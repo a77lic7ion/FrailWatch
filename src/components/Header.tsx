@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, 
-  Smartphone, 
-  Users, 
-  Sparkles, 
   Activity, 
   Clock, 
   Sliders, 
   RefreshCw,
   Bell,
-  Database,
   BookOpen,
   Building2,
   Menu,
@@ -223,57 +219,16 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
-            <button
-              id="tab-resident-phone"
-              onClick={() => setActiveTab('resident-phone')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                activeTab === 'resident-phone'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-              }`}
-            >
-              <Smartphone className="w-4 h-4" />
-              <span>Phone Simulator</span>
-            </button>
-
-            <button
-              id="tab-resident-login"
-              onClick={() => setActiveTab('resident-login')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                activeTab === 'resident-login'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-              }`}
-            >
-              <Smartphone className="w-4 h-4" />
-              <span>Resident login</span>
-            </button>
-
-            <button
-              id="tab-family-provider"
-              onClick={() => setActiveTab('family-provider')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                activeTab === 'family-provider'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-              }`}
-            >
-              <Users className="w-4 h-4" />
-              <span>Families & 4TIFY</span>
-            </button>
-
-            <button
-              id="tab-comparison"
-              onClick={() => setActiveTab('comparison')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                activeTab === 'comparison'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-indigo-300 hover:bg-indigo-950/40 border border-indigo-500/30'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-indigo-400" />
-              <span>Architecture Review</span>
-            </button>
+            {/* Tab: Staff Management */}
+            {staff?.role === 'superadmin' && onOpenStaffManagement && (
+              <button
+                onClick={onOpenStaffManagement}
+                className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all text-slate-300 hover:bg-slate-800 hover:text-white"
+              >
+                <UserCog className="w-4 h-4" />
+                <span>Staff Management</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -311,39 +266,6 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-[11px] font-extrabold uppercase">Senior View</span>
           </div>
           <span className="text-[9px] font-semibold text-emerald-100">Yes/No Buttons</span>
-        </button>
-
-        {/* Tab: Resident login */}
-        <button
-          onClick={() => setActiveTab('resident-login')}
-          className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl transition ${
-            activeTab === 'resident-login' ? 'text-emerald-400 font-bold' : 'hover:text-slate-200'
-          }`}
-        >
-          <Smartphone className="w-5 h-5" />
-          <span className="text-[10px] tracking-tight">Resident login</span>
-        </button>
-
-        {/* Tab: Phone Simulator */}
-        <button
-          onClick={() => setActiveTab('resident-phone')}
-          className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl transition ${
-            activeTab === 'resident-phone' ? 'text-emerald-400 font-bold' : 'hover:text-slate-200'
-          }`}
-        >
-          <Smartphone className="w-5 h-5" />
-          <span className="text-[10px] tracking-tight">Simulator</span>
-        </button>
-
-        {/* Tab: Family & 4TIFY */}
-        <button
-          onClick={() => setActiveTab('family-provider')}
-          className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl transition ${
-            activeTab === 'family-provider' ? 'text-emerald-400 font-bold' : 'hover:text-slate-200'
-          }`}
-        >
-          <Users className="w-5 h-5" />
-          <span className="text-[10px] tracking-tight">Families</span>
         </button>
 
         {/* Tab: Workflow Guide */}

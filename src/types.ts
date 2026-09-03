@@ -40,4 +40,4 @@ export interface CareHome {
   providerPartner: string; // e.g. "4tify Security & Care Network"
 }
 
-export type ActiveTab = 'dashboard' | 'resident-phone' | 'resident-login' | 'senior-checkin' | 'family-provider' | 'comparison';
+export type ActiveTab = 'dashboard' | 'senior-checkin';

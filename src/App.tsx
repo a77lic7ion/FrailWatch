@@ -1,15 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { StaffDashboard } from './components/StaffDashboard';
-import { ResidentPhoneView } from './components/ResidentPhoneView';
-import { FamilyAndProviderView } from './components/FamilyAndProviderView';
-import { ComparisonCritique } from './components/ComparisonCritique';
-import { SimulationModal } from './components/SimulationModal';
-import { CutoffModal } from './components/CutoffModal';
-import { DatabaseModal } from './components/DatabaseModal';
 import { SeniorCheckInWebsite } from './components/SeniorCheckInWebsite';
 import { WorkflowGuideModal } from './components/WorkflowGuideModal';
-import { ResidentPhoneLogin } from './components/ResidentPhoneLogin';
 import { StaffLogin } from './components/StaffLogin';
 import { StaffManagement } from './components/StaffManagement';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
@@ -22,15 +15,12 @@ export default function App() {
   const [staff, setStaff] = useState<any>(null);
   const [staffLoading, setStaffLoading] = useState<boolean>(true);
   const [loginError, setLoginError] = useState<string | null>(null);
-  const [residentLoginTarget, setResidentLoginTarget] = useState<Resident | null>(null);
   const [homes, setHomes] = useState<CareHome[]>(INITIAL_HOMES);
   const [selectedHomeId, setSelectedHomeId] = useState<string>(INITIAL_HOMES[0].id);
   const [residents, setResidents] = useState<Resident[]>(INITIAL_RESIDENTS);
   const [activeResidentId, setActiveResidentId] = useState<string>(INITIAL_RESIDENTS[0]?.id || '');
   const [currentTimeStr, setCurrentTimeStr] = useState<string>('08:35 AM');
-  const [isSimModalOpen, setIsSimModalOpen] = useState<boolean>(false);
   const [isCutoffModalOpen, setIsCutoffModalOpen] = useState<boolean>(false);
-  const [isDbModalOpen, setIsDbModalOpen] = useState<boolean>(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState<boolean>(false);
   const [isStaffMgmtOpen, setIsStaffMgmtOpen] = useState<boolean>(false);
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
@@ -199,10 +189,6 @@ export default function App() {
               await loadDbStatus();
             }}
             onUpdateResident={async () => {}}
-            onSelectResidentForPhone={(id) => {
-              setActiveResidentId(id);
-              setActiveTab('resident-login');
-            }}
             onOpenCutoffModal={() => setIsCutoffModalOpen(true)}
             onOpenSeniorWebsite={(residentId) => {
               if (residentId) setActiveResidentId(residentId);
@@ -220,29 +206,6 @@ export default function App() {
             allResidents={residents}
             onCheckInStatus={handleCheckIn}
             onReturnToAdmin={() => setActiveTab('dashboard')}
-          />
-        )}
-
-        {!showLogin && activeTab === 'resident-login' && (
-          <ResidentPhoneLogin
-            residents={residents}
-            onLoginSuccess={(resident) => {
-              setActiveResidentId(resident.id);
-              setActiveTab('senior-checkin');
-            }}
-          />
-        )}
-
-        {!showLogin && activeTab === 'family-view' && <FamilyAndProviderView />}
-        {!showLogin && activeTab === 'comparison' && <ComparisonCritique />}
-
-        {!showLogin && activeTab === 'database' && (
-          <DatabaseModal
-            isOpen={isDbModalOpen}
-            onClose={() => setIsDbModalOpen(false)}
-            dbStatus={dbStatus}
-            onRefresh={loadDbStatus}
-            isRefreshing={isDbRefreshing}
           />
         )}
       </main>
