@@ -29,7 +29,7 @@ import {
 import { Resident, CareHome, CheckInStatus } from '../types';
 
 interface StaffDashboardProps {
-  home: CareHome;
+  home?: CareHome;
   allHomes?: CareHome[];
   residents: Resident[];
   currentTimeStr: string;
@@ -76,7 +76,16 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [newContactName, setNewContactName] = useState('');
   const [newContactPhone, setNewContactPhone] = useState('');
   const [newContactRel, setNewContactRel] = useState('Child');
-  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(home?.id || 'home-benoni-01');
+  const homeOrDefault = home || {
+    id: 'home-benoni-01',
+    name: 'Default Home',
+    location: '',
+    cutoffTime: '09:15',
+    careStaffOnDuty: 0,
+    primaryNurse: '',
+    providerPartner: '',
+  } as CareHome;
+  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(homeOrDefault.id);
 
   // Verification modal state after admin creates user
   const [createdVerificationData, setCreatedVerificationData] = useState<{
@@ -137,7 +146,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       return;
     }
 
-    const targetHome = (allHomes || [home]).find((h) => h.id === selectedHomeForResident) || home;
+    const targetHome = (allHomes || [homeOrDefault]).find((h) => h.id === selectedHomeForResident) || homeOrDefault;
     const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
 
     const newRes: Partial<Resident> = {
@@ -187,7 +196,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   };
 
   const handleShareExistingResidentLink = (r: Resident) => {
-    const targetHome = (allHomes || [home]).find((h) => h.id === (r.homeId || home.id)) || home;
+    const targetHome = (allHomes || [homeOrDefault]).find((h) => h.id === (r.homeId || homeOrDefault.id)) || homeOrDefault;
     const token = r.verificationToken || `ew_${r.id}`;
     const url = `${window.location.origin}/?verify=${token}&home=${targetHome.id}`;
     setCreatedVerificationData({
@@ -230,9 +239,9 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-1">
               <Building2 className="w-4 h-4 text-emerald-600" />
-              <span>{home.name} · {home.location}</span>
+              <span>{homeOrDefault.name} · {homeOrDefault.location}</span>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
-                {home.providerPartner}
+                {homeOrDefault.providerPartner}
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
@@ -255,7 +264,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   Morning Cutoff
                 </div>
                 <div className="text-lg font-black text-slate-900 font-mono">
-                  {home.cutoffTime} AM
+                  {homeOrDefault.cutoffTime} AM
                 </div>
               </div>
             </div>
@@ -890,7 +899,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 </div>
 
                 <div className="bg-slate-100 rounded-xl p-3 text-xs font-mono text-slate-700 break-all border border-slate-200">
-                  {window.location.origin}/?verify={selectedResident.verificationToken || `ew_${selectedResident.id}`}&home={selectedResident.homeId || home.id}
+                  {window.location.origin}/?verify={selectedResident.verificationToken || `ew_${selectedResident.id}`}&home={selectedResident.homeId || homeOrDefault.id}
                 </div>
 
                 <div className="mt-2 flex gap-2">
@@ -967,7 +976,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   onChange={(e) => setSelectedHomeForResident(e.target.value)}
                   className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer bg-white text-slate-900"
                 >
-                  {(allHomes || [home]).map((h) => (
+                  {(allHomes || [homeOrDefault]).map((h) => (
                     <option key={h.id} value={h.id}>
                       {h.name} ({h.location})
                     </option>
@@ -1114,9 +1123,9 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             <div className="py-4">
               <div className="bg-slate-900 text-slate-100 p-4 rounded-2xl font-mono text-xs overflow-x-auto max-h-60 leading-relaxed border border-slate-800">
                 <div># ELDERWATCH MORNING AUDIT REPORT</div>
-                <div>FACILITY: {home.name}</div>
-                <div>DATE: {new Date().toISOString().split('T')[0]} · CUTOFF: {home.cutoffTime} AM</div>
-                <div>DUTY NURSE: {home.primaryNurse}</div>
+                <div>FACILITY: {homeOrDefault.name}</div>
+                <div>DATE: {new Date().toISOString().split('T')[0]} · CUTOFF: {homeOrDefault.cutoffTime} AM</div>
+                <div>DUTY NURSE: {homeOrDefault.primaryNurse}</div>
                 <div>------------------------------------------------</div>
                 <div>TOTAL RESIDENTS: {totalCount}</div>
                 <div>CONFIRMED OK: {okCount}</div>
@@ -1135,7 +1144,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               <button
                 onClick={() => {
                   navigator.clipboard?.writeText?.(
-                    `ELDERWATCH MORNING REPORT\nFacility: ${home.name}\nDate: ${new Date().toLocaleDateString()}\nVerified OK: ${okCount}/${totalCount}\nUrgent Attention: ${notOkCount}\nOverdue: ${overdueCount}`
+                  `ELDERWATCH MORNING REPORT\nFacility: ${homeOrDefault.name}\nDate: ${new Date().toLocaleDateString()}\nVerified OK: ${okCount}/${totalCount}\nUrgent Attention: ${notOkCount}\nOverdue: ${overdueCount}`
                   );
                   alert('Morning audit summary copied to clipboard!');
                 }}
