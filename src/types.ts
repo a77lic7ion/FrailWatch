@@ -2,11 +2,14 @@ export type CheckInStatus = 'ok' | 'not_ok' | 'overdue' | 'awaiting';
 
 export interface Resident {
   id: string;
+  homeId?: string;
   name: string;
   room: string;
   wing: string;
   phone: string;
   deviceLinked: boolean;
+  verificationToken?: string;
+  verifiedAt?: string;
   status: CheckInStatus;
   checkInTime?: string;
   notes?: string;
@@ -37,4 +40,4 @@ export interface CareHome {
   providerPartner: string; // e.g. "4tify Security & Care Network"
 }
 
-export type ActiveTab = 'dashboard' | 'resident-phone' | 'family-provider' | 'comparison';
+export type ActiveTab = 'dashboard' | 'resident-phone' | 'senior-checkin' | 'family-provider' | 'comparison';

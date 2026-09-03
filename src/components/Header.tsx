@@ -156,6 +156,22 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
+            id="tab-senior-checkin"
+            onClick={() => setActiveTab('senior-checkin')}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
+              activeTab === 'senior-checkin'
+                ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-400'
+                : 'text-emerald-300 hover:bg-emerald-950/40 border border-emerald-500/30'
+            }`}
+          >
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Senior Check-In Website</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-200 font-bold">
+              Green / Red
+            </span>
+          </button>
+
+          <button
             id="tab-resident-phone"
             onClick={() => setActiveTab('resident-phone')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
@@ -165,10 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Smartphone className="w-4 h-4" />
-            <span>Resident Phone Simulator</span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 font-medium">
-              2 Giant Buttons
-            </span>
+            <span>Mobile Device Simulator</span>
           </button>
 
           <button

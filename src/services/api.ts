@@ -62,17 +62,43 @@ export const api = {
     }
   },
 
-  async addResident(resident: Partial<Resident>): Promise<boolean> {
+  async addResident(resident: Partial<Resident>): Promise<{ success: boolean; resident?: Resident; verificationToken?: string; verificationUrl?: string }> {
     try {
       const res = await fetch('/api/residents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(resident),
       });
-      return res.ok;
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
     } catch (e) {
       console.warn('Failed to add resident to backend:', e);
-      return false;
+      return { success: false };
+    }
+  },
+
+  async verifyDevice(token?: string, residentId?: string): Promise<{ success: boolean; resident?: Resident; home?: CareHome; message?: string; error?: string }> {
+    try {
+      const res = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, residentId }),
+      });
+      return await res.json();
+    } catch (e) {
+      console.warn('Device verification error:', e);
+      return { success: false, error: 'Network error verifying device' };
+    }
+  },
+
+  async getResidentProfile(idOrToken: string): Promise<{ resident?: Resident; home?: CareHome } | null> {
+    try {
+      const res = await fetch(`/api/resident/${encodeURIComponent(idOrToken)}`);
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (e) {
+      console.warn('Error fetching resident profile:', e);
+      return null;
     }
   },
 

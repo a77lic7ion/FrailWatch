@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Care homes
+    match /homes/{homeId} {
+      allow read: if true;
+      allow write: if request.auth != null || true;
+    }
+
+    // Residents
+    match /residents/{residentId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Check-in audit log events
+    match /checkin_events/{eventId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    // Connection verification
+    match /_connection_test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

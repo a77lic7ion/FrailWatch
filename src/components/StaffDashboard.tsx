@@ -18,23 +18,30 @@ import {
   HeartPulse,
   Send,
   Check,
-  RotateCw
+  RotateCw,
+  Copy,
+  ExternalLink,
+  Link2,
+  Smartphone
 } from 'lucide-react';
 import { Resident, CareHome, CheckInStatus } from '../types';
 
 interface StaffDashboardProps {
   home: CareHome;
+  allHomes?: CareHome[];
   residents: Resident[];
   currentTimeStr: string;
   onUpdateResidentStatus: (residentId: string, status: CheckInStatus) => void;
-  onAddResident: (resident: Partial<Resident>) => void;
+  onAddResident: (resident: Partial<Resident>) => Promise<any> | void;
   onUpdateResident: (resident: Resident) => void;
   onSelectResidentForPhone: (id: string) => void;
   onOpenCutoffModal: () => void;
+  onOpenSeniorWebsite?: (residentId?: string) => void;
 }
 
 export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   home,
+  allHomes,
   residents,
   currentTimeStr,
   onUpdateResidentStatus,
@@ -42,6 +49,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   onUpdateResident,
   onSelectResidentForPhone,
   onOpenCutoffModal,
+  onOpenSeniorWebsite,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'action' | 'ok' | 'awaiting'>('all');
@@ -51,7 +59,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [showExportModal, setShowExportModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // New resident form state
+  // New resident form state (admin sets name and phone per home)
   const [newName, setNewName] = useState('');
   const [newRoom, setNewRoom] = useState('');
   const [newWing, setNewWing] = useState('Willow Cottage');
@@ -60,6 +68,20 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [newContactName, setNewContactName] = useState('');
   const [newContactPhone, setNewContactPhone] = useState('');
   const [newContactRel, setNewContactRel] = useState('Child');
+  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(home.id);
+
+  // Verification modal state after admin creates user
+  const [createdVerificationData, setCreatedVerificationData] = useState<{
+    residentName: string;
+    phone: string;
+    room: string;
+    homeName: string;
+    verificationToken: string;
+    verificationUrl: string;
+    residentId: string;
+  } | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedSms, setCopiedSms] = useState(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -100,23 +122,28 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
   const wings = Array.from(new Set(residents.map((r) => r.wing || 'Willow Cottage').filter(Boolean)));
 
-  const handleCreateResident = (e: React.FormEvent) => {
+  const handleCreateResident = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim() || !newRoom.trim() || !newPhone.trim()) {
-      alert('Please provide name, room number, and phone.');
+      alert('Please provide resident name, room number, and mobile cell phone number.');
       return;
     }
+
+    const targetHome = (allHomes || [home]).find((h) => h.id === selectedHomeForResident) || home;
+    const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
 
     const newRes: Partial<Resident> = {
       name: newName.trim(),
       room: newRoom.trim(),
+      homeId: targetHome.id,
       wing: newWing,
       phone: newPhone.trim(),
       deviceLinked: false,
+      verificationToken: token,
       status: 'awaiting',
       caregiver: newCaregiver,
       medicalAlerts: [],
-      notes: 'New resident setup. Send 1-tap link.',
+      notes: 'New resident setup. Send verification link to attach phone.',
       emergencyContact: {
         name: newContactName || 'Family Member',
         phone: newContactPhone || newPhone,
@@ -128,14 +155,42 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       ]
     };
 
-    onAddResident(newRes);
+    const res: any = await onAddResident(newRes);
+    const resolvedToken = res?.verificationToken || token;
+    const resolvedUrl = `${window.location.origin}/?verify=${resolvedToken}&home=${targetHome.id}`;
+
     setShowAddModal(false);
+    setCreatedVerificationData({
+      residentName: newName.trim(),
+      phone: newPhone.trim(),
+      room: newRoom.trim(),
+      homeName: targetHome.name,
+      verificationToken: resolvedToken,
+      verificationUrl: resolvedUrl,
+      residentId: res?.resident?.id || '',
+    });
+
     setNewName('');
     setNewRoom('');
     setNewPhone('');
     setNewContactName('');
     setNewContactPhone('');
-    showToast(`Resident ${newName} successfully added`);
+    showToast(`Resident ${newName} saved to database for ${targetHome.name}`);
+  };
+
+  const handleShareExistingResidentLink = (r: Resident) => {
+    const targetHome = (allHomes || [home]).find((h) => h.id === (r.homeId || home.id)) || home;
+    const token = r.verificationToken || `ew_${r.id}`;
+    const url = `${window.location.origin}/?verify=${token}&home=${targetHome.id}`;
+    setCreatedVerificationData({
+      residentName: r.name,
+      phone: r.phone,
+      room: r.room,
+      homeName: targetHome.name,
+      verificationToken: token,
+      verificationUrl: url,
+      residentId: r.id,
+    });
   };
 
   const handleDispatchCarer = (r: Resident) => {
@@ -579,6 +634,27 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 </button>
 
                 <div className="flex items-center gap-1">
+                  {!r.deviceLinked && (
+                    <button
+                      onClick={() => handleShareExistingResidentLink(r)}
+                      className="px-2 py-1 rounded-lg text-xs font-semibold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1 transition"
+                      title="Share verification link to attach phone to this care home"
+                    >
+                      <Link2 className="w-3 h-3" />
+                      <span>Verify Link</span>
+                    </button>
+                  )}
+
+                  {onOpenSeniorWebsite && (
+                    <button
+                      onClick={() => onOpenSeniorWebsite(r.id)}
+                      className="p-1.5 rounded-lg text-emerald-700 hover:bg-emerald-50 hover:text-emerald-900 transition"
+                      title="Open Senior Green/Red Web Check-In"
+                    >
+                      <Smartphone className="w-4 h-4" />
+                    </button>
+                  )}
+
                   <a
                     href={`tel:${r.phone}`}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
@@ -770,13 +846,45 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 </p>
               </div>
 
-              {/* Device Safe-Link */}
+              {/* Device Safe-Link & Database Attachment */}
               <div className="mt-5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                  Device Pairing Link (Zero Login)
-                </h4>
+                <div className="flex items-center justify-between mb-1.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Device Link & Facility Attachment
+                  </h4>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    selectedResident.deviceLinked
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    {selectedResident.deviceLinked ? '✓ Attached in Database' : '⏳ Pending User Link'}
+                  </span>
+                </div>
+
                 <div className="bg-slate-100 rounded-xl p-3 text-xs font-mono text-slate-700 break-all border border-slate-200">
-                  https://elderwatch.care/c?t=ew_{selectedResident.id}
+                  {window.location.origin}/?verify={selectedResident.verificationToken || `ew_${selectedResident.id}`}&home={selectedResident.homeId || home.id}
+                </div>
+
+                <div className="mt-2 flex gap-2">
+                  <button
+                    onClick={() => handleShareExistingResidentLink(selectedResident)}
+                    className="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                  >
+                    <Link2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Copy Verification Invite</span>
+                  </button>
+                  {onOpenSeniorWebsite && (
+                    <button
+                      onClick={() => {
+                        onOpenSeniorWebsite(selectedResident.id);
+                        setSelectedResident(null);
+                      }}
+                      className="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                    >
+                      <Smartphone className="w-3.5 h-3.5" />
+                      <span>Senior Web View</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -821,6 +929,27 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             </div>
 
             <form onSubmit={handleCreateResident} className="space-y-4 py-4">
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  Assign to Care Home Facility *
+                </label>
+                <select
+                  id="new-resident-home-select"
+                  value={selectedHomeForResident}
+                  onChange={(e) => setSelectedHomeForResident(e.target.value)}
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer bg-white text-slate-900"
+                >
+                  {(allHomes || [home]).map((h) => (
+                    <option key={h.id} value={h.id}>
+                      {h.name} ({h.location})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Stored in database per home. The resident will verify via link to attach their device to this facility.
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
@@ -992,6 +1121,131 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               >
                 Done
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VERIFICATION LINK & SMS INVITATION MODAL */}
+      {createdVerificationData && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 text-slate-900 animate-in fade-in zoom-in-95">
+            <div className="flex items-start justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                  <Link2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base text-slate-900">
+                    Verification Link Generated
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Database record stored for {createdVerificationData.homeName}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setCreatedVerificationData(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="py-4 space-y-4">
+              {/* Resident Summary Pill */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex items-center justify-between text-xs">
+                <div>
+                  <span className="text-slate-400 block text-[11px]">Resident & Mobile</span>
+                  <span className="font-bold text-slate-900 text-sm">{createdVerificationData.residentName}</span>
+                  <span className="text-slate-500 block">{createdVerificationData.phone} · {createdVerificationData.room}</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-slate-400 block text-[11px]">Facility Attached</span>
+                  <span className="font-bold text-emerald-700">{createdVerificationData.homeName}</span>
+                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-100 font-semibold px-2 py-0.5 rounded-full mt-1">
+                    Waiting for link click
+                  </span>
+                </div>
+              </div>
+
+              {/* Verification Link Field */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  1-Click Resident Mobile Verification URL
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={createdVerificationData.verificationUrl}
+                    className="flex-1 px-3 py-2 text-xs font-mono rounded-xl border border-slate-300 bg-slate-50 text-slate-800 select-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(createdVerificationData.verificationUrl);
+                      setCopiedLink(true);
+                      setTimeout(() => setCopiedLink(false), 3000);
+                      showToast('Verification URL copied to clipboard');
+                    }}
+                    className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition"
+                  >
+                    {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedLink ? 'Copied' : 'Copy'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Precomposed SMS / WhatsApp Message */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  Precomposed SMS / WhatsApp Invitation
+                </label>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 italic">
+                  "Good day {createdVerificationData.residentName.split(' ')[0]}! Welcome to {createdVerificationData.homeName}. Please tap this link on your cell phone to activate your morning reassurance check-in: {createdVerificationData.verificationUrl}"
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const smsText = `Good day ${createdVerificationData.residentName.split(' ')[0]}! Welcome to ${createdVerificationData.homeName}. Please tap this link on your cell phone to activate your morning reassurance check-in: ${createdVerificationData.verificationUrl}`;
+                    navigator.clipboard?.writeText(smsText);
+                    setCopiedSms(true);
+                    setTimeout(() => setCopiedSms(false), 3000);
+                    showToast('SMS message copied to clipboard');
+                  }}
+                  className="mt-2 text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{copiedSms ? '✓ SMS text copied!' : 'Copy SMS / WhatsApp message text'}</span>
+                </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenSeniorWebsite) {
+                      onOpenSeniorWebsite(createdVerificationData.residentId);
+                    } else {
+                      window.open(createdVerificationData.verificationUrl, '_blank');
+                    }
+                    setCreatedVerificationData(null);
+                  }}
+                  className="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>Test Senior Client Website (Green & Red Buttons)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCreatedVerificationData(null)}
+                  className="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         </div>

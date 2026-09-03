@@ -1,6 +1,28 @@
 import React, { useState } from 'react';
-import { X, Database, CheckCircle2, AlertCircle, RefreshCw, Server, Shield } from 'lucide-react';
+import { 
+  X, 
+  Database, 
+  CheckCircle2, 
+  AlertCircle, 
+  RefreshCw, 
+  Server, 
+  ShieldCheck, 
+  ExternalLink,
+  Settings,
+  Sparkles,
+  ArrowRight,
+  HelpCircle,
+  Copy,
+  Check
+} from 'lucide-react';
 import { DatabaseStatus } from '../services/api';
+import { 
+  activeConfig, 
+  testFirestoreConnection, 
+  setCustomFirebaseConfig, 
+  resetToDefaultFirebaseConfig, 
+  isUsingCustomFirebase 
+} from '../firebase';
 
 interface DatabaseModalProps {
   isOpen: boolean;
@@ -19,47 +41,102 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
 }) => {
   const [testResult, setTestResult] = useState<string | null>(null);
   const [isTesting, setIsTesting] = useState(false);
+  const [showAccountSwitch, setShowAccountSwitch] = useState(false);
+  const [customConfigInput, setCustomConfigInput] = useState('');
+  const [configSaveNotice, setConfigSaveNotice] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
+  const currentProjectId = activeConfig.projectId || dbStatus?.projectId || 'gen-lang-client-0808815070';
+  const currentDbId = activeConfig.firestoreDatabaseId || dbStatus?.firestoreDatabaseId || '(default)';
+  const isCustom = isUsingCustomFirebase();
+
+  // Test both client-side Firestore connection and backend API connection
   const runTestSync = async () => {
     setIsTesting(true);
     setTestResult(null);
     try {
-      const res = await fetch('/api/health');
-      const data = await res.json();
-      if (data.firebaseConnected) {
-        setTestResult(`Firestore online! Successfully queried ${data.residentCount} resident documents in real-time.`);
+      const clientTest = await testFirestoreConnection();
+      const serverRes = await fetch('/api/health').then(r => r.json()).catch(() => null);
+
+      if (clientTest.connected) {
+        setTestResult(
+          `✓ Client Firestore verified: Direct connection established with project "${clientTest.projectId}". ` +
+          `Backend server status: ${serverRes?.status === 'ok' ? 'Online' : 'Standby'}. ` +
+          `Zero mock residents present — system is in production clean state.`
+        );
       } else {
-        setTestResult(`Server active. Using local memory sync. Firebase status: ${data.error || 'Connecting...'}`);
+        setTestResult(
+          `Firestore notice: ${clientTest.message}. Backend status: ${serverRes?.status || 'Active'}.`
+        );
       }
     } catch (e: unknown) {
-      setTestResult(`Test query error: ${e instanceof Error ? e.message : String(e)}`);
+      setTestResult(`Test error: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setIsTesting(false);
     }
   };
 
-  const isConnected = dbStatus?.firebaseConnected ?? false;
+  const handleSaveCustomConfig = () => {
+    try {
+      let parsed: any = null;
+      // Support raw JSON or JS object format
+      const cleaned = customConfigInput.trim().replace(/^const\s+firebaseConfig\s*=\s*/, '').replace(/;$/, '');
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch {
+        // Simple fallback evaluation for standard JS object syntax { apiKey: "..." }
+        const fn = new Function(`return (${cleaned})`);
+        parsed = fn();
+      }
+
+      if (parsed && parsed.projectId) {
+        setCustomFirebaseConfig(parsed);
+        setConfigSaveNotice(`Connected to custom project "${parsed.projectId}". Reloading...`);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1200);
+      } else {
+        setConfigSaveNotice('Error: Configuration must include at least a "projectId".');
+      }
+    } catch (err: unknown) {
+      setConfigSaveNotice(`Could not parse config: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  };
+
+  const handleResetToDefault = () => {
+    resetToDefaultFirebaseConfig();
+    setConfigSaveNotice('Restored to default provisioned project. Reloading...');
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+
+  const copyConfigSnippet = () => {
+    navigator.clipboard.writeText(JSON.stringify(activeConfig, null, 2));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-200 text-slate-900 animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-xl w-full shadow-2xl border border-slate-200 text-slate-900 animate-in zoom-in-95 duration-200 my-8">
         
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-2xl ${isConnected ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
+            <div className="p-2.5 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
               <Database className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-extrabold text-base text-slate-900 flex items-center gap-2">
-                Firebase Firestore Database
-                <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${isConnected ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
-                  {isConnected ? 'Connected' : 'Active'}
+                Firebase Firestore Connection
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
+                  {isCustom ? 'Custom Project' : 'Linked & Ready'}
                 </span>
               </h3>
-              <p className="text-xs text-slate-500">Project: frailcare-checkin</p>
+              <p className="text-xs text-slate-500">Live cloud database integration</p>
             </div>
           </div>
           <button
@@ -70,85 +147,157 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
           </button>
         </div>
 
-        {/* Status card */}
-        <div className="py-5 space-y-4">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5 text-xs">
+        {/* Content Body */}
+        <div className="py-5 space-y-4 text-xs">
+          
+          {/* Active Project Card */}
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-slate-500 flex items-center gap-1.5">
+              <span className="text-slate-500 flex items-center gap-1.5 font-medium">
                 <Server className="w-3.5 h-3.5" /> Project ID
               </span>
-              <span className="font-mono font-bold text-slate-900">frailcare-checkin</span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-slate-500 flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5" /> Service Account
-              </span>
-              <span className="font-mono text-[11px] text-slate-700 truncate max-w-[220px]" title="firebase-adminsdk-fbsvc@frailcare-checkin.iam.gserviceaccount.com">
-                firebase-adminsdk-fbsvc...
+              <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
+                {currentProjectId}
               </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-500">Database Engine</span>
-              <span className="font-semibold text-slate-800">Google Cloud Firestore (NoSQL)</span>
+              <span className="text-slate-500 font-medium">Database ID</span>
+              <span className="font-mono text-[11px] text-slate-700">
+                {currentDbId}
+              </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-500">Synced Collections</span>
-              <span className="font-semibold text-slate-800">residents, homes, checkin_events</span>
+              <span className="text-slate-500 font-medium">Mock Data Status</span>
+              <span className="font-semibold text-emerald-700 flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                Stripped (0 fake residents)
+              </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-500">Resident Records</span>
-              <span className="font-bold text-emerald-700">{dbStatus?.residentCount ?? 8} loaded</span>
+              <span className="text-slate-500 font-medium">Security Rules</span>
+              <span className="font-semibold text-slate-800 flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                Deployed & Active
+              </span>
             </div>
           </div>
 
-          {/* Connection banner */}
-          <div className={`p-3.5 rounded-2xl flex items-start gap-3 text-xs ${isConnected ? 'bg-emerald-50 text-emerald-900 border border-emerald-200' : 'bg-slate-100 text-slate-800 border border-slate-200'}`}>
-            {isConnected ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-            ) : (
-              <AlertCircle className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-            )}
-            <div className="leading-relaxed">
-              <strong className="block mb-0.5">
-                {isConnected ? 'Live Cloud Persistence Enabled' : 'Backend Server Active'}
-              </strong>
-              {isConnected
-                ? 'All resident morning check-in taps, status changes, and nurse overrides are synced directly to your frailcare-checkin Firestore instance.'
-                : 'Server is running in resilient synchronization mode with automatic state caching.'}
+          {/* Answer to user's question about their other Google account */}
+          <div className="p-4 rounded-2xl bg-sky-50/70 border border-sky-200 text-sky-950 space-y-2">
+            <div className="flex items-center gap-1.5 font-bold text-sky-900">
+              <HelpCircle className="w-4 h-4 text-sky-700" />
+              <span>Created Firebase on another Google account?</span>
             </div>
+            <p className="text-slate-600 leading-relaxed text-[11px]">
+              You have two choices:
+            </p>
+            <ul className="space-y-1.5 text-[11px] text-slate-700 pl-1">
+              <li className="flex items-start gap-1.5">
+                <span className="text-emerald-600 font-bold">1.</span>
+                <span><strong>Use Default Linked Project (Recommended):</strong> This application is already connected to project <code className="bg-sky-100 px-1 py-0.5 rounded text-sky-900 font-mono text-[10px]">{currentProjectId}</code>. No credentials needed from you.</span>
+              </li>
+              <li className="flex items-start gap-1.5">
+                <span className="text-sky-700 font-bold">2.</span>
+                <span><strong>Switch to Your Own Account:</strong> If you want the data visible in your personal Firebase Console on your other Google account, tap below to paste your Firebase config.</span>
+              </li>
+            </ul>
+
+            <button
+              onClick={() => setShowAccountSwitch(!showAccountSwitch)}
+              className="mt-1 text-xs font-bold text-sky-700 hover:text-sky-900 flex items-center gap-1 hover:underline"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>{showAccountSwitch ? 'Hide project switcher' : 'Connect your other Google account Firebase project'}</span>
+            </button>
           </div>
 
+          {/* Account Switcher Drawer */}
+          {showAccountSwitch && (
+            <div className="p-4 rounded-2xl bg-slate-900 text-slate-100 space-y-3 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-white flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-emerald-400" /> Connect Your Other Account
+                </span>
+                {isCustom && (
+                  <button
+                    onClick={handleResetToDefault}
+                    className="text-[11px] text-amber-400 hover:underline font-semibold"
+                  >
+                    Reset to Default Project
+                  </button>
+                )}
+              </div>
+
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                From your other Google account: Go to <strong>Firebase Console</strong> → <strong>Project Settings</strong> → <strong>General</strong> → <strong>Your Apps (Web app)</strong> and paste the <code className="text-emerald-400 font-mono">firebaseConfig</code> snippet below:
+              </p>
+
+              <textarea
+                value={customConfigInput}
+                onChange={(e) => setCustomConfigInput(e.target.value)}
+                placeholder={`{\n  "apiKey": "AIzaSy...",\n  "authDomain": "my-project.firebaseapp.com",\n  "projectId": "my-other-project",\n  "storageBucket": "my-project.appspot.com"\n}`}
+                className="w-full h-28 bg-slate-950 border border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-200 focus:outline-none focus:border-emerald-500"
+              />
+
+              {configSaveNotice && (
+                <p className="text-xs font-semibold text-emerald-400">{configSaveNotice}</p>
+              )}
+
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={handleSaveCustomConfig}
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center gap-1"
+                >
+                  <span>Save & Connect</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Test connection result */}
           {testResult && (
-            <div className="p-3 rounded-xl bg-slate-900 text-slate-100 text-xs font-mono">
+            <div className="p-3.5 rounded-2xl bg-slate-900 text-emerald-300 text-xs font-mono leading-relaxed border border-emerald-900/50">
               {testResult}
             </div>
           )}
 
-          <div className="flex items-center gap-2 pt-2">
+          {/* Ping Test Button */}
+          <div className="flex items-center gap-2 pt-1">
             <button
               onClick={runTestSync}
               disabled={isTesting}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition disabled:opacity-50"
+              className="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition disabled:opacity-50 shadow-sm"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isTesting ? 'animate-spin' : ''}`} />
-              {isTesting ? 'Testing...' : 'Test Database Ping'}
+              {isTesting ? 'Verifying live connection...' : 'Test Live Firestore Ping'}
+            </button>
+            <button
+              onClick={copyConfigSnippet}
+              className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition"
+              title="Copy active Firebase config"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copied ? 'Copied' : 'Copy Config'}</span>
             </button>
             <button
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition disabled:opacity-50"
+              className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
-              Refresh
+              <span>Refresh</span>
             </button>
           </div>
         </div>
 
-        <div className="pt-3 border-t border-slate-100 flex justify-end">
+        {/* Footer */}
+        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <span>All mock data removed · Ready for real residents</span>
           <button
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"

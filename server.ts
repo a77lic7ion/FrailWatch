@@ -39,238 +39,32 @@ const SEED_HOMES = [
   }
 ];
 
-const SEED_RESIDENTS = [
-  {
-    id: 'res-1',
-    name: 'Margaret Thompson',
-    room: 'Room 14',
-    wing: 'Willow Cottage',
-    phone: '+27 82 555 1201',
-    deviceLinked: true,
-    status: 'ok',
-    checkInTime: '08:14 AM',
-    notes: 'Mild arthritis in fingers. Prefers large touch targets.',
-    medicalAlerts: ['Hypertension', 'Hearing aid right ear'],
-    caregiver: 'Sr. Sarah Botha',
-    emergencyContact: {
-      name: 'Claire Thompson',
-      relationship: 'Daughter',
-      phone: '+27 83 444 8921',
-      notifyOnIssue: true,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '08:05 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '08:11 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '08:22 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '08:09 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '08:18 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '08:04 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'ok', time: '08:14 AM' },
-    ]
-  },
-  {
-    id: 'res-2',
-    name: 'Arthur Pendelton',
-    room: 'Room 07',
-    wing: 'Rose Wing',
-    phone: '+27 82 555 3392',
-    deviceLinked: true,
-    status: 'not_ok',
-    checkInTime: '08:31 AM',
-    notes: 'Tapped "I NEED HELP" button. Reported dizziness getting out of bed.',
-    medicalAlerts: ['Post-hip replacement', 'Fall risk'],
-    caregiver: 'Nurse David M.',
-    emergencyContact: {
-      name: 'David Pendelton',
-      relationship: 'Son',
-      phone: '+27 82 999 1144',
-      notifyOnIssue: true,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '07:55 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '08:02 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '07:48 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '08:15 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '08:00 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '07:58 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'not_ok', time: '08:31 AM' },
-    ]
-  },
-  {
-    id: 'res-3',
-    name: 'Evelyn Vance',
-    room: 'Room 22',
-    wing: 'Garden Suites',
-    phone: '+27 83 712 9043',
-    deviceLinked: true,
-    status: 'overdue',
-    notes: 'Cutoff passed with zero response. Requires immediate physical window check.',
-    medicalAlerts: ['Diabetic (requires 08:30 insulin)', 'Deep sleeper'],
-    caregiver: 'Sr. Sarah Botha',
-    emergencyContact: {
-      name: 'Marcus Vance',
-      relationship: 'Son',
-      phone: '+27 84 321 0099',
-      notifyOnIssue: true,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '08:45 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '08:50 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '08:40 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '08:52 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '08:48 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '08:55 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'overdue', time: undefined },
-    ]
-  },
-  {
-    id: 'res-4',
-    name: 'Robert "Bob" Davies',
-    room: 'Room 03',
-    wing: 'Willow Cottage',
-    phone: '+27 82 331 4455',
-    deviceLinked: true,
-    status: 'awaiting',
-    notes: 'Usually checks in around 08:50 AM after his morning coffee.',
-    medicalAlerts: ['Mild cognitive impairment'],
-    caregiver: 'Nurse Grace K.',
-    emergencyContact: {
-      name: 'Helen Davies',
-      relationship: 'Spouse',
-      phone: '+27 82 331 4456',
-      notifyOnIssue: false,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '08:49 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '08:52 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '08:47 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '08:55 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '08:50 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '08:48 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'awaiting', time: undefined },
-    ]
-  },
-  {
-    id: 'res-5',
-    name: 'Constance "Connie" Meyer',
-    room: 'Room 19',
-    wing: 'Garden Suites',
-    phone: '+27 79 123 7890',
-    deviceLinked: true,
-    status: 'ok',
-    checkInTime: '07:28 AM',
-    notes: 'Early riser, checks in as soon as she wakes up.',
-    medicalAlerts: ['Cardiac pacemaker'],
-    caregiver: 'Sr. Sarah Botha',
-    emergencyContact: {
-      name: 'Simon Meyer',
-      relationship: 'Grandson',
-      phone: '+27 71 888 2211',
-      notifyOnIssue: true,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '07:30 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '07:25 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '07:32 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '07:22 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '07:40 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '07:35 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'ok', time: '07:28 AM' },
-    ]
-  },
-  {
-    id: 'res-6',
-    name: 'George Van Der Merwe',
-    room: 'Room 11',
-    wing: 'Rose Wing',
-    phone: '+27 82 443 6677',
-    deviceLinked: true,
-    status: 'ok',
-    checkInTime: '08:01 AM',
-    notes: 'Uses tablet on bedside stand.',
-    medicalAlerts: ['Parkinsons (mild tremor)'],
-    caregiver: 'Nurse David M.',
-    emergencyContact: {
-      name: 'Annamarie Van Der Merwe',
-      relationship: 'Daughter',
-      phone: '+27 83 222 9900',
-      notifyOnIssue: true,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '08:10 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '08:08 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '08:05 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '08:12 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '08:15 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '08:03 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'ok', time: '08:01 AM' },
-    ]
-  },
-  {
-    id: 'res-7',
-    name: 'Dorothy Zimmerman',
-    room: 'Room 28',
-    wing: 'Garden Suites',
-    phone: '+27 84 901 2345',
-    deviceLinked: true,
-    status: 'awaiting',
-    notes: 'Recent move-in. Family visits Tuesdays & Thursdays.',
-    medicalAlerts: ['Macular degeneration (low vision)'],
-    caregiver: 'Sr. Sarah Botha',
-    emergencyContact: {
-      name: 'Jonathan Zimmerman',
-      relationship: 'Son',
-      phone: '+27 82 505 1122',
-      notifyOnIssue: true,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '08:35 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '08:40 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '08:38 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '08:42 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '08:45 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '08:30 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'awaiting', time: undefined },
-    ]
-  },
-  {
-    id: 'res-8',
-    name: 'Harold Goldberg',
-    room: 'Room 05',
-    wing: 'Willow Cottage',
-    phone: '+27 83 678 1234',
-    deviceLinked: false,
-    status: 'awaiting',
-    notes: 'New phone provided by family. Needs 1-tap device pairing.',
-    medicalAlerts: ['Asthma'],
-    caregiver: 'Nurse Grace K.',
-    emergencyContact: {
-      name: 'Rachel Goldberg',
-      relationship: 'Daughter',
-      phone: '+27 82 777 4433',
-      notifyOnIssue: true,
-    },
-    sevenDayHistory: [
-      { date: '2026-08-28', day: 'Wed', status: 'ok', time: '08:12 AM' },
-      { date: '2026-08-29', day: 'Thu', status: 'ok', time: '08:15 AM' },
-      { date: '2026-08-30', day: 'Fri', status: 'ok', time: '08:20 AM' },
-      { date: '2026-08-31', day: 'Sat', status: 'ok', time: '08:10 AM' },
-      { date: '2026-09-01', day: 'Sun', status: 'ok', time: '08:18 AM' },
-      { date: '2026-09-02', day: 'Mon', status: 'ok', time: '08:11 AM' },
-      { date: '2026-09-03', day: 'Today', status: 'awaiting', time: undefined },
-    ]
-  }
-];
+// Real database state - Mock residents stripped.
+// Real residents are created via the Admin interface and stored into Firestore.
+const SEED_RESIDENTS: any[] = [];
 
 // ----------------------------------------------------
-// In-Memory Fallback State (Always active if Firebase offline)
+// In-Memory Fallback State (Synced with Firestore)
 // ----------------------------------------------------
 let memoryHomes = JSON.parse(JSON.stringify(SEED_HOMES));
-let memoryResidents = JSON.parse(JSON.stringify(SEED_RESIDENTS));
+let memoryResidents: any[] = [];
 
 // ----------------------------------------------------
-// Firebase Admin & Firestore Initialization
+// Firebase Configuration & Initialization
 // ----------------------------------------------------
+let appletConfig: any = null;
+try {
+  const configPath = path.resolve(process.cwd(), 'firebase-applet-config.json');
+  if (fs.existsSync(configPath)) {
+    appletConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  }
+} catch (e) {
+  console.warn('Could not read firebase-applet-config.json:', e);
+}
+
+const activeProjectId = appletConfig?.projectId || process.env.FIREBASE_PROJECT_ID || 'gen-lang-client-0808815070';
+const activeDatabaseId = appletConfig?.firestoreDatabaseId || '';
+
 let firestoreDb: Firestore | null = null;
 let firebaseInitialized = false;
 let firebaseError: string | null = null;
@@ -278,14 +72,13 @@ let firebaseError: string | null = null;
 function initFirebase() {
   try {
     if (getApps().length > 0) {
-      firestoreDb = getFirestore();
+      firestoreDb = activeDatabaseId ? getFirestore(getApps()[0], activeDatabaseId) : getFirestore();
       firebaseInitialized = true;
       return firestoreDb;
     }
 
     let serviceAccount: ServiceAccount | null = null;
 
-    // Check environment variable
     if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
       try {
         serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
@@ -294,13 +87,11 @@ function initFirebase() {
       }
     }
 
-    // Check local credential file
     if (!serviceAccount) {
       const saPath = path.resolve(process.cwd(), 'firebase-service-account.json');
       if (fs.existsSync(saPath)) {
         try {
-          const raw = fs.readFileSync(saPath, 'utf-8');
-          serviceAccount = JSON.parse(raw);
+          serviceAccount = JSON.parse(fs.readFileSync(saPath, 'utf-8'));
         } catch (e) {
           console.warn('Failed to parse firebase-service-account.json:', e);
         }
@@ -310,24 +101,27 @@ function initFirebase() {
     if (serviceAccount) {
       initializeApp({
         credential: cert(serviceAccount),
-        projectId: (serviceAccount as { project_id?: string }).project_id || 'frailcare-checkin',
+        projectId: (serviceAccount as { project_id?: string }).project_id || activeProjectId,
       });
-      firestoreDb = getFirestore();
+      firestoreDb = activeDatabaseId ? getFirestore(getApps()[0], activeDatabaseId) : getFirestore();
       firebaseInitialized = true;
-      console.log('Firebase Admin initialized successfully with project:', (serviceAccount as { project_id?: string }).project_id);
-      
-      // Auto seed Firestore asynchronously
-      seedFirestoreIfEmpty().catch((err) => {
-        console.warn('Firestore initial seeding error:', err.message);
-      });
+      console.log('Firebase Admin initialized with service account for:', activeProjectId);
     } else {
-      firebaseError = 'No Firebase service account credentials found.';
-      console.warn('Firebase credentials not found, running with in-memory sync.');
+      initializeApp({
+        projectId: activeProjectId,
+      });
+      firestoreDb = activeDatabaseId ? getFirestore(getApps()[0], activeDatabaseId) : getFirestore();
+      firebaseInitialized = true;
+      console.log('Firebase initialized with project:', activeProjectId);
     }
+    
+    seedFirestoreIfEmpty().catch((err) => {
+      console.warn('Firestore initial seeding error:', err.message);
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     firebaseError = message;
-    console.error('Firebase initialization failed, falling back to memory mode:', message);
+    console.error('Firebase initialization:', message);
   }
   return firestoreDb;
 }
@@ -335,24 +129,20 @@ function initFirebase() {
 async function seedFirestoreIfEmpty() {
   if (!firestoreDb) return;
   try {
-    const residentsSnap = await firestoreDb.collection('residents').limit(1).get();
-    if (residentsSnap.empty) {
-      console.log('Seeding initial residents to Firestore...');
+    const homesSnap = await firestoreDb.collection('homes').limit(1).get();
+    if (homesSnap.empty) {
+      console.log('Seeding initial care facilities to Firestore...');
       const batch = firestoreDb.batch();
-      for (const res of SEED_RESIDENTS) {
-        const docRef = firestoreDb.collection('residents').doc(res.id);
-        batch.set(docRef, res);
-      }
       for (const home of SEED_HOMES) {
         const docRef = firestoreDb.collection('homes').doc(home.id);
         batch.set(docRef, home);
       }
       await batch.commit();
-      console.log('Firestore successfully seeded with residents and care homes.');
+      console.log('Firestore facilities successfully registered.');
     }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    console.warn('Could not auto-seed Firestore:', message);
+    console.warn('Could not auto-seed facility headers:', message);
   }
 }
 
@@ -384,8 +174,9 @@ app.get('/api/health', async (_req: Request, res: Response) => {
     status: 'ok',
     firebaseInitialized,
     firebaseConnected: isConnected,
-    projectId: 'frailcare-checkin',
-    clientEmail: 'firebase-adminsdk-fbsvc@frailcare-checkin.iam.gserviceaccount.com',
+    projectId: activeProjectId,
+    firestoreDatabaseId: activeDatabaseId,
+    clientEmail: 'firebase-adminsdk@' + activeProjectId + '.iam.gserviceaccount.com',
     residentCount,
     error: errorMsg,
   });
@@ -410,6 +201,9 @@ app.get('/api/data', async (_req: Request, res: Response) => {
             return {
               id: d.id,
               ...data,
+              homeId: data.homeId || 'home-benoni-01',
+              verificationToken: data.verificationToken || `ew_${d.id}`,
+              deviceLinked: Boolean(data.deviceLinked),
               wing: data.wing || 'Willow Cottage',
               sevenDayHistory: Array.isArray(data.sevenDayHistory) && data.sevenDayHistory.length > 0
                 ? data.sevenDayHistory
@@ -492,7 +286,7 @@ app.post('/api/checkin', async (req: Request, res: Response) => {
   res.json({ success: true, residentId, status, checkInTime: time });
 });
 
-// 4. Add New Resident
+// 4. Add New Resident (by administrator, assigned per home)
 app.post('/api/residents', async (req: Request, res: Response) => {
   const newResident = req.body;
   if (!newResident.name || !newResident.room) {
@@ -500,11 +294,17 @@ app.post('/api/residents', async (req: Request, res: Response) => {
   }
 
   const id = newResident.id || `res-${Date.now()}`;
+  const homeId = newResident.homeId || 'home-benoni-01';
+  const verificationToken = newResident.verificationToken || ('ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36));
+
   const completeResident = {
     ...newResident,
     id,
+    homeId,
+    verificationToken,
     status: newResident.status || 'awaiting',
-    deviceLinked: newResident.deviceLinked ?? true,
+    deviceLinked: newResident.deviceLinked !== undefined ? newResident.deviceLinked : false,
+    createdAt: new Date().toISOString(),
     sevenDayHistory: newResident.sevenDayHistory || [
       { date: '2026-09-03', day: 'Today', status: newResident.status || 'awaiting' },
     ],
@@ -515,12 +315,159 @@ app.post('/api/residents', async (req: Request, res: Response) => {
   if (firestoreDb) {
     try {
       await firestoreDb.collection('residents').doc(id).set(completeResident);
+      
+      // Log creation event in Firestore
+      await firestoreDb.collection('checkin_events').add({
+        residentId: id,
+        homeId,
+        event: 'resident_created_by_admin',
+        name: completeResident.name,
+        phone: completeResident.phone,
+        verificationToken,
+        recordedAt: FieldValue.serverTimestamp(),
+      });
     } catch (e: unknown) {
       console.warn('Failed to insert resident in Firestore:', e);
     }
   }
 
-  res.json({ success: true, resident: completeResident });
+  res.json({ 
+    success: true, 
+    resident: completeResident, 
+    verificationToken,
+    verificationUrl: `/?verify=${verificationToken}&home=${homeId}`
+  });
+});
+
+// 5. Verify & Attach Device to Care Home
+const performVerification = async (token?: string, residentId?: string, res?: Response) => {
+  let resident: any = memoryResidents.find(
+    (r) => (token && r.verificationToken === token) || (residentId && r.id === residentId)
+  );
+
+  if (!resident && firestoreDb) {
+    try {
+      if (token) {
+        const snap = await firestoreDb.collection('residents').where('verificationToken', '==', token).limit(1).get();
+        if (!snap.empty) {
+          const doc = snap.docs[0];
+          resident = { id: doc.id, ...doc.data() };
+        }
+      }
+      if (!resident && residentId) {
+        const doc = await firestoreDb.collection('residents').doc(residentId).get();
+        if (doc.exists) {
+          resident = { id: doc.id, ...doc.data() };
+        }
+      }
+    } catch (e) {
+      console.warn('Firestore verification lookup error:', e);
+    }
+  }
+
+  if (!resident) {
+    return res?.status(404).json({ 
+      error: 'Invalid or expired verification link. Please request a new link from your care home administrator.' 
+    });
+  }
+
+  // Mark device as attached/linked in database
+  const verifiedAt = new Date().toISOString();
+  resident.deviceLinked = true;
+  resident.verifiedAt = verifiedAt;
+
+  // Update in memory
+  const idx = memoryResidents.findIndex((r) => r.id === resident.id);
+  if (idx !== -1) {
+    memoryResidents[idx].deviceLinked = true;
+    memoryResidents[idx].verifiedAt = verifiedAt;
+  }
+
+  // Persist attachment in Firestore
+  if (firestoreDb) {
+    try {
+      await firestoreDb.collection('residents').doc(resident.id).set(
+        { deviceLinked: true, verifiedAt },
+        { merge: true }
+      );
+
+      await firestoreDb.collection('checkin_events').add({
+        residentId: resident.id,
+        homeId: resident.homeId || 'home-benoni-01',
+        event: 'device_verified_and_attached',
+        phone: resident.phone,
+        recordedAt: FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      console.warn('Failed to update verified resident in Firestore:', e);
+    }
+  }
+
+  // Fetch home details to attach
+  const targetHomeId = resident.homeId || 'home-benoni-01';
+  let home = memoryHomes.find((h) => h.id === targetHomeId);
+  if (!home && firestoreDb) {
+    try {
+      const homeDoc = await firestoreDb.collection('homes').doc(targetHomeId).get();
+      if (homeDoc.exists) {
+        home = { id: homeDoc.id, ...homeDoc.data() } as any;
+      }
+    } catch (e) {
+      console.warn('Failed to fetch home for verification:', e);
+    }
+  }
+
+  return res?.json({
+    success: true,
+    message: `Device verified and attached to ${home?.name || 'Care Home'}`,
+    resident,
+    home: home || memoryHomes[0],
+  });
+};
+
+app.post('/api/verify', async (req: Request, res: Response) => {
+  const token = (req.body.token || req.query.token) as string;
+  const residentId = (req.body.residentId || req.query.residentId) as string;
+  return performVerification(token, residentId, res);
+});
+
+app.get('/api/verify', async (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const residentId = req.query.residentId as string;
+  return performVerification(token, residentId, res);
+});
+
+// 6. Get Single Resident + Home Profile (for senior client check-in website)
+app.get('/api/resident/:idOrToken', async (req: Request, res: Response) => {
+  const { idOrToken } = req.params;
+  let resident: any = memoryResidents.find(
+    (r) => r.id === idOrToken || r.verificationToken === idOrToken
+  );
+
+  if (!resident && firestoreDb) {
+    try {
+      const doc = await firestoreDb.collection('residents').doc(idOrToken).get();
+      if (doc.exists) {
+        resident = { id: doc.id, ...doc.data() };
+      } else {
+        const snap = await firestoreDb.collection('residents').where('verificationToken', '==', idOrToken).limit(1).get();
+        if (!snap.empty) {
+          resident = { id: snap.docs[0].id, ...snap.docs[0].data() };
+        }
+      }
+    } catch (e) {
+      console.warn('Error fetching single resident from Firestore:', e);
+    }
+  }
+
+  if (!resident) {
+    return res.status(404).json({ error: 'Resident profile not found' });
+  }
+
+  const targetHomeId = resident.homeId || 'home-benoni-01';
+  const home = memoryHomes.find((h) => h.id === targetHomeId) || memoryHomes[0];
+
+  res.json({ resident, home });
 });
 
 // 5. Update Resident

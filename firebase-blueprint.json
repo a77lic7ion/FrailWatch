@@ -1,0 +1,69 @@
+{
+  "entities": {
+    "CareHome": {
+      "title": "CareHome",
+      "description": "A care home facility using the morning check-in reassurance system",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "totalResidents": { "type": "number" },
+        "cutoffTime": { "type": "string" },
+        "careStaffOnDuty": { "type": "number" },
+        "primaryNurse": { "type": "string" },
+        "providerPartner": { "type": "string" }
+      },
+      "required": ["id", "name", "cutoffTime"]
+    },
+    "Resident": {
+      "title": "Resident",
+      "description": "A resident registered in a care home with daily reassurance check-ins",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "homeId": { "type": "string" },
+        "name": { "type": "string" },
+        "room": { "type": "string" },
+        "wing": { "type": "string" },
+        "phone": { "type": "string" },
+        "deviceLinked": { "type": "boolean" },
+        "verificationToken": { "type": "string" },
+        "status": { "type": "string" },
+        "checkInTime": { "type": "string" },
+        "caregiver": { "type": "string" },
+        "notes": { "type": "string" },
+        "medicalAlerts": { "type": "array" }
+      },
+      "required": ["id", "name", "room", "homeId"]
+    },
+    "CheckInEvent": {
+      "title": "CheckInEvent",
+      "description": "Log of a check-in event, alert, or device verification",
+      "type": "object",
+      "properties": {
+        "residentId": { "type": "string" },
+        "homeId": { "type": "string" },
+        "event": { "type": "string" },
+        "status": { "type": "string" },
+        "time": { "type": "string" },
+        "recordedAt": { "type": "string" }
+      },
+      "required": ["residentId", "homeId", "event"]
+    }
+  },
+  "firestore": {
+    "/homes/{homeId}": {
+      "schema": "CareHome",
+      "description": "Collection of care homes and facilities"
+    },
+    "/residents/{residentId}": {
+      "schema": "Resident",
+      "description": "Collection of registered residents across care facilities"
+    },
+    "/checkin_events/{eventId}": {
+      "schema": "CheckInEvent",
+      "description": "Immutable log of check-in events and verification attachments"
+    }
+  }
+}

@@ -7,6 +7,7 @@ import { ComparisonCritique } from './components/ComparisonCritique';
 import { SimulationModal } from './components/SimulationModal';
 import { CutoffModal } from './components/CutoffModal';
 import { DatabaseModal } from './components/DatabaseModal';
+import { SeniorCheckInWebsite } from './components/SeniorCheckInWebsite';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
 import { api, DatabaseStatus } from './services/api';
@@ -16,13 +17,25 @@ export default function App() {
   const [homes, setHomes] = useState<CareHome[]>(INITIAL_HOMES);
   const [selectedHomeId, setSelectedHomeId] = useState<string>(INITIAL_HOMES[0].id);
   const [residents, setResidents] = useState<Resident[]>(INITIAL_RESIDENTS);
-  const [activeResidentId, setActiveResidentId] = useState<string>(INITIAL_RESIDENTS[0].id);
+  const [activeResidentId, setActiveResidentId] = useState<string>(INITIAL_RESIDENTS[0]?.id || '');
   const [currentTimeStr, setCurrentTimeStr] = useState<string>('08:35 AM');
   const [isSimModalOpen, setIsSimModalOpen] = useState<boolean>(false);
   const [isCutoffModalOpen, setIsCutoffModalOpen] = useState<boolean>(false);
   const [isDbModalOpen, setIsDbModalOpen] = useState<boolean>(false);
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
+
+  // Check URL parameters for direct verification / senior check-in link
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('verify') || params.get('token') || params.get('residentId') || params.get('mode') === 'checkin') {
+        setActiveTab('senior-checkin');
+      }
+    } catch {
+      // Ignore URL parsing errors
+    }
+  }, []);
 
   // Load database status and sync initial data
   const loadDbStatus = useCallback(async () => {
@@ -115,16 +128,19 @@ export default function App() {
     api.recordCheckIn(residentId, status, timeFormatted);
   };
 
-  // Add resident handler
-  const handleAddResident = (newResData: Partial<Resident>) => {
+  // Add resident handler (administrator adds user with cell number and name per home)
+  const handleAddResident = async (newResData: Partial<Resident>) => {
     const id = `res-${Date.now()}`;
+    const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
     const newResident: Resident = {
       id,
+      homeId: newResData.homeId || selectedHomeId,
       name: newResData.name || 'New Resident',
       room: newResData.room || 'Room TBD',
       wing: newResData.wing || 'Willow Cottage',
       phone: newResData.phone || '+27 82 000 0000',
-      deviceLinked: true,
+      deviceLinked: false,
+      verificationToken: token,
       status: 'awaiting',
       caregiver: newResData.caregiver || 'Sr. Sarah Botha',
       medicalAlerts: newResData.medicalAlerts || [],
@@ -141,7 +157,8 @@ export default function App() {
     };
 
     setResidents((prev) => [newResident, ...prev]);
-    api.addResident(newResident);
+    const apiResult = await api.addResident(newResident);
+    return apiResult;
   };
 
   // Update resident details
@@ -182,7 +199,7 @@ export default function App() {
   const handleResetMorning = () => {
     setCurrentTimeStr('08:35 AM');
     setResidents(INITIAL_RESIDENTS);
-    setActiveResidentId(INITIAL_RESIDENTS[0].id);
+    setActiveResidentId(INITIAL_RESIDENTS[0]?.id || '');
     api.resetDemo();
   };
 
@@ -223,6 +240,7 @@ export default function App() {
         {activeTab === 'dashboard' && (
           <StaffDashboard
             home={selectedHome}
+            allHomes={homes}
             residents={residents}
             currentTimeStr={currentTimeStr}
             onUpdateResidentStatus={(id, status) => handleCheckIn(id, status)}
@@ -230,6 +248,19 @@ export default function App() {
             onUpdateResident={handleUpdateResident}
             onSelectResidentForPhone={handleSelectResidentForPhone}
             onOpenCutoffModal={() => setIsCutoffModalOpen(true)}
+            onOpenSeniorWebsite={(residentId) => {
+              if (residentId) setActiveResidentId(residentId);
+              setActiveTab('senior-checkin');
+            }}
+          />
+        )}
+
+        {activeTab === 'senior-checkin' && (
+          <SeniorCheckInWebsite
+            initialResident={residents.find((r) => r.id === activeResidentId) || residents[0]}
+            initialHome={selectedHome}
+            onCheckInStatus={handleCheckIn}
+            onReturnToAdmin={() => setActiveTab('dashboard')}
           />
         )}
 
