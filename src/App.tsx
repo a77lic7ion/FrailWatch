@@ -165,6 +165,10 @@ export default function App() {
         onOpenStaffManagement={isGlobal ? () => setIsStaffMgmtOpen(true) : undefined}
         onOpenHomeManagement={isGlobal ? () => setIsHomeMgmtOpen(true) : undefined}
         onOpenDbVerify={isGlobal ? () => setIsDbVerifyOpen(true) : undefined}
+        onMobileHomeClick={() => {
+          if (isGlobal) setSelectedGlobalHomeId(null);
+          else setActiveTab('dashboard');
+        }}
       />
 
       <main className="flex-1">

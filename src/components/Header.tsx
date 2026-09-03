@@ -33,6 +33,7 @@ interface HeaderProps {
   onOpenHomeManagement?: () => void;
   onOpenDbVerify?: () => void;
   dbStatus?: any;
+  onMobileHomeClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -53,6 +54,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenHomeManagement,
   onOpenDbVerify,
   dbStatus,
+  onMobileHomeClick,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const attentionCount = urgentCount + overdueCount;
@@ -132,16 +134,17 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="font-mono font-medium">{currentTimeStr}</span>
               </div>
 
-              {/* Workflow Guide Button (Desktop & Mobile) */}
+            {/* Thin status/action rail */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Workflow Guide Button */}
               {onOpenGuideModal && (
                 <button
                   onClick={onOpenGuideModal}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 text-xs font-semibold transition"
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 text-[11px] font-semibold transition"
                   title="View complete Workflow & Mobile Guide"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
                   <span className="hidden md:inline">Workflow Guide</span>
-                  <span className="md:hidden text-[11px]">Guide</span>
                 </button>
               )}
 
@@ -149,7 +152,7 @@ export const Header: React.FC<HeaderProps> = ({
               {onOpenStaffManagement && (
                 <button
                   onClick={onOpenStaffManagement}
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition"
+                  className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-semibold transition"
                   title="Manage staff and admins"
                 >
                   <UserCog className="w-3.5 h-3.5 text-emerald-400" />
@@ -161,7 +164,7 @@ export const Header: React.FC<HeaderProps> = ({
               {onOpenHomeManagement && (
                 <button
                   onClick={onOpenHomeManagement}
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition"
+                  className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[11px] font-semibold transition"
                   title="Manage homes"
                 >
                   <Building2 className="w-3.5 h-3.5 text-indigo-400" />
@@ -172,14 +175,13 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Firebase connection status indicator */}
               <span
                 title={dbStatus?.error ? `Firebase error: ${dbStatus.error}` : 'Connected to Firebase'}
-                className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs transition"
+                className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-[11px] transition"
               >
                 <span className={`w-2 h-2 rounded-full ${dbStatus?.error ? 'bg-rose-500' : 'bg-emerald-500 animate-pulse'}`}></span>
                 <span className="hidden lg:inline font-mono text-[11px] text-slate-200">
                   {dbStatus?.error ? 'Firebase error' : 'Firebase'}
                 </span>
               </span>
-
 
               <button
                 id="reset-demo-btn"
@@ -189,24 +191,9 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
-
-              {/* Staff info + logout */}
-              {staff?.email && (
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <span className="font-mono">{staff.email}</span>
-                  {onLogout && (
-                    <button
-                      onClick={onLogout}
-                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition"
-                      title="Logout"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-              )}
             </div>
           </div>
+        </div>
 
           {/* DESKTOP VIEW MODE SWITCHER (HIDDEN ON MOBILE, USES BOTTOM BAR INSTEAD) */}
           <div className="hidden md:flex items-center gap-2 overflow-x-auto py-2.5 border-t border-slate-800 scrollbar-none">
@@ -231,64 +218,26 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      {/* MOBILE BOTTOM NAVIGATION BAR (FIXED ON SMARTPHONE VIEWPORTS) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 shadow-2xl px-1.5 py-2 flex items-center justify-around text-slate-400">
-        
-        {/* Tab: Staff Dashboard */}
+      {/* MOBILE FOOTER (fixed, always visible) */}
+      <footer className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t border-slate-800 px-3 py-2 flex items-center justify-between">
         <button
-          onClick={() => setActiveTab('dashboard')}
-          className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl transition relative ${
-            activeTab === 'dashboard' ? 'text-emerald-400 font-bold' : 'hover:text-slate-200'
-          }`}
+          onClick={onMobileHomeClick}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700"
         >
-          <Activity className="w-5 h-5" />
-          <span className="text-[10px] tracking-tight">Staff Triage</span>
-          {attentionCount > 0 && (
-            <span className="absolute top-0 right-1 w-4 h-4 rounded-full bg-rose-600 text-white text-[9px] font-bold flex items-center justify-center animate-pulse">
-              {attentionCount}
-            </span>
-          )}
+          <Building2 className="w-4 h-4" />
+          <span>Home</span>
         </button>
 
-        {/* Tab: Senior Check-In (HIGHLIGHTED) */}
-        <button
-          onClick={() => setActiveTab('senior-checkin')}
-          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition border ${
-            activeTab === 'senior-checkin'
-              ? 'bg-emerald-600 text-white font-black border-emerald-400 shadow-md shadow-emerald-600/30 ring-2 ring-emerald-500/40'
-              : 'bg-emerald-950/70 text-emerald-300 border-emerald-600/40 hover:bg-emerald-900/80'
-          }`}
-        >
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
-            <span className="text-[11px] font-extrabold uppercase">Senior View</span>
-          </div>
-          <span className="text-[9px] font-semibold text-emerald-100">Yes/No Buttons</span>
-        </button>
-
-        {/* Tab: Workflow Guide */}
-        {onOpenGuideModal && (
-          <button
-            onClick={onOpenGuideModal}
-            className="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-indigo-300 hover:text-indigo-100 transition"
-          >
-            <BookOpen className="w-5 h-5" />
-            <span className="text-[10px] tracking-tight font-semibold">Guide</span>
-          </button>
-        )}
-
-        {/* Logout */}
         {onLogout && (
           <button
             onClick={onLogout}
-            className="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-rose-300 hover:text-rose-100 transition"
-            title="Sign out"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold"
           >
-            <LogOut className="w-5 h-5" />
-            <span className="text-[10px] tracking-tight font-semibold">Sign out</span>
+            <LogOut className="w-4 h-4" />
+            <span>Sign out</span>
           </button>
         )}
-      </nav>
+      </footer>
     </>
   );
 };
