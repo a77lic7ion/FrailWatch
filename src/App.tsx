@@ -69,7 +69,7 @@ export default function App() {
 
   const isGlobal = staff?.role === 'superadmin' || staff?.homeId === '*';
   const effectiveHomes = isGlobal ? homes : homes.filter((h) => h.id === staff?.homeId);
-  const effectiveSelectedHomeId = isGlobal ? selectedHomeId : (effectiveHomes[0]?.id || selectedHomeId);
+  const effectiveSelectedHomeId = isGlobal ? (selectedGlobalHomeId || selectedHomeId) : (effectiveHomes[0]?.id || selectedHomeId);
 
   useEffect(() => {
     if (!isGlobal && staff?.homeId) {
