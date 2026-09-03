@@ -115,6 +115,9 @@ export default function App() {
   }, [loadDbStatus]);
 
   const selectedHome = (effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || effectiveHomes[0] || (homes[0] || { id: 'home-benoni-01', name: 'Default Home', location: '', cutoffTime: '09:15', careStaffOnDuty: 0, primaryNurse: '', providerPartner: '' }));
+  if (typeof window !== 'undefined') {
+    try { console.log('[FrailWatch][App] selectedHome=', selectedHome, 'staff=', staff, 'effectiveHomes=', effectiveHomes.length, 'homes=', homes.length); } catch {}
+  }
   const visibleResidents = isGlobal ? residents : residents.filter((r) => r.homeId === staff?.homeId);
   const urgentCount = visibleResidents.filter((r) => r.status === 'not_ok').length;
   const overdueCount = visibleResidents.filter((r) => r.status === 'overdue').length;
@@ -178,7 +181,15 @@ export default function App() {
 
         {!showLogin && activeTab === 'dashboard' && (
           <StaffDashboard
-            home={selectedHome}
+            home={selectedHome || {
+              id: 'home-benoni-01',
+              name: 'Default Home',
+              location: '',
+              cutoffTime: '09:15',
+              careStaffOnDuty: 0,
+              primaryNurse: '',
+              providerPartner: '',
+            }}
             allHomes={effectiveHomes}
             residents={visibleResidents}
             currentTimeStr={currentTimeStr}
