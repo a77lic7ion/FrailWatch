@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { Building2, ShieldCheck, Lock } from 'lucide-react';
 
+class FirebaseBlockedError extends Error {
+  constructor() {
+    super('Firebase connection blocked by browser extension or network filter.');
+    this.name = 'FirebaseBlockedError';
+  }
+}
+
 interface StaffLoginProps {
   onLogin: (email: string, password: string) => Promise<void>;
   error?: string | null;
@@ -28,13 +35,19 @@ export function StaffLogin({ onLogin, error, loading }: StaffLoginProps) {
           </div>
         )}
 
+        {error && /blocked/i.test(error) && (
+          <div className="bg-amber-500/10 border border-amber-500/40 text-amber-200 text-xs rounded-xl p-3">
+            This can happen when an extension blocks Firebase. Try disabling uBlock/AdBlock for this site, or use a private window.
+          </div>
+        )}
+
         <form
           onSubmit={async (e) => {
             e.preventDefault();
             try {
               await Promise.race([
                 onLogin(email, password),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Login timed out. Please try again.')), 15000)),
+                new Promise((_, reject) => setTimeout(() => reject(new FirebaseBlockedError()), 15000)),
               ]);
             } catch (err: any) {
               const msg = err?.message || String(err);
