@@ -96,6 +96,10 @@ app.get('/api/health', async (_req: Request, res: Response) => {
   res.json({ status: 'ok', firebaseInitialized, firebaseConnected: isConnected, projectId: activeProjectId, clientEmail: `firebase-adminsdk@${activeProjectId}.iam.gserviceaccount.com`, residentCount, error: errorMsg });
 });
 
+app.get('/api/ping', (_req: Request, res: Response) => {
+  res.json({ ok: true, ts: Date.now() });
+});
+
 app.get('/api/data', requireStaff, async (req: Request, res: Response) => {
   const staff: any = (req as any).staff;
   try {

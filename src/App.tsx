@@ -7,6 +7,8 @@ import { StaffLogin } from './components/StaffLogin';
 import { StaffManagement } from './components/StaffManagement';
 import { HomeManagement } from './components/HomeManagement';
 import { DbVerificationModal } from './components/DbVerificationModal';
+import { GlobalAdminHomeSelector } from './components/GlobalAdminHomeSelector';
+import { HomeWeeklyOverview } from './components/HomeWeeklyOverview';
 import { CutoffModal } from './components/CutoffModal';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
@@ -28,6 +30,7 @@ export default function App() {
   const [isStaffMgmtOpen, setIsStaffMgmtOpen] = useState<boolean>(false);
   const [isHomeMgmtOpen, setIsHomeMgmtOpen] = useState<boolean>(false);
   const [isDbVerifyOpen, setIsDbVerifyOpen] = useState<boolean>(false);
+  const [selectedGlobalHomeId, setSelectedGlobalHomeId] = useState<string | null>(null);
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
 
@@ -179,6 +182,23 @@ export default function App() {
           />
         )}
 
+        {!showLogin && isGlobal && !selectedGlobalHomeId && (
+          <GlobalAdminHomeSelector
+            homes={effectiveHomes}
+            onSelectHome={(id) => setSelectedGlobalHomeId(id)}
+          />
+        )}
+
+        {!showLogin && isGlobal && selectedGlobalHomeId && (
+          <HomeWeeklyOverview
+            home={selectedHome}
+            residents={visibleResidents}
+            onBack={() => setSelectedGlobalHomeId(null)}
+            onEditStaff={() => setIsStaffMgmtOpen(true)}
+            onEditResidents={() => setActiveTab('dashboard')}
+          />
+        )}
+
         {!showLogin && activeTab === 'dashboard' && (
           <StaffDashboard
             home={selectedHome || {
@@ -191,7 +211,7 @@ export default function App() {
               providerPartner: '',
             }}
             allHomes={effectiveHomes}
-            residents={visibleResidents}
+            residents={isGlobal && selectedGlobalHomeId ? residents.filter((r) => r.homeId === selectedGlobalHomeId) : visibleResidents}
             currentTimeStr={currentTimeStr}
             onUpdateResidentStatus={handleCheckIn}
             onAddResident={async (payload) => {
