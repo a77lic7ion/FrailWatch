@@ -111,6 +111,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [newHomeCutoff, setNewHomeCutoff] = useState('09:00');
   const [creatingHome, setCreatingHome] = useState(false);
 
+  const isGlobalAdmin = staff?.role === 'superadmin' || staff?.homeId === '*';
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
@@ -355,7 +357,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
 
             <div className="flex flex-wrap items-center gap-2">
-              {onOpenGuideModal && (
+              {isGlobalAdmin && onOpenGuideModal && (
                 <button
                   id="open-guide-btn"
                   onClick={onOpenGuideModal}
@@ -366,22 +368,26 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   <span>Workflow & Link Guide</span>
                 </button>
               )}
-              <button
-                id="edit-cutoff-btn"
-                onClick={onOpenCutoffModal}
-                className="px-3 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition"
-              >
-                Change Cutoff
-              </button>
-              <button
-                id="export-report-btn"
-                onClick={() => setShowExportModal(true)}
-                className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1.5 shadow-sm"
-              >
-                <FileDown className="w-3.5 h-3.5" />
-                <span>Report</span>
-              </button>
-              {onOpenStaffManagement && (
+              {isGlobalAdmin && (
+                <button
+                  id="edit-cutoff-btn"
+                  onClick={onOpenCutoffModal}
+                  className="px-3 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition"
+                >
+                  Change Cutoff
+                </button>
+              )}
+              {isGlobalAdmin && (
+                <button
+                  id="export-report-btn"
+                  onClick={() => setShowExportModal(true)}
+                  className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1.5 shadow-sm"
+                >
+                  <FileDown className="w-3.5 h-3.5" />
+                  <span>Report</span>
+                </button>
+              )}
+              {isGlobalAdmin && onOpenStaffManagement && (
                 <button
                   onClick={onOpenStaffManagement}
                   className="px-3 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition flex items-center gap-1.5"
@@ -800,7 +806,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     Profile
                   </button>
 
-                  {staff?.role === 'superadmin' && (
+                  {(staff?.role === 'superadmin' || staff?.role === 'home_admin') && (
                     <>
                       <button
                         onClick={() => setEditingResident(r)}
