@@ -1,28 +1,38 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Care homes
     match /homes/{homeId} {
       allow read: if true;
-      allow write: if request.auth != null || true;
+      allow write: if request.auth != null && (get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role == 'superadmin' || get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.homeId == homeId);
     }
 
-    // Residents
     match /residents/{residentId} {
       allow read: if true;
-      allow write: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role == 'superadmin' || get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.homeId == resource.data.homeId);
+
+      // Allow residents to update their own deviceLinked status or status by phone match
+      allow update: if request.auth == null && request.resource.data.phone == resource.data.phone && request.resource.data.homeId == resource.data.homeId && request.resource.data.keys().hasAny(['status','deviceLinked','checkInTime','verifiedAt']);
     }
 
-    // Check-in audit log events
+    match /homes/{homeId}/checkins/{date}/entries/{phone} {
+      allow read: if request.auth != null && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.homeId == homeId;
+      allow write: if request.auth == null && phone.matches('^[0-9+]+$') && request.resource.data.homeId == homeId && request.resource.data.status in ['ok','not_ok'];
+    }
+
     match /checkin_events/{eventId} {
       allow read: if true;
       allow create: if true;
       allow update, delete: if false;
     }
 
-    // Connection verification
     match /_connection_test/{docId} {
       allow read, write: if true;
+    }
+
+    match /staff/{staffUid} {
+      allow read: if request.auth != null && request.auth.uid == staffUid;
+      allow write: if false;
     }
   }
 }

@@ -1,4 +1,6 @@
-import { CareHome, Resident, CheckInStatus } from '../types';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app, db } from '../firebase';
+export const auth = getAuth(app);
 
 export interface DatabaseStatus {
   status: string;
@@ -11,16 +13,30 @@ export interface DatabaseStatus {
 }
 
 export interface AppDataResponse {
-  homes: CareHome[];
-  residents: Resident[];
+  homes: any[];
+  residents: any[];
   source: 'firestore' | 'local_fallback';
   timestamp: string;
+}
+
+let staffSession: { uid: string; email?: string; role?: string; homeId?: string } | null = null;
+
+export function setStaffSession(s: { uid: string; email?: string; role?: string; homeId?: string } | null) {
+  staffSession = s;
+}
+
+export async function getAuthHeaders(): Promise<HeadersInit> {
+  const user = auth.currentUser;
+  if (!user) return {};
+  const token = await user.getIdToken();
+  return { Authorization: `Bearer ${token}` };
 }
 
 export const api = {
   async getStatus(): Promise<DatabaseStatus> {
     try {
-      const res = await fetch('/api/health');
+      const headers = await getAuthHeaders();
+      const res = await fetch('/api/health', { headers });
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -30,7 +46,7 @@ export const api = {
         firebaseInitialized: false,
         firebaseConnected: false,
         projectId: 'frailcare-checkin',
-        clientEmail: 'firebase-adminsdk-fbsvc@frailcare-checkin.iam.gserviceaccount.com',
+        clientEmail: 'firebase-adminsdk@frailcare-checkin.iam.gserviceaccount.com',
         residentCount: 0,
         error: String(e),
       };
@@ -39,7 +55,12 @@ export const api = {
 
   async getData(): Promise<AppDataResponse | null> {
     try {
-      const res = await fetch('/api/data');
+      const headers = await getAuthHeaders();
+      const params = new URLSearchParams();
+      if (staffSession?.homeId && staffSession.role !== 'superadmin' && staffSession.homeId !== '*') {
+        params.set('homeId', staffSession.homeId);
+      }
+      const res = await fetch(`/api/data?${params.toString()}`, { headers });
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -48,11 +69,11 @@ export const api = {
     }
   },
 
-  async recordCheckIn(residentId: string, status: CheckInStatus, checkInTime?: string): Promise<boolean> {
+  async recordCheckIn(residentId: string, status: string, checkInTime?: string): Promise<boolean> {
     try {
       const res = await fetch('/api/checkin', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify({ residentId, status, checkInTime }),
       });
       return res.ok;
@@ -62,14 +83,17 @@ export const api = {
     }
   },
 
-  async addResident(resident: Partial<Resident>): Promise<{ success: boolean; resident?: Resident; verificationToken?: string; verificationUrl?: string }> {
+  async addResident(resident: any): Promise<{ success: boolean; resident?: any; verificationToken?: string; verificationUrl?: string }> {
     try {
       const res = await fetch('/api/residents', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(resident),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
       return await res.json();
     } catch (e) {
       console.warn('Failed to add resident to backend:', e);
@@ -77,21 +101,7 @@ export const api = {
     }
   },
 
-  async verifyDevice(token?: string, residentId?: string): Promise<{ success: boolean; resident?: Resident; home?: CareHome; message?: string; error?: string }> {
-    try {
-      const res = await fetch('/api/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, residentId }),
-      });
-      return await res.json();
-    } catch (e) {
-      console.warn('Device verification error:', e);
-      return { success: false, error: 'Network error verifying device' };
-    }
-  },
-
-  async getResidentProfile(idOrToken: string): Promise<{ resident?: Resident; home?: CareHome } | null> {
+  async getResidentProfile(idOrToken: string): Promise<{ resident?: any; home?: any } | null> {
     try {
       const res = await fetch(`/api/resident/${encodeURIComponent(idOrToken)}`);
       if (!res.ok) return null;
@@ -102,11 +112,11 @@ export const api = {
     }
   },
 
-  async updateResident(id: string, updates: Partial<Resident>): Promise<boolean> {
+  async updateResident(id: string, updates: any): Promise<boolean> {
     try {
-      const res = await fetch(`/api/residents/${id}`, {
+      const res = await fetch(`/api/residents/${encodeURIComponent(id)}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(updates),
       });
       return res.ok;
@@ -118,8 +128,9 @@ export const api = {
 
   async deleteResident(id: string): Promise<boolean> {
     try {
-      const res = await fetch(`/api/residents/${id}`, {
+      const res = await fetch(`/api/residents/${encodeURIComponent(id)}`, {
         method: 'DELETE',
+        headers: { ...(await getAuthHeaders()) },
       });
       return res.ok;
     } catch (e) {
@@ -132,7 +143,7 @@ export const api = {
     try {
       const res = await fetch('/api/cutoff', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify({ homeId, cutoffTime }),
       });
       return res.ok;
@@ -146,6 +157,7 @@ export const api = {
     try {
       const res = await fetch('/api/reset-demo', {
         method: 'POST',
+        headers: { ...(await getAuthHeaders()) },
       });
       return res.ok;
     } catch (e) {

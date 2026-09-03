@@ -13,7 +13,9 @@ import {
   BookOpen,
   Building2,
   Menu,
-  X
+  X,
+  LogOut,
+  UserCog
 } from 'lucide-react';
 import { ActiveTab, CareHome } from '../types';
 import { Logo } from './Logo';
@@ -32,6 +34,9 @@ interface HeaderProps {
   onOpenDbModal?: () => void;
   onOpenGuideModal?: () => void;
   isDbConnected?: boolean;
+  staff?: any;
+  onLogout?: () => void;
+  onOpenStaffManagement?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -48,6 +53,9 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenDbModal,
   onOpenGuideModal,
   isDbConnected = true,
+  staff,
+  onLogout,
+  onOpenStaffManagement,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const attentionCount = urgentCount + overdueCount;
@@ -115,6 +123,18 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
               )}
 
+              {/* Staff Management Button */}
+              {onOpenStaffManagement && (
+                <button
+                  onClick={onOpenStaffManagement}
+                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition"
+                  title="Manage staff and admins"
+                >
+                  <UserCog className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Staff</span>
+                </button>
+              )}
+
               {/* Firebase Database Status Badge */}
               {onOpenDbModal && (
                 <button
@@ -148,6 +168,22 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
+
+              {/* Staff info + logout */}
+              {staff?.email && (
+                <div className="hidden md:flex items-center gap-2 text-xs text-slate-300">
+                  <span className="font-mono">{staff.email}</span>
+                  {onLogout && (
+                    <button
+                      onClick={onLogout}
+                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition"
+                      title="Logout"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -198,6 +234,19 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Smartphone className="w-4 h-4" />
               <span>Phone Simulator</span>
+            </button>
+
+            <button
+              id="tab-resident-login"
+              onClick={() => setActiveTab('resident-login')}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
+                activeTab === 'resident-login'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <Smartphone className="w-4 h-4" />
+              <span>Resident login</span>
             </button>
 
             <button
@@ -262,6 +311,17 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-[11px] font-extrabold uppercase">Senior View</span>
           </div>
           <span className="text-[9px] font-semibold text-emerald-100">Yes/No Buttons</span>
+        </button>
+
+        {/* Tab: Resident login */}
+        <button
+          onClick={() => setActiveTab('resident-login')}
+          className={`flex flex-col items-center gap-1 py-1 px-2 rounded-xl transition ${
+            activeTab === 'resident-login' ? 'text-emerald-400 font-bold' : 'hover:text-slate-200'
+          }`}
+        >
+          <Smartphone className="w-5 h-5" />
+          <span className="text-[10px] tracking-tight">Resident login</span>
         </button>
 
         {/* Tab: Phone Simulator */}

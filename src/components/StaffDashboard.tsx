@@ -23,7 +23,8 @@ import {
   ExternalLink,
   Link2,
   Smartphone,
-  BookOpen
+  BookOpen,
+  UserCog
 } from 'lucide-react';
 import { Resident, CareHome, CheckInStatus } from '../types';
 
@@ -39,6 +40,8 @@ interface StaffDashboardProps {
   onOpenCutoffModal: () => void;
   onOpenSeniorWebsite?: (residentId?: string) => void;
   onOpenGuideModal?: () => void;
+  staff?: any;
+  onOpenStaffManagement?: () => void;
 }
 
 export const StaffDashboard: React.FC<StaffDashboardProps> = ({
@@ -53,6 +56,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   onOpenCutoffModal,
   onOpenSeniorWebsite,
   onOpenGuideModal,
+  staff,
+  onOpenStaffManagement,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'action' | 'ok' | 'awaiting'>('all');
@@ -284,6 +289,15 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 <FileDown className="w-3.5 h-3.5" />
                 <span>Report</span>
               </button>
+              {onOpenStaffManagement && (
+                <button
+                  onClick={onOpenStaffManagement}
+                  className="px-3 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition flex items-center gap-1.5"
+                >
+                  <UserCog className="w-3.5 h-3.5" />
+                  <span>Staff</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
