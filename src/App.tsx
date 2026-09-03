@@ -13,16 +13,13 @@ import { HomeWeeklyOverview } from './components/HomeWeeklyOverview';
 import { CutoffModal } from './components/CutoffModal';
 import { Logo } from './components/Logo';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
+
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
 import { api, DatabaseStatus } from './services/api';
 import { onStaffAuthChange, staffLogin, staffLogout, markLoggingOut } from './services/staffAuth';
 
-type ViewMode = 'admin' | 'resident';
-
 export default function App() {
-  const [viewMode, setViewMode] = useState<ViewMode>('admin');
-  const [residentUser, setResidentUser] = useState<Resident | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [staff, setStaff] = useState<any>(null);
   const [staffLoading, setStaffLoading] = useState<boolean>(true);
@@ -38,8 +35,11 @@ export default function App() {
   const [isHomeMgmtOpen, setIsHomeMgmtOpen] = useState<boolean>(false);
   const [isDbVerifyOpen, setIsDbVerifyOpen] = useState<boolean>(false);
   const [selectedGlobalHomeId, setSelectedGlobalHomeId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'admin' | 'resident'>('admin');
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
+  const [residentUser, setResidentUser] = useState<Resident | null>(null);
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
 
   const logout = async () => {
     try { markLoggingOut(); await staffLogout(); } catch {}
@@ -49,7 +49,17 @@ export default function App() {
     setResidents([]);
     setHomes(INITIAL_HOMES);
     setStaffLoading(true);
+    setViewMode('admin');
+    setResidentUser(null);
   };
+
+  useEffect(() => {
+    if ('serviceWorker' in window) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  }, []);
 
   useEffect(() => {
     return onStaffAuthChange((s) => {
@@ -178,6 +188,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      <link rel="manifest" href="/manifest.webmanifest" />
+      <meta name="theme-color" content="#0f766e" />
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -277,12 +289,32 @@ export default function App() {
         {!showLogin && activeTab === 'senior-checkin' && viewMode === 'resident' && residentUser && (
           <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
             <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-              <div className="text-center mb-6">
+              <div className="text-center mb-5">
                 <Logo className="w-12 h-12 mx-auto mb-2" />
                 <h1 className="text-xl font-black">Morning Check-In</h1>
                 <p className="text-xs text-slate-400 mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
                 <p className="text-[11px] text-slate-500 mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
+                {!residentUser.deviceLinked && (
+                  <p className="text-[11px] text-amber-300 mt-2">Device verification pending...</p>
+                )}
               </div>
+
+              {installPrompt && (
+                <button
+                  onClick={async () => {
+                    installPrompt.prompt();
+                    const result = await installPrompt.userChoice;
+                    if (result.outcome === 'accepted') {
+                      try { localStorage.setItem('elderwatch_pwa_installed', 'true'); } catch {}
+                    }
+                    setInstallPrompt(null);
+                  }}
+                  className="w-full rounded-xl bg-white/10 border border-white/20 py-2 text-xs font-semibold mb-4"
+                >
+                  Install Daily Check-In
+                </button>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <button
                   id="resident-ok-button"
@@ -328,6 +360,16 @@ export default function App() {
                   Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               )}
+              <button
+                onClick={() => {
+                  if (navigator.canShare && window.location.href) {
+                    navigator.share({ title: 'ElderWatch Check-In', url: window.location.href });
+                  }
+                }}
+                className="mt-4 text-[11px] text-slate-400 underline w-full text-center"
+              >
+                Share this link
+              </button>
             </div>
           </div>
         )}
