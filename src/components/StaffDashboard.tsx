@@ -1065,7 +1065,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     <option key="willow" value="Willow Cottage">Willow Cottage</option>
                     <option key="rose" value="Rose Wing">Rose Wing</option>
                     <option key="garden" value="Garden Suites">Garden Suites</option>
-                    <option key="cedar" value="Cedar House">Cedar House</option>
+                    <option key="cedar" value="Cedar Home">Cedar Home</option>
                   </select>
                 </div>
                 <div>

@@ -27,7 +27,7 @@ export const Logo: React.FC<LogoProps> = ({ className = 'w-8 h-8', size }) => {
         fill="#0c6970"
       />
 
-      {/* House Frame */}
+      {/* Home Frame */}
       <path 
         d="M256 36L48 214C37 223.4 43.6 242 58 242H88V434C88 456.09 105.91 474 128 474H384C406.09 474 424 456.09 424 434V242H454C468.4 242 475 223.4 464 214L256 36Z" 
         fill="#0c6970" 

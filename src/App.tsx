@@ -5,6 +5,7 @@ import { SeniorCheckInWebsite } from './components/SeniorCheckInWebsite';
 import { WorkflowGuideModal } from './components/WorkflowGuideModal';
 import { StaffLogin } from './components/StaffLogin';
 import { StaffManagement } from './components/StaffManagement';
+import { CutoffModal } from './components/CutoffModal';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
 import { api, DatabaseStatus } from './services/api';
@@ -205,19 +206,11 @@ export default function App() {
             initialResident={residents.find((r) => r.id === activeResidentId)}
             allResidents={residents}
             onCheckInStatus={handleCheckIn}
-            onReturnToAdmin={() => setActiveTab('dashboard')}
           />
         )}
       </main>
 
       {/* Modals */}
-      {isSimModalOpen && (
-        <SimulationModal
-          onClose={() => setIsSimModalOpen(false)}
-          residents={residents}
-          onSimulate={(updated) => setResidents(updated)}
-        />
-      )}
       {isCutoffModalOpen && (
         <CutoffModal
           isOpen={isCutoffModalOpen}
