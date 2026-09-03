@@ -22,7 +22,8 @@ import {
   Copy,
   ExternalLink,
   Link2,
-  Smartphone
+  Smartphone,
+  BookOpen
 } from 'lucide-react';
 import { Resident, CareHome, CheckInStatus } from '../types';
 
@@ -37,6 +38,7 @@ interface StaffDashboardProps {
   onSelectResidentForPhone: (id: string) => void;
   onOpenCutoffModal: () => void;
   onOpenSeniorWebsite?: (residentId?: string) => void;
+  onOpenGuideModal?: () => void;
 }
 
 export const StaffDashboard: React.FC<StaffDashboardProps> = ({
@@ -50,6 +52,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   onSelectResidentForPhone,
   onOpenCutoffModal,
   onOpenSeniorWebsite,
+  onOpenGuideModal,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'action' | 'ok' | 'awaiting'>('all');
@@ -254,7 +257,18 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
             <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {onOpenGuideModal && (
+                <button
+                  id="open-guide-btn"
+                  onClick={onOpenGuideModal}
+                  className="px-3 py-2 rounded-xl text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition flex items-center gap-1.5 shadow-xs"
+                  title="View complete Workflow and Link guide"
+                >
+                  <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Workflow & Link Guide</span>
+                </button>
+              )}
               <button
                 id="edit-cutoff-btn"
                 onClick={onOpenCutoffModal}
@@ -268,7 +282,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1.5 shadow-sm"
               >
                 <FileDown className="w-3.5 h-3.5" />
-                <span>Morning Report</span>
+                <span>Report</span>
               </button>
             </div>
           </div>
@@ -276,7 +290,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       </div>
 
       {/* Triage Metrics Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         
         {/* Total */}
         <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">

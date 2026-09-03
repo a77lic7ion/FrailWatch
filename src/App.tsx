@@ -8,6 +8,7 @@ import { SimulationModal } from './components/SimulationModal';
 import { CutoffModal } from './components/CutoffModal';
 import { DatabaseModal } from './components/DatabaseModal';
 import { SeniorCheckInWebsite } from './components/SeniorCheckInWebsite';
+import { WorkflowGuideModal } from './components/WorkflowGuideModal';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
 import { api, DatabaseStatus } from './services/api';
@@ -22,6 +23,7 @@ export default function App() {
   const [isSimModalOpen, setIsSimModalOpen] = useState<boolean>(false);
   const [isCutoffModalOpen, setIsCutoffModalOpen] = useState<boolean>(false);
   const [isDbModalOpen, setIsDbModalOpen] = useState<boolean>(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState<boolean>(false);
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
 
@@ -232,11 +234,12 @@ export default function App() {
         onOpenSimModal={() => setIsSimModalOpen(true)}
         onResetData={handleResetMorning}
         onOpenDbModal={() => setIsDbModalOpen(true)}
+        onOpenGuideModal={() => setIsGuideModalOpen(true)}
         isDbConnected={dbStatus?.firebaseConnected}
       />
 
       {/* Main View Area */}
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-24 md:pb-16">
         {activeTab === 'dashboard' && (
           <StaffDashboard
             home={selectedHome}
@@ -252,6 +255,7 @@ export default function App() {
               if (residentId) setActiveResidentId(residentId);
               setActiveTab('senior-checkin');
             }}
+            onOpenGuideModal={() => setIsGuideModalOpen(true)}
           />
         )}
 
@@ -259,6 +263,7 @@ export default function App() {
           <SeniorCheckInWebsite
             initialResident={residents.find((r) => r.id === activeResidentId) || residents[0]}
             initialHome={selectedHome}
+            allResidents={residents}
             onCheckInStatus={handleCheckIn}
             onReturnToAdmin={() => setActiveTab('dashboard')}
           />
@@ -312,6 +317,18 @@ export default function App() {
         dbStatus={dbStatus}
         onRefresh={loadDbStatus}
         isRefreshing={isDbRefreshing}
+      />
+
+      {/* Workflow & Mobile System Guide Modal */}
+      <WorkflowGuideModal
+        isOpen={isGuideModalOpen}
+        onClose={() => setIsGuideModalOpen(false)}
+        home={selectedHome}
+        residents={residents}
+        onOpenSeniorScreen={(residentId) => {
+          if (residentId) setActiveResidentId(residentId);
+          setActiveTab('senior-checkin');
+        }}
       />
 
       {/* Bottom Subtle Status Footer */}

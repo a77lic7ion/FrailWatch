@@ -70,10 +70,10 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
       
       {/* Sub-navigation Switcher */}
       <div className="flex items-center justify-center">
-        <div className="bg-slate-200/80 p-1.5 rounded-2xl flex items-center gap-2 border border-slate-300/70 shadow-xs">
+        <div className="bg-slate-200/80 p-1.5 rounded-2xl flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 border border-slate-300/70 shadow-xs w-full sm:w-auto">
           <button
             onClick={() => setActiveSubTab('family')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
               activeSubTab === 'family'
                 ? 'bg-white text-slate-900 shadow-sm border border-slate-200'
                 : 'text-slate-600 hover:text-slate-900'
@@ -85,14 +85,14 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
 
           <button
             onClick={() => setActiveSubTab('4tify')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
               activeSubTab === '4tify'
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Shield className="w-4 h-4 text-emerald-400" />
-            <span>4TIFY Security & Care Provider Hub</span>
+            <span>4TIFY Care Provider Hub</span>
           </button>
         </div>
       </div>

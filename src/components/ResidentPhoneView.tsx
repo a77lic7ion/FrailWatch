@@ -208,9 +208,9 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
           ? 'fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md p-2 sm:p-6 overflow-y-auto' 
           : 'relative'
       }`}>
-        <div className={`w-full max-w-[420px] rounded-[44px] p-3 transition-all duration-300 ${
-          isHighContrast ? 'bg-black border-4 border-slate-700' : 'bg-slate-900 border-[10px] border-slate-800 shadow-2xl'
-        } relative flex flex-col min-h-[720px] max-h-[860px]`}>
+        <div className={`w-full max-w-[420px] rounded-3xl sm:rounded-[44px] p-2 sm:p-3 transition-all duration-300 ${
+          isHighContrast ? 'bg-black border-2 sm:border-4 border-slate-700' : 'bg-slate-900 border-4 sm:border-[10px] border-slate-800 shadow-2xl'
+        } relative flex flex-col min-h-[660px] sm:min-h-[720px] max-h-[880px]`}>
           
           {/* Close button in fullscreen */}
           {isFullScreen && (
