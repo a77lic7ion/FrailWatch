@@ -9,7 +9,6 @@ import { HomeManagement } from './components/HomeManagement';
 import { DbVerificationModal } from './components/DbVerificationModal';
 import { GlobalAdminHomeSelector } from './components/GlobalAdminHomeSelector';
 import { GlobalAdminResidentList } from './components/GlobalAdminResidentList';
-import { SplashScreen } from './components/SplashScreen';
 import { CutoffModal } from './components/CutoffModal';
 import { Logo } from './components/Logo';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
@@ -39,7 +38,6 @@ export default function App() {
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
   const [residentUser, setResidentUser] = useState<Resident | null>(null);
-  const [showSplash, setShowSplash] = useState<boolean>(true);
 
   const isResidentLink = typeof window !== 'undefined' && (() => {
     const p = new URLSearchParams(window.location.search);
@@ -53,7 +51,6 @@ export default function App() {
       const residentId = params.get('residentId') || params.get('id');
       if (token || residentId || params.get('mode') === 'checkin') {
         setActiveTab('senior-checkin');
-        setShowSplash(false);
         const lookup = token || residentId;
         if (lookup) {
           api.getResidentProfile(lookup).then((profile) => {
@@ -82,7 +79,6 @@ export default function App() {
     setStaffLoading(true);
     setViewMode('admin');
     setResidentUser(null);
-    setShowSplash(true);
   };
 
   useEffect(() => {
@@ -297,11 +293,7 @@ export default function App() {
           </div>
         )}
 
-        {!isResidentLink && showLogin && showSplash && (
-          <SplashScreen onContinue={() => setShowSplash(false)} />
-        )}
-
-        {!isResidentLink && showLogin && !showSplash && (
+        {showLogin && (
           <StaffLogin
             loading={staffLoading}
             error={loginError}
