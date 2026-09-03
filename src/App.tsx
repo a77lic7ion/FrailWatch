@@ -195,7 +195,10 @@ export default function App() {
             residents={visibleResidents}
             onBack={() => setSelectedGlobalHomeId(null)}
             onEditStaff={() => setIsStaffMgmtOpen(true)}
-            onEditResidents={() => setActiveTab('dashboard')}
+            onEditResidents={() => {
+              setSelectedHomeId(selectedGlobalHomeId);
+              setActiveTab('dashboard');
+            }}
           />
         )}
 
