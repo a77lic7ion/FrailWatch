@@ -193,20 +193,7 @@ export default function App() {
           />
         )}
 
-        {!showLogin && isGlobal && selectedGlobalHomeId && (
-          <HomeWeeklyOverview
-            home={selectedHome}
-            residents={visibleResidents}
-            onBack={() => setSelectedGlobalHomeId(null)}
-            onEditStaff={() => setIsStaffMgmtOpen(true)}
-            onEditResidents={() => {
-              setSelectedHomeId(selectedGlobalHomeId);
-              setActiveTab('dashboard');
-            }}
-          />
-        )}
-
-        {!showLogin && activeTab === 'dashboard' && (!isGlobal || selectedGlobalHomeId) && (
+        {!showLogin && isGlobal && selectedGlobalHomeId && activeTab === 'dashboard' && (
           <StaffDashboard
             home={selectedHome || {
               id: 'home-benoni-01',
