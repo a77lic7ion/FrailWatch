@@ -8,6 +8,7 @@ import { StaffManagement } from './components/StaffManagement';
 import { HomeManagement } from './components/HomeManagement';
 import { DbVerificationModal } from './components/DbVerificationModal';
 import { GlobalAdminHomeSelector } from './components/GlobalAdminHomeSelector';
+import { GlobalAdminResidentList } from './components/GlobalAdminResidentList';
 import { HomeWeeklyOverview } from './components/HomeWeeklyOverview';
 import { CutoffModal } from './components/CutoffModal';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
@@ -194,7 +195,7 @@ export default function App() {
         )}
 
         {!showLogin && isGlobal && selectedGlobalHomeId && activeTab === 'dashboard' && (
-          <StaffDashboard
+          <GlobalAdminResidentList
             home={selectedHome || {
               id: 'home-benoni-01',
               name: 'Default Home',
@@ -204,23 +205,9 @@ export default function App() {
               primaryNurse: '',
               providerPartner: '',
             }}
-            allHomes={effectiveHomes}
-            residents={isGlobal && selectedGlobalHomeId ? residents.filter((r) => r.homeId === selectedGlobalHomeId) : visibleResidents}
-            currentTimeStr={currentTimeStr}
-            onUpdateResidentStatus={handleCheckIn}
-            onAddResident={async (payload) => {
-              await api.addResident(payload);
-              await loadDbStatus();
-            }}
-            onUpdateResident={async () => {}}
-            onOpenCutoffModal={() => setIsCutoffModalOpen(true)}
-            onOpenSeniorWebsite={(residentId) => {
-              if (residentId) setActiveResidentId(residentId);
-              setActiveTab('senior-checkin');
-            }}
-            onOpenGuideModal={() => setIsGuideModalOpen(true)}
-            staff={staff}
-            onOpenStaffManagement={isGlobal ? () => setIsStaffMgmtOpen(true) : undefined}
+            residents={residents}
+            onBack={() => setSelectedGlobalHomeId(null)}
+            onOpenStaffManagement={() => setIsStaffMgmtOpen(true)}
           />
         )}
 
