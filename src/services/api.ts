@@ -1,4 +1,5 @@
-import { getAuth } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from '../firebase';
 import { db } from '../firebase';
 import { 
   collection, 
@@ -11,10 +12,6 @@ import {
   where, 
   doc as firestoreDoc 
 } from 'firebase/firestore';
-import { 
-  createUserWithEmailAndPassword, 
-  updateProfile 
-} from 'firebase/auth';
 
 export interface DatabaseStatus {
   status: string;
@@ -188,9 +185,56 @@ export const api = {
 
   async createStaff(payload: { email: string; password: string; name?: string; role?: string; homeId?: string }): Promise<any> {
     try {
-      const cred = await createUserWithEmailAndPassword(getAuth(), payload.email, payload.password);
+      // If a staff record for this email already exists, reuse it
+      const existingStaffQuery = query(collection(db, 'staff'), where('email', '==', payload.email));
+      const existingStaffSnap = await getDocs(existingStaffQuery);
+      if (!existingStaffSnap.empty) {
+        const existing = existingStaffSnap.docs[0];
+        const data = existing.data();
+        // Ensure the Firebase Auth user exists and matches this staff doc
+        try {
+          await signInWithEmailAndPassword(getAuth(app), payload.email, payload.password);
+        } catch (authErr: any) {
+          const code = authErr?.code || '';
+          if (code.includes('user-not-found') || code.includes('wrong-password') || code.includes('too-many-requests')) {
+            // Auth user missing or password wrong; create it if possible
+            try {
+              const cred = await createUserWithEmailAndPassword(getAuth(app), payload.email, payload.password);
+              await updateProfile(cred.user, { displayName: payload.name || data.name || '' });
+              await setDoc(firestoreDoc(db, existing.id), {
+                ...data,
+                email: payload.email,
+                name: payload.name || data.name || '',
+                role: payload.role || data.role || 'home_admin',
+                homeId: payload.homeId || data.homeId || '',
+                uid: cred.user.uid,
+              });
+              return { uid: cred.user.uid, ...payload };
+            } catch (createErr: any) {
+              // If email already exists in Auth but not linked to this staff doc, we have an orphan
+              if (createErr?.message?.includes('already in use')) {
+                throw new Error('This email exists in Firebase Auth but has no staff record. Please contact an admin to clean up Firebase Authentication users.');
+              }
+              throw createErr;
+            }
+          }
+          throw authErr;
+        }
+        // Auth user exists and password works; ensure staff doc is up to date
+        await setDoc(firestoreDoc(db, existing.id), {
+          ...data,
+          email: payload.email,
+          name: payload.name || data.name || '',
+          role: payload.role || data.role || 'home_admin',
+          homeId: payload.homeId || data.homeId || '',
+        });
+        return { uid: existing.id, ...payload };
+      }
+
+      // No existing staff doc; create fresh
+      const cred = await createUserWithEmailAndPassword(getAuth(app), payload.email, payload.password);
       await updateProfile(cred.user, { displayName: payload.name || '' });
-      await setDoc(firestoreDoc(db, 'staff', cred.user.uid), {
+      await setDoc(firestoreDoc(db, cred.user.uid), {
         email: payload.email,
         name: payload.name || '',
         role: payload.role || 'home_admin',
@@ -198,6 +242,7 @@ export const api = {
       });
       return { uid: cred.user.uid, ...payload };
     } catch (e: any) {
+      console.error('createStaff failed:', e);
       throw new Error(e?.message || 'Failed to create staff');
     }
   },
