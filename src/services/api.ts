@@ -113,7 +113,7 @@ export const api = {
 
   async getResidentProfile(idOrToken: string): Promise<{ resident?: any; home?: any } | null> {
     try {
-      const res = await fetch(apiUrl(`/api/resident/${encodeURIComponent(idOrToken)}`);
+      const res = await fetch(apiUrl(`/api/resident/${encodeURIComponent(idOrToken)}`), {});
       if (!res.ok) return null;
       return await res.json();
     } catch (e) {
@@ -124,7 +124,7 @@ export const api = {
 
   async updateResident(id: string, updates: any): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`, {
+      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(updates),
@@ -138,7 +138,7 @@ export const api = {
 
   async deleteResident(id: string): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`, {
+      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`), {
         method: 'DELETE',
         headers: { ...(await getAuthHeaders()) },
       });
@@ -223,7 +223,7 @@ export const api = {
 
   async updateStaff(uid: string, updates: any): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`, {
+      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(updates),
@@ -237,7 +237,7 @@ export const api = {
 
   async deleteStaff(uid: string): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`, {
+      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`), {
         method: 'DELETE',
         headers: { ...(await getAuthHeaders()) },
       });

@@ -3,6 +3,7 @@
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "http://100.73.5.111:8260/api/$1" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
