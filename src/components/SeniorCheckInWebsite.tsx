@@ -36,13 +36,18 @@ export function SeniorCheckInWebsite({
 
     const run = async () => {
       if (token || residentId) {
-        const res = await api.verifyDevice(token || undefined, residentId || undefined);
-        if (res.success && res.resident) {
-          setResident(res.resident);
-          try {
-            localStorage.setItem('elderwatch_linked_resident_id', res.resident.id);
-            if (token) localStorage.setItem('elderwatch_linked_token', token);
-          } catch {}
+        const res = await api.verifyResident(token || undefined);
+        if (res) {
+          if (token) {
+            const profile = await api.getResidentProfile(token);
+            if (profile?.resident) {
+              setResident(profile.resident);
+              try {
+                localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
+                localStorage.setItem('elderwatch_linked_token', token);
+              } catch {}
+            }
+          }
           const cleanUrl = window.location.pathname;
           window.history.replaceState({}, '', cleanUrl);
           return;

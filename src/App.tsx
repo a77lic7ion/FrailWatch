@@ -11,12 +11,18 @@ import { GlobalAdminHomeSelector } from './components/GlobalAdminHomeSelector';
 import { GlobalAdminResidentList } from './components/GlobalAdminResidentList';
 import { HomeWeeklyOverview } from './components/HomeWeeklyOverview';
 import { CutoffModal } from './components/CutoffModal';
+import { Logo } from './components/Logo';
+import { CheckCircle2, AlertTriangle } from 'lucide-react';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
 import { api, DatabaseStatus } from './services/api';
 import { onStaffAuthChange, staffLogin, staffLogout, markLoggingOut } from './services/staffAuth';
 
+type ViewMode = 'admin' | 'resident';
+
 export default function App() {
+  const [viewMode, setViewMode] = useState<ViewMode>('admin');
+  const [residentUser, setResidentUser] = useState<Resident | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [staff, setStaff] = useState<any>(null);
   const [staffLoading, setStaffLoading] = useState<boolean>(true);
@@ -70,8 +76,24 @@ export default function App() {
       localStorage.removeItem('elderwatch_custom_firebase_config');
     } catch {}
     const params = new URLSearchParams(window.location.search);
-    if (params.get('verify') || params.get('token') || params.get('residentId') || params.get('mode') === 'checkin') {
+    const token = params.get('verify') || params.get('token');
+    const residentId = params.get('residentId') || params.get('id');
+    if (token || residentId || params.get('mode') === 'checkin') {
       setActiveTab('senior-checkin');
+      const lookup = token || residentId;
+      if (lookup) {
+        api.getResidentProfile(lookup).then((profile) => {
+          if (profile?.resident) {
+            api.verifyResident(lookup);
+            setResidentUser(profile.resident);
+            setViewMode('resident');
+            try {
+              localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
+              if (token) localStorage.setItem('elderwatch_linked_token', token);
+            } catch {}
+          }
+        }).catch(() => {});
+      }
     }
   }, []);
 
@@ -252,7 +274,65 @@ export default function App() {
           />
         )}
 
-        {!showLogin && activeTab === 'senior-checkin' && (
+        {!showLogin && activeTab === 'senior-checkin' && viewMode === 'resident' && residentUser && (
+          <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
+            <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+              <div className="text-center mb-6">
+                <Logo className="w-12 h-12 mx-auto mb-2" />
+                <h1 className="text-xl font-black">Morning Check-In</h1>
+                <p className="text-xs text-slate-400 mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
+                <p className="text-[11px] text-slate-500 mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  id="resident-ok-button"
+                  type="button"
+                  onClick={async () => {
+                    const timeFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    setResidentUser({ ...residentUser, status: 'ok', checkInTime: timeFormatted } as any);
+                    await api.recordCheckIn(residentUser.id, 'ok', timeFormatted);
+                  }}
+                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
+                    residentUser.status === 'ok'
+                      ? 'bg-emerald-600 border-emerald-300 ring-4 ring-emerald-500/50'
+                      : 'bg-emerald-600 hover:bg-emerald-500 border-emerald-400'
+                  }`}
+                >
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <CheckCircle2 className="w-16 h-16" />
+                    <span>I AM OK</span>
+                  </div>
+                </button>
+                <button
+                  id="resident-help-button"
+                  type="button"
+                  onClick={async () => {
+                    const timeFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    setResidentUser({ ...residentUser, status: 'not_ok', checkInTime: timeFormatted } as any);
+                    await api.recordCheckIn(residentUser.id, 'not_ok', timeFormatted);
+                  }}
+                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
+                    residentUser.status === 'not_ok'
+                      ? 'bg-rose-700 border-rose-400 ring-4 ring-rose-500/50'
+                      : 'bg-rose-600 hover:bg-rose-500 border-rose-400'
+                  }`}
+                >
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <AlertTriangle className="w-16 h-16" />
+                    <span>I NEED HELP</span>
+                  </div>
+                </button>
+              </div>
+              {residentUser.status && (
+                <p className="text-center text-xs text-slate-400 mt-4">
+                  Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {!showLogin && activeTab === 'senior-checkin' && viewMode !== 'resident' && (
           <SeniorCheckInWebsite
             initialResident={residents.find((r) => r.id === activeResidentId)}
             allResidents={residents}
