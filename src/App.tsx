@@ -75,7 +75,16 @@ export default function App() {
     );
   }
 
-  // Check URL parameters for direct verification / senior check-in link
+  const isGlobal = staff.role === 'superadmin' || staff.homeId === '*';
+  const effectiveHomes = isGlobal ? homes : homes.filter((h) => h.id === staff.homeId);
+  const effectiveSelectedHomeId = isGlobal ? selectedHomeId : (effectiveHomes[0]?.id || selectedHomeId);
+
+  useEffect(() => {
+    if (!isGlobal) {
+      setSelectedHomeId(effectiveSelectedHomeId);
+    }
+  }, [isGlobal, effectiveSelectedHomeId]);
+
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -83,11 +92,10 @@ export default function App() {
         setActiveTab('senior-checkin');
       }
     } catch {
-      // Ignore URL parsing errors
+      // ignore
     }
   }, []);
 
-  // Load database status and sync initial data
   const loadDbStatus = useCallback(async () => {
     setIsDbRefreshing(true);
     try {
@@ -103,7 +111,7 @@ export default function App() {
             : [
                 { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
                 { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
-                { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
+                { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:12 AM' },
                 { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
                 { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
                 { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
@@ -133,46 +141,35 @@ export default function App() {
     loadDbStatus();
   }, [loadDbStatus]);
 
-  // Selected home object
-  const selectedHome = homes.find((h) => h.id === selectedHomeId) || homes[0];
-
-  // Live urgent counters
-  const urgentCount = residents.filter((r) => r.status === 'not_ok').length;
-  const overdueCount = residents.filter((r) => r.status === 'overdue').length;
+  const selectedHome = effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || effectiveHomes[0];
+  const visibleResidents = isGlobal ? residents : residents.filter((r) => r.homeId === staff.homeId);
+  const urgentCount = visibleResidents.filter((r) => r.status === 'not_ok').length;
+  const overdueCount = visibleResidents.filter((r) => r.status === 'overdue').length;
 
   const handleCheckIn = (residentId: string, status: CheckInStatus) => {
     const timeFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     setResidents((prev) =>
       prev.map((r) => {
         if (r.id !== residentId) return r;
-        
         const currentHistory = Array.isArray(r.sevenDayHistory) && r.sevenDayHistory.length > 0
           ? [...r.sevenDayHistory]
           : [
               { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
               { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
-              { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
+              { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:12 AM' },
               { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
               { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
               { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
               { date: '2026-09-03', day: 'Today', status: 'awaiting' },
             ];
-        
         currentHistory[currentHistory.length - 1] = {
           ...currentHistory[currentHistory.length - 1],
           status,
           time: status === 'awaiting' ? undefined : timeFormatted,
         };
-
-        return {
-          ...r,
-          status,
-          checkInTime: timeFormatted,
-          sevenDayHistory: currentHistory,
-        };
+        return { ...r, status, checkInTime: timeFormatted, sevenDayHistory: currentHistory };
       })
     );
-
     api.recordCheckIn(residentId, status);
   };
 
@@ -184,14 +181,15 @@ export default function App() {
         dbStatus={dbStatus}
         staff={staff}
         onLogout={logout}
+        onOpenStaffManagement={isGlobal ? () => setIsStaffMgmtOpen(true) : undefined}
       />
 
       <main className="flex-1">
         {activeTab === 'dashboard' && (
           <StaffDashboard
             home={selectedHome}
-            allHomes={homes}
-            residents={residents}
+            allHomes={effectiveHomes}
+            residents={visibleResidents}
             currentTimeStr={currentTimeStr}
             onUpdateResidentStatus={handleCheckIn}
             onAddResident={async (payload) => {
@@ -210,7 +208,7 @@ export default function App() {
             }}
             onOpenGuideModal={() => setIsGuideModalOpen(true)}
             staff={staff}
-            onOpenStaffManagement={() => setIsStaffMgmtOpen(true)}
+            onOpenStaffManagement={isGlobal ? () => setIsStaffMgmtOpen(true) : undefined}
           />
         )}
 
