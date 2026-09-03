@@ -206,7 +206,7 @@ export default function App() {
           />
         )}
 
-        {!showLogin && activeTab === 'dashboard' && (
+        {!showLogin && activeTab === 'dashboard' && (!isGlobal || selectedGlobalHomeId) && (
           <StaffDashboard
             home={selectedHome || {
               id: 'home-benoni-01',

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Plus, Building2, X, Pencil, Trash2, Users } from 'lucide-react';
-import { getAuthHeaders } from '../services/api';
 import { api } from '../services/api';
 
 interface HomeManagementProps {
@@ -44,12 +43,8 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
   const loadHomes = async () => {
     setLoading(true);
     try {
-      const headers = await getAuthHeaders();
-      const res = await fetch('/api/homes', { headers });
-      if (res.ok) {
-        const data = await res.json();
-        setHomes(data.homes || []);
-      }
+      const list = await api.getHomes();
+      setHomes(list || []);
     } catch (e: any) {
       setError(e.message || 'Failed to load homes');
     } finally {
