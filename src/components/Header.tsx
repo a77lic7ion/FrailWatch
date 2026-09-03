@@ -33,6 +33,8 @@ interface HeaderProps {
   staff?: any;
   onLogout?: () => void;
   onOpenStaffManagement?: () => void;
+  onOpenHomeManagement?: () => void;
+  onOpenDbVerify?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -48,10 +50,12 @@ export const Header: React.FC<HeaderProps> = ({
   onResetData,
   onOpenDbModal,
   onOpenGuideModal,
-  isDbConnected = true,
+  isDbConnected,
   staff,
   onLogout,
   onOpenStaffManagement,
+  onOpenHomeManagement,
+  onOpenDbVerify,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const attentionCount = urgentCount + overdueCount;
@@ -153,6 +157,18 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                   <UserCog className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Staff</span>
+                </button>
+              )}
+
+              {/* Home Management Button */}
+              {onOpenHomeManagement && (
+                <button
+                  onClick={onOpenHomeManagement}
+                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition"
+                  title="Manage homes"
+                >
+                  <Building2 className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Homes</span>
                 </button>
               )}
 

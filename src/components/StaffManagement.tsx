@@ -32,6 +32,8 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
   const [success, setSuccess] = useState<string | null>(null);
   const [editingStaff, setEditingStaff] = useState<StaffMember | null>(null);
 
+  const isCreatingGlobalAdmin = role === 'superadmin';
+
   const canGlobalManage = staff.role === 'superadmin' || staff.homeId === '*';
 
   const loadStaff = async () => {
@@ -157,11 +159,13 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                   <option value="superadmin">Global Admin</option>
                   <option value="home_admin">Home Admin</option>
                 </select>
-                <select className="border rounded-lg p-2" value={homeId} onChange={(e) => setHomeId(e.target.value)}>
-                  {homes.map((h) => (
-                    <option key={h.id} value={h.id}>{h.name}</option>
-                  ))}
-                </select>
+                {!isCreatingGlobalAdmin && (
+                  <select className="border rounded-lg p-2" value={homeId} onChange={(e) => setHomeId(e.target.value)}>
+                    {homes.map((h) => (
+                      <option key={h.id} value={h.id}>{h.name}</option>
+                    ))}
+                  </select>
+                )}
               </div>
               <button disabled={saving} className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-60">
                 {saving ? 'Creating...' : 'Create'}

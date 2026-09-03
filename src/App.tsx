@@ -5,6 +5,8 @@ import { SeniorCheckInWebsite } from './components/SeniorCheckInWebsite';
 import { WorkflowGuideModal } from './components/WorkflowGuideModal';
 import { StaffLogin } from './components/StaffLogin';
 import { StaffManagement } from './components/StaffManagement';
+import { HomeManagement } from './components/HomeManagement';
+import { DbVerificationModal } from './components/DbVerificationModal';
 import { CutoffModal } from './components/CutoffModal';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
@@ -24,6 +26,8 @@ export default function App() {
   const [isCutoffModalOpen, setIsCutoffModalOpen] = useState<boolean>(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState<boolean>(false);
   const [isStaffMgmtOpen, setIsStaffMgmtOpen] = useState<boolean>(false);
+  const [isHomeMgmtOpen, setIsHomeMgmtOpen] = useState<boolean>(false);
+  const [isDbVerifyOpen, setIsDbVerifyOpen] = useState<boolean>(false);
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
 
@@ -151,6 +155,8 @@ export default function App() {
         staff={staff}
         onLogout={logout}
         onOpenStaffManagement={isGlobal ? () => setIsStaffMgmtOpen(true) : undefined}
+        onOpenHomeManagement={isGlobal ? () => setIsHomeMgmtOpen(true) : undefined}
+        onOpenDbVerify={isGlobal ? () => setIsDbVerifyOpen(true) : undefined}
       />
 
       <main className="flex-1">
@@ -239,6 +245,20 @@ export default function App() {
           onClose={() => setIsStaffMgmtOpen(false)}
           staff={staff}
           onRefresh={loadDbStatus}
+        />
+      )}
+      {isHomeMgmtOpen && (
+        <HomeManagement
+          isOpen={isHomeMgmtOpen}
+          onClose={() => setIsHomeMgmtOpen(false)}
+          staff={staff}
+          onRefresh={loadDbStatus}
+        />
+      )}
+      {isDbVerifyOpen && (
+        <DbVerificationModal
+          isOpen={isDbVerifyOpen}
+          onClose={() => setIsDbVerifyOpen(false)}
         />
       )}
     </div>
