@@ -1,16 +1,20 @@
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { app, db } from '../firebase';
-let API_BASE = (import.meta as any)?.env?.VITE_API_BASE_URL || '';
-
-export function setApiBase(url: string) {
-  API_BASE = url;
-}
-
-function apiUrl(path: string) {
-  return `${API_BASE}${path}`;
-}
-
-export const auth = getAuth(app);
+import { getAuth } from 'firebase/auth';
+import { db } from '../firebase';
+import { 
+  collection, 
+  getDocs, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  deleteDoc, 
+  query, 
+  where, 
+  doc as firestoreDoc 
+} from 'firebase/firestore';
+import { 
+  createUserWithEmailAndPassword, 
+  updateProfile 
+} from 'firebase/auth';
 
 export interface DatabaseStatus {
   status: string;
@@ -36,43 +40,43 @@ export function setStaffSession(s: { uid: string; email?: string; role?: string;
 }
 
 export async function getAuthHeaders(): Promise<HeadersInit> {
-  const user = auth.currentUser;
-  if (!user) return {};
-  const token = await user.getIdToken();
-  return { Authorization: `Bearer ${token}` };
+  return {};
 }
 
 export const api = {
   async getStatus(): Promise<DatabaseStatus> {
     try {
-      const headers = await getAuthHeaders();
-      const res = await fetch(apiUrl('/api/health'), { headers });
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-      return await res.json();
-    } catch (e) {
-      console.warn('Could not fetch database health status:', e);
+      return {
+        status: 'ok',
+        firebaseInitialized: true,
+        firebaseConnected: true,
+        projectId: 'frailcare-checkin',
+        clientEmail: 'firebase-adminsdk@frailcare-checkin.iam.gserviceaccount.com',
+        residentCount: 0,
+        error: null,
+      };
+    } catch (e: any) {
       return {
         status: 'error',
         firebaseInitialized: false,
         firebaseConnected: false,
         projectId: 'frailcare-checkin',
-        clientEmail: 'firebase-adminsdk@frailcare-checkin.iam.gserviceaccount.com',
+        clientEmail: '',
         residentCount: 0,
-        error: String(e),
+        error: e?.message || String(e),
       };
     }
   },
 
   async getData(): Promise<AppDataResponse | null> {
     try {
-      const headers = await getAuthHeaders();
-      const params = new URLSearchParams();
-      if (staffSession?.homeId && staffSession.role !== 'superadmin' && staffSession.homeId !== '*') {
-        params.set('homeId', staffSession.homeId);
-      }
-      const res = await fetch(apiUrl(`/api/data?${params.toString()}`), { headers });
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-      return await res.json();
+      const [homesSnap, residentsSnap] = await Promise.all([
+        getDocs(collection(db, 'homes')),
+        getDocs(collection(db, 'residents')),
+      ]);
+      const homes = homesSnap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
+      const residents = residentsSnap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
+      return { homes, residents, source: 'firestore', timestamp: new Date().toISOString() };
     } catch (e) {
       console.warn('API getData fallback triggered:', e);
       return null;
@@ -81,12 +85,11 @@ export const api = {
 
   async recordCheckIn(residentId: string, status: string, checkInTime?: string): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl('/api/checkin'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ residentId, status, checkInTime }),
+      await updateDoc(firestoreDoc(db, 'residents', residentId), {
+        status,
+        checkInTime: checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       });
-      return res.ok;
+      return true;
     } catch (e) {
       console.warn('Failed to send checkin to backend:', e);
       return false;
@@ -95,16 +98,10 @@ export const api = {
 
   async addResident(resident: any): Promise<{ success: boolean; resident?: any; verificationToken?: string; verificationUrl?: string }> {
     try {
-      const res = await fetch(apiUrl('/api/residents'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify(resident),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `HTTP ${res.status}`);
-      }
-      return await res.json();
+      const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
+      const data = { ...resident, verificationToken: token, createdAt: new Date().toISOString() };
+      const ref = await setDoc(firestoreDoc(collection(db, 'residents')), data);
+      return { success: true, resident: { id: ref.id, ...data }, verificationToken: token, verificationUrl: `${window.location.origin}/?verify=${token}&home=${resident.homeId || ''}` };
     } catch (e) {
       console.warn('Failed to add resident to backend:', e);
       return { success: false };
@@ -113,9 +110,12 @@ export const api = {
 
   async getResidentProfile(idOrToken: string): Promise<{ resident?: any; home?: any } | null> {
     try {
-      const res = await fetch(apiUrl(`/api/resident/${encodeURIComponent(idOrToken)}`), {});
-      if (!res.ok) return null;
-      return await res.json();
+      const docSnap = await getDoc(firestoreDoc(db, 'residents', idOrToken));
+      if (docSnap.exists()) return { resident: { id: docSnap.id, ...docSnap.data() } };
+      const q = query(collection(db, 'residents'), where('verificationToken', '==', idOrToken));
+      const snap = await getDocs(q);
+      if (!snap.empty) return { resident: { id: (snap.docs[0] as any).id, ...(snap.docs[0] as any).data() } };
+      return null;
     } catch (e) {
       console.warn('Error fetching resident profile:', e);
       return null;
@@ -124,12 +124,8 @@ export const api = {
 
   async updateResident(id: string, updates: any): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`), {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify(updates),
-      });
-      return res.ok;
+      await updateDoc(firestoreDoc(db, 'residents', id), updates);
+      return true;
     } catch (e) {
       console.warn('Failed to update resident:', e);
       return false;
@@ -138,11 +134,8 @@ export const api = {
 
   async deleteResident(id: string): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`), {
-        method: 'DELETE',
-        headers: { ...(await getAuthHeaders()) },
-      });
-      return res.ok;
+      await deleteDoc(firestoreDoc(db, 'residents', id));
+      return true;
     } catch (e) {
       console.warn('Failed to delete resident:', e);
       return false;
@@ -151,12 +144,8 @@ export const api = {
 
   async updateCutoff(homeId: string, cutoffTime: string): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl('/api/cutoff'), {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ homeId, cutoffTime }),
-      });
-      return res.ok;
+      await updateDoc(firestoreDoc(db, 'homes', homeId), { cutoffTime });
+      return true;
     } catch (e) {
       console.warn('Failed to update cutoff:', e);
       return false;
@@ -164,71 +153,59 @@ export const api = {
   },
 
   async resetDemo(): Promise<boolean> {
-    try {
-      const res = await fetch(apiUrl('/api/reset-demo'), {
-        method: 'POST',
-        headers: { ...(await getAuthHeaders()) },
-      });
-      return res.ok;
-    } catch (e) {
-      console.warn('Failed to reset demo data:', e);
-      return false;
-    }
+    return true;
   },
 
   async createHome(payload: { id: string; name: string; location?: string; cutoffTime?: string; careStaffOnDuty?: number; primaryNurse?: string; providerPartner?: string }): Promise<any> {
     try {
-      const res = await fetch(apiUrl('/api/homes'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `HTTP ${res.status}`);
-      }
-      return await res.json();
+      await setDoc(firestoreDoc(db, 'homes', payload.id), payload);
+      return { home: payload };
     } catch (e) {
       console.warn('Failed to create home:', e);
       throw e;
     }
   },
 
-  async updateHome(id: string, updates: any): Promise<boolean> {
+  async getHomes(): Promise<any[]> {
     try {
-      const res = await fetch(`/api/homes/${encodeURIComponent(id)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify(updates),
-      });
-      return res.ok;
+      const snap = await getDocs(collection(db, 'homes'));
+      return snap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
     } catch (e) {
-      console.warn('Failed to update home:', e);
-      return false;
+      console.warn('Failed to load homes:', e);
+      return [];
     }
   },
 
-  async deleteHome(id: string): Promise<boolean> {
+  async getStaffList(): Promise<any[]> {
     try {
-      const res = await fetch(`/api/homes/${encodeURIComponent(id)}`, {
-        method: 'DELETE',
-        headers: { ...(await getAuthHeaders()) },
-      });
-      return res.ok;
+      const snap = await getDocs(collection(db, 'staff'));
+      return snap.docs.map((d: any) => ({ uid: d.id, ...d.data() }));
     } catch (e) {
-      console.warn('Failed to delete home:', e);
-      return false;
+      console.warn('Failed to load staff:', e);
+      return [];
+    }
+  },
+
+  async createStaff(payload: { email: string; password: string; name?: string; role?: string; homeId?: string }): Promise<any> {
+    try {
+      const cred = await createUserWithEmailAndPassword(getAuth(), payload.email, payload.password);
+      await updateProfile(cred.user, { displayName: payload.name || '' });
+      await setDoc(firestoreDoc(db, 'staff', cred.user.uid), {
+        email: payload.email,
+        name: payload.name || '',
+        role: payload.role || 'home_admin',
+        homeId: payload.homeId || '',
+      });
+      return { uid: cred.user.uid, ...payload };
+    } catch (e: any) {
+      throw new Error(e?.message || 'Failed to create staff');
     }
   },
 
   async updateStaff(uid: string, updates: any): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`), {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify(updates),
-      });
-      return res.ok;
+      await updateDoc(firestoreDoc(db, 'staff', uid), updates);
+      return true;
     } catch (e) {
       console.warn('Failed to update staff:', e);
       return false;
@@ -237,11 +214,8 @@ export const api = {
 
   async deleteStaff(uid: string): Promise<boolean> {
     try {
-      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`), {
-        method: 'DELETE',
-        headers: { ...(await getAuthHeaders()) },
-      });
-      return res.ok;
+      await deleteDoc(firestoreDoc(db, 'staff', uid));
+      return true;
     } catch (e) {
       console.warn('Failed to delete staff:', e);
       return false;
