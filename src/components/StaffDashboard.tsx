@@ -653,10 +653,20 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           <button
             id="add-resident-btn"
             onClick={() => setShowAddModal(true)}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm ml-auto"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm mr-2"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Resident</span>
+          </button>
+
+          {/* Create Home Button */}
+          <button
+            id="create-home-btn"
+            onClick={() => setShowCreateHomeModal(true)}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition flex items-center gap-1 shadow-sm"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Create Home</span>
           </button>
         </div>
 
