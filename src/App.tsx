@@ -39,6 +39,7 @@ export default function App() {
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
   const [residentUser, setResidentUser] = useState<Resident | null>(null);
+  const [showSplash, setShowSplash] = useState<boolean>(true);
 
   const logout = async () => {
     try { markLoggingOut(); await staffLogout(); } catch {}
@@ -205,7 +206,82 @@ export default function App() {
       />
 
       <main className="flex-1">
-        {showLogin && (
+        {viewMode === 'resident' && activeTab === 'senior-checkin' && residentUser && (
+          <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
+            <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+              <div className="text-center mb-5">
+                <Logo className="w-12 h-12 mx-auto mb-2" />
+                <h1 className="text-xl font-black">Morning Check-In</h1>
+                <p className="text-xs text-slate-400 mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
+                <p className="text-[11px] text-slate-500 mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  id="resident-ok-button"
+                  type="button"
+                  onClick={async () => {
+                    const timeFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    setResidentUser({ ...residentUser, status: 'ok', checkInTime: timeFormatted } as any);
+                    await api.recordCheckIn(residentUser.id, 'ok', timeFormatted);
+                  }}
+                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
+                    residentUser.status === 'ok'
+                      ? 'bg-emerald-600 border-emerald-300 ring-4 ring-emerald-500/50'
+                      : 'bg-emerald-600 hover:bg-emerald-500 border-emerald-400'
+                  }`}
+                >
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <CheckCircle2 className="w-16 h-16" />
+                    <span>I AM OK</span>
+                  </div>
+                </button>
+                <button
+                  id="resident-help-button"
+                  type="button"
+                  onClick={async () => {
+                    const timeFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    setResidentUser({ ...residentUser, status: 'not_ok', checkInTime: timeFormatted } as any);
+                    await api.recordCheckIn(residentUser.id, 'not_ok', timeFormatted);
+                  }}
+                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
+                    residentUser.status === 'not_ok'
+                      ? 'bg-rose-700 border-rose-400 ring-4 ring-rose-500/50'
+                      : 'bg-rose-600 hover:bg-rose-500 border-rose-400'
+                  }`}
+                >
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <AlertTriangle className="w-16 h-16" />
+                    <span>I NEED HELP</span>
+                  </div>
+                </button>
+              </div>
+              {residentUser.status && (
+                <p className="text-center text-xs text-slate-400 mt-4">
+                  Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {showLogin && viewMode !== 'resident' && showSplash && (
+          <div className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-between py-12 px-6">
+            <div className="text-center">
+              <Logo className="w-16 h-16 mx-auto mb-4" />
+              <h1 className="text-2xl font-black text-slate-900">ElderWatch</h1>
+              <p className="text-sm text-slate-500 mt-2">Morning reassurance check-in for residents and care teams.</p>
+            </div>
+            <button
+              onClick={() => setShowSplash(false)}
+              className="w-full max-w-sm rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 transition"
+            >
+              Continue to Login
+            </button>
+          </div>
+        )}
+
+        {showLogin && viewMode !== 'resident' && !showSplash && (
           <StaffLogin
             loading={staffLoading}
             error={loginError}
@@ -282,65 +358,6 @@ export default function App() {
             staff={staff}
             onOpenStaffManagement={undefined}
           />
-        )}
-
-        {!showLogin && activeTab === 'senior-checkin' && viewMode === 'resident' && residentUser && (
-          <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-              <div className="text-center mb-5">
-                <Logo className="w-12 h-12 mx-auto mb-2" />
-                <h1 className="text-xl font-black">Morning Check-In</h1>
-                <p className="text-xs text-slate-400 mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
-                <p className="text-[11px] text-slate-500 mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  id="resident-ok-button"
-                  type="button"
-                  onClick={async () => {
-                    const timeFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    setResidentUser({ ...residentUser, status: 'ok', checkInTime: timeFormatted } as any);
-                    await api.recordCheckIn(residentUser.id, 'ok', timeFormatted);
-                  }}
-                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
-                    residentUser.status === 'ok'
-                      ? 'bg-emerald-600 border-emerald-300 ring-4 ring-emerald-500/50'
-                      : 'bg-emerald-600 hover:bg-emerald-500 border-emerald-400'
-                  }`}
-                >
-                  <div className="flex flex-col items-center justify-center gap-3">
-                    <CheckCircle2 className="w-16 h-16" />
-                    <span>I AM OK</span>
-                  </div>
-                </button>
-                <button
-                  id="resident-help-button"
-                  type="button"
-                  onClick={async () => {
-                    const timeFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    setResidentUser({ ...residentUser, status: 'not_ok', checkInTime: timeFormatted } as any);
-                    await api.recordCheckIn(residentUser.id, 'not_ok', timeFormatted);
-                  }}
-                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
-                    residentUser.status === 'not_ok'
-                      ? 'bg-rose-700 border-rose-400 ring-4 ring-rose-500/50'
-                      : 'bg-rose-600 hover:bg-rose-500 border-rose-400'
-                  }`}
-                >
-                  <div className="flex flex-col items-center justify-center gap-3">
-                    <AlertTriangle className="w-16 h-16" />
-                    <span>I NEED HELP</span>
-                  </div>
-                </button>
-              </div>
-              {residentUser.status && (
-                <p className="text-center text-xs text-slate-400 mt-4">
-                  Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
-              )}
-            </div>
-          </div>
         )}
 
         {!showLogin && activeTab === 'senior-checkin' && viewMode !== 'resident' && (
