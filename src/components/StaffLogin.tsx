@@ -32,13 +32,16 @@ export function StaffLogin({ onLogin, error, loading }: StaffLoginProps) {
           onSubmit={async (e) => {
             e.preventDefault();
             try {
-              await onLogin(email, password);
+              await Promise.race([
+                onLogin(email, password),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Login timed out. Please try again.')), 15000)),
+              ]);
             } catch (err: any) {
               const msg = err?.message || String(err);
               const codeMatch = msg.match(/\(([^)]+)\)/);
               const code = codeMatch ? codeMatch[1] : '';
               const reason = code ? `Firebase: Error (${code}).` : msg;
-              throw err;
+              throw new Error(reason);
             }
           }}
           className="space-y-4"
