@@ -89,7 +89,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
     primaryNurse: '',
     providerPartner: '',
   } as CareHome;
-  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(homeOrDefault.id);
+  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(home?.id || homeOrDefault.id);
 
   // Verification modal state after admin creates user
   const [createdVerificationData, setCreatedVerificationData] = useState<{

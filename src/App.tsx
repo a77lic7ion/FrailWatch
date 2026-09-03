@@ -69,8 +69,8 @@ export default function App() {
       const status = await api.getStatus();
       setDbStatus(status);
       const appData = await api.getData();
-      if (appData && appData.residents && appData.residents.length > 0) {
-        const sanitizedResidents: Resident[] = appData.residents.map((r: any) => ({
+      if (appData) {
+        const sanitizedResidents: Resident[] = (appData.residents || []).map((r: any) => ({
           ...r,
           wing: r.wing || 'Willow Cottage',
           sevenDayHistory: Array.isArray(r.sevenDayHistory) && r.sevenDayHistory.length > 0
@@ -78,7 +78,7 @@ export default function App() {
             : [
                 { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
                 { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
-                { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:12 AM' },
+                { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
                 { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
                 { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
                 { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
@@ -106,9 +106,9 @@ export default function App() {
 
   useEffect(() => {
     loadDbStatus();
-  }, [loadDbStatus]);
+  }, [loadDbStatus, staff?.homeId, isGlobal]);
 
-  const selectedHome = (effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || effectiveHomes[0] || (homes[0] || { id: 'home-benoni-01', name: 'Default Home', location: '', cutoffTime: '09:15', careStaffOnDuty: 0, primaryNurse: '', providerPartner: '' }));
+  const selectedHome = (effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || effectiveHomes[0] || homes.find((h) => h.id === staff?.homeId) || (homes[0] || { id: 'home-benoni-01', name: 'Default Home', location: '', cutoffTime: '09:15', careStaffOnDuty: 0, primaryNurse: '', providerPartner: '' }));
   const visibleResidents = isGlobal ? residents : residents.filter((r) => r.homeId === staff?.homeId);
   const urgentCount = visibleResidents.filter((r) => r.status === 'not_ok').length;
   const overdueCount = visibleResidents.filter((r) => r.status === 'overdue').length;

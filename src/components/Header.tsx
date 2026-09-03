@@ -303,6 +303,18 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-[10px] tracking-tight font-semibold">Guide</span>
           </button>
         )}
+
+        {/* Logout */}
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            className="flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-rose-300 hover:text-rose-100 transition"
+            title="Sign out"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight font-semibold">Sign out</span>
+          </button>
+        )}
       </nav>
     </>
   );
