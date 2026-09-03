@@ -19,6 +19,7 @@ export const ResidentPhoneLogin: React.FC<Props> = ({ onLoginSuccess, onBack }) 
     if (!lookup) return;
     api.getResidentProfile(lookup).then((profile) => {
       if (profile?.resident) {
+        api.verifyResident(lookup);
         onLoginSuccess?.(profile.resident);
       } else {
         setError('Resident link expired or invalid.');

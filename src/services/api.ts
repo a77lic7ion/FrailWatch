@@ -119,6 +119,27 @@ export const api = {
     }
   },
 
+  async verifyResident(idOrToken: string): Promise<boolean> {
+    try {
+      let docId = idOrToken;
+      const docSnap = await getDoc(firestoreDoc(db, 'residents', idOrToken));
+      if (!docSnap.exists()) {
+        const q = query(collection(db, 'residents'), where('verificationToken', '==', idOrToken));
+        const snap = await getDocs(q);
+        if (snap.empty) return false;
+        docId = (snap.docs[0] as any).id;
+      }
+      await updateDoc(firestoreDoc(db, 'residents', docId), {
+        deviceLinked: true,
+        linkedAt: new Date().toISOString(),
+      });
+      return true;
+    } catch (e) {
+      console.warn('Error verifying resident:', e);
+      return false;
+    }
+  },
+
   async updateResident(id: string, updates: any): Promise<boolean> {
     try {
       await updateDoc(firestoreDoc(db, 'residents', id), updates);
