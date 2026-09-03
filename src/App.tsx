@@ -87,12 +87,11 @@ export default function App() {
 
   useEffect(() => {
     try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('verify') || params.get('token') || params.get('residentId') || params.get('mode') === 'checkin') {
-        setActiveTab('senior-checkin');
-      }
-    } catch {
-      // ignore
+      localStorage.removeItem('elderwatch_custom_firebase_config');
+    } catch {}
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('verify') || params.get('token') || params.get('residentId') || params.get('mode') === 'checkin') {
+      setActiveTab('senior-checkin');
     }
   }, []);
 
