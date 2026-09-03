@@ -220,6 +220,38 @@ export default function App() {
           />
         )}
 
+        {!showLogin && activeTab === 'dashboard' && !isGlobal && (
+          <StaffDashboard
+            home={selectedHome || {
+              id: 'home-benoni-01',
+              name: 'Default Home',
+              location: '',
+              cutoffTime: '09:15',
+              careStaffOnDuty: 0,
+              primaryNurse: '',
+              providerPartner: '',
+            }}
+            allHomes={effectiveHomes}
+            residents={visibleResidents}
+            currentTimeStr={currentTimeStr}
+            onUpdateResidentStatus={handleCheckIn}
+            onAddResident={async (payload) => {
+              await api.addResident(payload);
+              await loadDbStatus();
+            }}
+            onUpdateResident={async () => {}}
+            onSelectResidentForPhone={() => {}}
+            onOpenCutoffModal={() => setIsCutoffModalOpen(true)}
+            onOpenSeniorWebsite={(residentId) => {
+              if (residentId) setActiveResidentId(residentId);
+              setActiveTab('senior-checkin');
+            }}
+            onOpenGuideModal={() => setIsGuideModalOpen(true)}
+            staff={staff}
+            onOpenStaffManagement={undefined}
+          />
+        )}
+
         {!showLogin && activeTab === 'senior-checkin' && (
           <SeniorCheckInWebsite
             initialResident={residents.find((r) => r.id === activeResidentId)}
