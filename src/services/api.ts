@@ -183,6 +183,26 @@ export const api = {
     }
   },
 
+  async updateHome(id: string, updates: any): Promise<boolean> {
+    try {
+      await updateDoc(firestoreDoc(db, 'homes', id), updates);
+      return true;
+    } catch (e) {
+      console.warn('Failed to update home:', e);
+      return false;
+    }
+  },
+
+  async deleteHome(id: string): Promise<boolean> {
+    try {
+      await deleteDoc(firestoreDoc(db, 'homes', id));
+      return true;
+    } catch (e) {
+      console.warn('Failed to delete home:', e);
+      return false;
+    }
+  },
+
   async createStaff(payload: { email: string; password: string; name?: string; role?: string; homeId?: string }): Promise<any> {
     try {
       // If a staff record for this email already exists, reuse it
