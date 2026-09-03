@@ -5,15 +5,19 @@ interface Props {
 }
 
 interface State {
-  error: string | null;
+  errorInfo: string | null;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   readonly props: Props;
-  state: State = { error: null };
+  state: State = { errorInfo: null };
 
   static getDerivedStateFromError(error: unknown) {
-    return { error: error instanceof Error ? error.message : String(error) };
+    return {
+      errorInfo: error instanceof Error
+        ? `${error.message}\n\n${error.stack || 'No stack trace'}`
+        : String(error),
+    };
   }
 
   componentDidCatch(error: unknown) {
@@ -21,12 +25,12 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   render() {
-    if (this.state.error) {
+    if (this.state.errorInfo) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
           <div className="bg-white border border-red-200 rounded-xl p-6 max-w-lg w-full">
             <h2 className="text-lg font-bold text-red-800">App Error</h2>
-            <pre className="mt-2 text-xs text-red-700 whitespace-pre-wrap">{this.state.error}</pre>
+            <pre className="mt-2 text-xs text-red-700 whitespace-pre-wrap">{this.state.errorInfo}</pre>
           </div>
         </div>
       );

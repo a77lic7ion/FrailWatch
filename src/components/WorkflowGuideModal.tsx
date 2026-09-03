@@ -22,7 +22,7 @@ import { CareHome, Resident } from '../types';
 interface WorkflowGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
-  home: CareHome;
+  home?: CareHome;
   residents: Resident[];
   onOpenSeniorScreen?: (residentId?: string) => void;
 }
@@ -42,7 +42,8 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
 
   const currentResident = residents.find((r) => r.id === selectedResId) || residents[0];
   const currentToken = currentResident?.verificationToken || (currentResident ? `ew_${currentResident.id}` : 'ew_demo_token');
-  const currentUrl = `${window.location.origin}/?verify=${currentToken}&home=${home.id}`;
+  const safeHome = home || { id: 'home-benoni-01', name: 'Default Home', cutoffTime: '09:15' };
+  const currentUrl = `${window.location.origin}/?verify=${currentToken}&home=${safeHome.id}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(currentUrl);
@@ -52,7 +53,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
 
   const openWhatsApp = () => {
     const text = encodeURIComponent(
-      `Good morning ${currentResident?.name || 'Resident'}! Here is your ElderWatch morning check-in link for ${home.name}. Tap this link every morning before ${home.cutoffTime} to let care staff know you are safe: ${currentUrl}`
+      `Good morning ${currentResident?.name || 'Resident'}! Here is your ElderWatch morning check-in link for ${safeHome.name}. Tap this link every morning before ${safeHome.cutoffTime} to let care staff know you are safe: ${currentUrl}`
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };

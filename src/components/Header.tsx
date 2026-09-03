@@ -23,8 +23,8 @@ import { Logo } from './Logo';
 interface HeaderProps {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
-  selectedHome: CareHome;
-  allHomes: CareHome[];
+  selectedHome?: CareHome;
+  allHomes?: CareHome[];
   setSelectedHomeId: (id: string) => void;
   currentTimeStr: string;
   urgentCount: number;
@@ -92,11 +92,11 @@ export const Header: React.FC<HeaderProps> = ({
                 <select
                   id="facility-select"
                   aria-label="Select Care Home Facility"
-                  value={selectedHome.id}
+                  value={selectedHome?.id || ''}
                   onChange={(e) => setSelectedHomeId(e.target.value)}
                   className="bg-transparent text-slate-100 font-semibold focus:outline-none cursor-pointer text-xs max-w-[120px] sm:max-w-[190px] truncate"
                 >
-                  {allHomes.map((home) => (
+                  {(allHomes || []).map((home) => (
                     <option key={home.id} value={home.id} className="bg-slate-800 text-slate-100">
                       {home.name}
                     </option>
