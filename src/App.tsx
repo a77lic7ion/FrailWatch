@@ -273,7 +273,6 @@ export default function App() {
               await loadDbStatus();
             }}
             onUpdateResident={async () => {}}
-            onSelectResidentForPhone={() => {}}
             onOpenCutoffModal={() => setIsCutoffModalOpen(true)}
             onOpenSeniorWebsite={(residentId) => {
               if (residentId) setActiveResidentId(residentId);

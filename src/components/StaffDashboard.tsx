@@ -9,7 +9,6 @@ import {
   ShieldAlert, 
   FileDown, 
   Filter, 
-  ChevronRight, 
   UserCheck, 
   Building2, 
   X, 
@@ -37,7 +36,6 @@ interface StaffDashboardProps {
   onUpdateResidentStatus: (residentId: string, status: CheckInStatus) => void;
   onAddResident: (resident: Partial<Resident>) => Promise<any> | void;
   onUpdateResident: (resident: Resident) => void;
-  onSelectResidentForPhone: (id: string) => void;
   onOpenCutoffModal: () => void;
   onOpenSeniorWebsite?: (residentId?: string) => void;
   onOpenGuideModal?: () => void;
@@ -53,7 +51,6 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   onUpdateResidentStatus,
   onAddResident,
   onUpdateResident,
-  onSelectResidentForPhone,
   onOpenCutoffModal,
   onOpenSeniorWebsite,
   onOpenGuideModal,
@@ -760,14 +757,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
               {/* Action row */}
               <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                <button
-                  onClick={() => onSelectResidentForPhone(r.id)}
-                  className="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 transition"
-                  title="Simulate this resident's phone screen"
-                >
-                  <span>Test Phone View</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
+
 
                 <div className="flex items-center gap-1">
                   {!r.deviceLinked && (
@@ -1044,17 +1034,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             {/* Bottom Actions in Drawer */}
             <div className="pt-6 mt-6 border-t border-slate-100 flex gap-2">
               <button
-                onClick={() => {
-                  onSelectResidentForPhone(selectedResident.id);
-                  setSelectedResident(null);
-                }}
-                className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
-              >
-                Open Resident Phone Simulator
-              </button>
-              <button
                 onClick={() => setSelectedResident(null)}
-                className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+                className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
               >
                 Close
               </button>
@@ -1506,16 +1487,6 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Caregiver</label>
                 <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.caregiver} onChange={(e) => setEditingResident({ ...editingResident, caregiver: e.target.value })} />
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingResident(null);
-                  onSelectResidentForPhone(editingResident.id);
-                }}
-                className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-sm"
-              >
-                Open Resident Phone Simulator
-              </button>
               <div className="flex gap-2 pt-2">
                 <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Save Changes</button>
                 <button type="button" onClick={() => setEditingResident(null)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
