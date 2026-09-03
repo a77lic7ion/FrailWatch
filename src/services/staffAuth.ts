@@ -98,9 +98,22 @@ export async function getStaffMe(): Promise<StaffRecord | null> {
   }
 }
 
+let loggingOut = false;
+export function markLoggingOut() {
+  loggingOut = true;
+}
+
 export function onStaffAuthChange(callback: (staff: StaffRecord | null) => void) {
   return onAuthStateChanged(auth, async (u: User | null) => {
-    if (!u) return callback(null);
+    if (!u) {
+      callback(null);
+      return;
+    }
+    if (loggingOut) {
+      callback(null);
+      loggingOut = false;
+      return;
+    }
     try {
       const staff = await getStaffMe();
       callback(staff);
@@ -109,3 +122,4 @@ export function onStaffAuthChange(callback: (staff: StaffRecord | null) => void)
     }
   });
 }
+

@@ -13,7 +13,7 @@ import { CutoffModal } from './components/CutoffModal';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
 import { api, DatabaseStatus } from './services/api';
-import { onStaffAuthChange, staffLogin, staffLogout } from './services/staffAuth';
+import { onStaffAuthChange, staffLogin, staffLogout, markLoggingOut } from './services/staffAuth';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
@@ -35,12 +35,13 @@ export default function App() {
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
 
   const logout = async () => {
-    try { await staffLogout(); } catch {}
+    try { markLoggingOut(); await staffLogout(); } catch {}
     setStaff(null);
     setActiveTab('dashboard');
     setSelectedGlobalHomeId(null);
     setResidents([]);
     setHomes(INITIAL_HOMES);
+    setStaffLoading(true);
   };
 
   useEffect(() => {
@@ -175,7 +176,7 @@ export default function App() {
               setStaffLoading(true);
               try {
                 const result = await staffLogin(email, password);
-                setStaff(result.staff);
+                setStaff(result);
                 setStaffLoading(false);
               } catch (err: any) {
                 setStaffLoading(false);

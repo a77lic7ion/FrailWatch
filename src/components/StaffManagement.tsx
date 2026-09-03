@@ -26,7 +26,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState('home_admin');
-  const [homeId, setHomeId] = useState(staff.homeId || 'home-benoni-01');
+  const [homeId, setHomeId] = useState((staff?.homeId) || 'home-benoni-01');
   const [homes, setHomes] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
 
   const isCreatingGlobalAdmin = role === 'superadmin';
 
-  const canGlobalManage = staff.role === 'superadmin' || staff.homeId === '*';
+  const canGlobalManage = !!staff && (staff.role === 'superadmin' || staff.homeId === '*');
 
   const loadStaff = async () => {
     setLoading(true);
