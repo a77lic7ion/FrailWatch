@@ -232,15 +232,23 @@ export const api = {
       }
 
       // No existing staff doc; create fresh
-      const cred = await createUserWithEmailAndPassword(getAuth(app), payload.email, payload.password);
-      await updateProfile(cred.user, { displayName: payload.name || '' });
-      await setDoc(firestoreDoc(db, cred.user.uid), {
-        email: payload.email,
-        name: payload.name || '',
-        role: payload.role || 'home_admin',
-        homeId: payload.homeId || '',
-      });
-      return { uid: cred.user.uid, ...payload };
+      try {
+        const cred = await createUserWithEmailAndPassword(getAuth(app), payload.email, payload.password);
+        await updateProfile(cred.user, { displayName: payload.name || '' });
+        await setDoc(firestoreDoc(db, cred.user.uid), {
+          email: payload.email,
+          name: payload.name || '',
+          role: payload.role || 'home_admin',
+          homeId: payload.homeId || '',
+        });
+        return { uid: cred.user.uid, ...payload };
+      } catch (createErr: any) {
+        const code = createErr?.code || createErr?.message || '';
+        if (code.includes('already-in-use') || code.includes('already in use')) {
+          throw new Error('Email already in use by Firebase Auth. If the user was deleted, it may take up to 24 hours to release. Try a different email or reset the Firebase Auth user.');
+        }
+        throw createErr;
+      }
     } catch (e: any) {
       console.error('createStaff failed:', e);
       throw new Error(e?.message || 'Failed to create staff');
