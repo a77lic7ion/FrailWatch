@@ -14,6 +14,13 @@ const PORT = Number(process.env.PORT || process.env.PORT_8260 || 3000);
 let adminAuth: ReturnType<typeof getAuth> | null = null;
 
 app.use(express.json());
+app.use((_req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (_req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 
 const SEED_HOMES = [
   { id: 'home-benoni-01', name: 'Benoni Frail Care & Assisted Living', location: 'Willow Lane, Benoni', totalResidents: 24, cutoffTime: '09:15', careStaffOnDuty: 4, primaryNurse: 'Sr. Sarah Botha, RN', providerPartner: '4TIFY SECURITY & Care Solutions' },

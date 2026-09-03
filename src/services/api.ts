@@ -1,5 +1,15 @@
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { app, db } from '../firebase';
+let API_BASE = (import.meta as any)?.env?.VITE_API_BASE_URL || '';
+
+export function setApiBase(url: string) {
+  API_BASE = url;
+}
+
+function apiUrl(path: string) {
+  return `${API_BASE}${path}`;
+}
+
 export const auth = getAuth(app);
 
 export interface DatabaseStatus {
@@ -36,7 +46,7 @@ export const api = {
   async getStatus(): Promise<DatabaseStatus> {
     try {
       const headers = await getAuthHeaders();
-      const res = await fetch('/api/health', { headers });
+      const res = await fetch(apiUrl('/api/health'), { headers });
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -60,7 +70,7 @@ export const api = {
       if (staffSession?.homeId && staffSession.role !== 'superadmin' && staffSession.homeId !== '*') {
         params.set('homeId', staffSession.homeId);
       }
-      const res = await fetch(`/api/data?${params.toString()}`, { headers });
+      const res = await fetch(apiUrl(`/api/data?${params.toString()}`), { headers });
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
       return await res.json();
     } catch (e) {
@@ -71,7 +81,7 @@ export const api = {
 
   async recordCheckIn(residentId: string, status: string, checkInTime?: string): Promise<boolean> {
     try {
-      const res = await fetch('/api/checkin', {
+      const res = await fetch(apiUrl('/api/checkin'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify({ residentId, status, checkInTime }),
@@ -85,7 +95,7 @@ export const api = {
 
   async addResident(resident: any): Promise<{ success: boolean; resident?: any; verificationToken?: string; verificationUrl?: string }> {
     try {
-      const res = await fetch('/api/residents', {
+      const res = await fetch(apiUrl('/api/residents'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(resident),
@@ -103,7 +113,7 @@ export const api = {
 
   async getResidentProfile(idOrToken: string): Promise<{ resident?: any; home?: any } | null> {
     try {
-      const res = await fetch(`/api/resident/${encodeURIComponent(idOrToken)}`);
+      const res = await fetch(apiUrl(`/api/resident/${encodeURIComponent(idOrToken)}`);
       if (!res.ok) return null;
       return await res.json();
     } catch (e) {
@@ -114,7 +124,7 @@ export const api = {
 
   async updateResident(id: string, updates: any): Promise<boolean> {
     try {
-      const res = await fetch(`/api/residents/${encodeURIComponent(id)}`, {
+      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(updates),
@@ -128,7 +138,7 @@ export const api = {
 
   async deleteResident(id: string): Promise<boolean> {
     try {
-      const res = await fetch(`/api/residents/${encodeURIComponent(id)}`, {
+      const res = await fetch(apiUrl(`/api/residents/${encodeURIComponent(id)}`, {
         method: 'DELETE',
         headers: { ...(await getAuthHeaders()) },
       });
@@ -141,7 +151,7 @@ export const api = {
 
   async updateCutoff(homeId: string, cutoffTime: string): Promise<boolean> {
     try {
-      const res = await fetch('/api/cutoff', {
+      const res = await fetch(apiUrl('/api/cutoff'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify({ homeId, cutoffTime }),
@@ -155,7 +165,7 @@ export const api = {
 
   async resetDemo(): Promise<boolean> {
     try {
-      const res = await fetch('/api/reset-demo', {
+      const res = await fetch(apiUrl('/api/reset-demo'), {
         method: 'POST',
         headers: { ...(await getAuthHeaders()) },
       });
@@ -168,7 +178,7 @@ export const api = {
 
   async createHome(payload: { id: string; name: string; location?: string; cutoffTime?: string; careStaffOnDuty?: number; primaryNurse?: string; providerPartner?: string }): Promise<any> {
     try {
-      const res = await fetch('/api/homes', {
+      const res = await fetch(apiUrl('/api/homes'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(payload),
@@ -213,7 +223,7 @@ export const api = {
 
   async updateStaff(uid: string, updates: any): Promise<boolean> {
     try {
-      const res = await fetch(`/api/staff/${encodeURIComponent(uid)}`, {
+      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify(updates),
@@ -227,7 +237,7 @@ export const api = {
 
   async deleteStaff(uid: string): Promise<boolean> {
     try {
-      const res = await fetch(`/api/staff/${encodeURIComponent(uid)}`, {
+      const res = await fetch(apiUrl(`/api/staff/${encodeURIComponent(uid)}`, {
         method: 'DELETE',
         headers: { ...(await getAuthHeaders()) },
       });
