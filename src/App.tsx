@@ -39,7 +39,6 @@ export default function App() {
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
   const [residentUser, setResidentUser] = useState<Resident | null>(null);
-  const [installPrompt, setInstallPrompt] = useState<any>(null);
 
   const logout = async () => {
     try { markLoggingOut(); await staffLogout(); } catch {}
@@ -294,26 +293,7 @@ export default function App() {
                 <h1 className="text-xl font-black">Morning Check-In</h1>
                 <p className="text-xs text-slate-400 mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
                 <p className="text-[11px] text-slate-500 mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
-                {!residentUser.deviceLinked && (
-                  <p className="text-[11px] text-amber-300 mt-2">Device verification pending...</p>
-                )}
               </div>
-
-              {installPrompt && (
-                <button
-                  onClick={async () => {
-                    installPrompt.prompt();
-                    const result = await installPrompt.userChoice;
-                    if (result.outcome === 'accepted') {
-                      try { localStorage.setItem('elderwatch_pwa_installed', 'true'); } catch {}
-                    }
-                    setInstallPrompt(null);
-                  }}
-                  className="w-full rounded-xl bg-white/10 border border-white/20 py-2 text-xs font-semibold mb-4"
-                >
-                  Install Daily Check-In
-                </button>
-              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <button
@@ -360,16 +340,6 @@ export default function App() {
                   Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               )}
-              <button
-                onClick={() => {
-                  if (navigator.canShare && window.location.href) {
-                    navigator.share({ title: 'ElderWatch Check-In', url: window.location.href });
-                  }
-                }}
-                className="mt-4 text-[11px] text-slate-400 underline w-full text-center"
-              >
-                Share this link
-              </button>
             </div>
           </div>
         )}
