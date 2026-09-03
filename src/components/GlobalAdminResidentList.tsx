@@ -22,8 +22,8 @@ export function GlobalAdminResidentList({ home, residents, onBack, onOpenStaffMa
     <div className="max-w-4xl mx-auto px-3 sm:px-6 py-6 space-y-4">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <button onClick={onBack} className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
-            <ArrowLeft className="w-4 h-4" /> Back
+          <button onClick={onBack} className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1.5 rounded-lg border border-indigo-200">
+            <ArrowLeft className="w-4 h-4" /> Back to home list
           </button>
           <div>
             <h2 className="text-lg font-bold text-slate-900">{home.name}</h2>
