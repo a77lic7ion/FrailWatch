@@ -11,7 +11,10 @@ export async function staffLogin(email: string, password: string) {
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
     body: JSON.stringify({ email }),
   });
-  if (!res.ok) throw new Error('Staff login failed');
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || 'Staff login failed');
+  }
   return res.json();
 }
 
