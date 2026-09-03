@@ -192,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Staff info + logout */}
               {staff?.email && (
-                <div className="hidden md:flex items-center gap-2 text-xs text-slate-300">
+                <div className="flex items-center gap-2 text-xs text-slate-300">
                   <span className="font-mono">{staff.email}</span>
                   {onLogout && (
                     <button
