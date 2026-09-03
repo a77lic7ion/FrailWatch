@@ -28,7 +28,6 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'family' | '4tify'>('family');
   const [selectedFamilyResidentId, setSelectedFamilyResidentId] = useState<string>(residents[0]?.id || 'res-1');
-  const [smsAlertEnabled, setSmsAlertEnabled] = useState(true);
 
   const fallbackResident: Resident = {
     id: 'res-1',
@@ -227,25 +226,6 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
               </h4>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                  <div>
-                    <div className="text-xs font-bold text-slate-800">Morning Peace-of-Mind SMS</div>
-                    <div className="text-[11px] text-slate-500">
-                      Receive instant SMS to {resident.emergencyContact.phone} as soon as {resident.name.split(' ')[0]} taps &quot;I&apos;m okay&quot;.
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setSmsAlertEnabled(!smsAlertEnabled)}
-                    className={`w-12 h-7 rounded-full transition-colors relative ${
-                      smsAlertEnabled ? 'bg-emerald-600' : 'bg-slate-300'
-                    }`}
-                  >
-                    <div className={`w-5 h-5 rounded-full bg-white absolute top-1 transition-transform ${
-                      smsAlertEnabled ? 'left-6' : 'left-1'
-                    }`} />
-                  </button>
-                </div>
-
                 <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
                   <div>
                     <div className="text-xs font-bold text-slate-800">Automatic Cutoff Missed Alert</div>
