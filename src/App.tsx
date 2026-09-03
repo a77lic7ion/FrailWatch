@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { StaffDashboard } from './components/StaffDashboard';
 import { ResidentPhoneView } from './components/ResidentPhoneView';
@@ -6,8 +6,10 @@ import { FamilyAndProviderView } from './components/FamilyAndProviderView';
 import { ComparisonCritique } from './components/ComparisonCritique';
 import { SimulationModal } from './components/SimulationModal';
 import { CutoffModal } from './components/CutoffModal';
+import { DatabaseModal } from './components/DatabaseModal';
 import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
+import { api, DatabaseStatus } from './services/api';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
@@ -18,6 +20,33 @@ export default function App() {
   const [currentTimeStr, setCurrentTimeStr] = useState<string>('08:35 AM');
   const [isSimModalOpen, setIsSimModalOpen] = useState<boolean>(false);
   const [isCutoffModalOpen, setIsCutoffModalOpen] = useState<boolean>(false);
+  const [isDbModalOpen, setIsDbModalOpen] = useState<boolean>(false);
+  const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
+  const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
+
+  // Load database status and sync initial data
+  const loadDbStatus = useCallback(async () => {
+    setIsDbRefreshing(true);
+    try {
+      const status = await api.getStatus();
+      setDbStatus(status);
+      const appData = await api.getData();
+      if (appData && appData.residents && appData.residents.length > 0) {
+        setResidents(appData.residents);
+        if (appData.homes && appData.homes.length > 0) {
+          setHomes(appData.homes);
+        }
+      }
+    } catch (e) {
+      console.warn('Initial data load exception:', e);
+    } finally {
+      setIsDbRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadDbStatus();
+  }, [loadDbStatus]);
 
   // Selected home object
   const selectedHome = homes.find((h) => h.id === selectedHomeId) || homes[0];
@@ -50,6 +79,9 @@ export default function App() {
         };
       })
     );
+
+    // Sync to Firestore backend
+    api.recordCheckIn(residentId, status, timeFormatted);
   };
 
   // Add resident handler
@@ -78,11 +110,13 @@ export default function App() {
     };
 
     setResidents((prev) => [newResident, ...prev]);
+    api.addResident(newResident);
   };
 
   // Update resident details
   const handleUpdateResident = (updated: Resident) => {
     setResidents((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
+    api.updateResident(updated.id, updated);
   };
 
   // Simulation: fast forward past 09:15 cutoff
@@ -118,6 +152,7 @@ export default function App() {
     setCurrentTimeStr('08:35 AM');
     setResidents(INITIAL_RESIDENTS);
     setActiveResidentId(INITIAL_RESIDENTS[0].id);
+    api.resetDemo();
   };
 
   // Save updated cutoff time
@@ -125,6 +160,7 @@ export default function App() {
     setHomes((prev) =>
       prev.map((h) => (h.id === selectedHomeId ? { ...h, cutoffTime: newCutoff } : h))
     );
+    api.updateCutoff(selectedHomeId, newCutoff);
   };
 
   // Switch to phone simulator focusing on a specific resident
@@ -147,6 +183,8 @@ export default function App() {
         overdueCount={overdueCount}
         onOpenSimModal={() => setIsSimModalOpen(true)}
         onResetData={handleResetMorning}
+        onOpenDbModal={() => setIsDbModalOpen(true)}
+        isDbConnected={dbStatus?.firebaseConnected}
       />
 
       {/* Main View Area */}
@@ -203,6 +241,15 @@ export default function App() {
         onClose={() => setIsCutoffModalOpen(false)}
         home={selectedHome}
         onSaveCutoff={handleSaveCutoff}
+      />
+
+      {/* Firebase Database Status Modal */}
+      <DatabaseModal
+        isOpen={isDbModalOpen}
+        onClose={() => setIsDbModalOpen(false)}
+        dbStatus={dbStatus}
+        onRefresh={loadDbStatus}
+        isRefreshing={isDbRefreshing}
       />
 
       {/* Bottom Subtle Status Footer */}

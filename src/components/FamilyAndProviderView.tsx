@@ -15,6 +15,7 @@ import {
   Check
 } from 'lucide-react';
 import { Resident, CareHome } from '../types';
+import { Logo } from './Logo';
 
 interface FamilyAndProviderViewProps {
   residents: Resident[];
@@ -73,16 +74,19 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
             
             {/* Header & Resident Selector */}
             <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  Morning Peace of Mind
-                </span>
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
-                  Family Loved One Check-In
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Know your loved one is safe every morning, without the home needing to make dozens of individual phone calls.
-                </p>
+              <div className="flex items-start gap-3.5">
+                <Logo className="w-10 h-10 mt-1 drop-shadow-xs" />
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    Morning Peace of Mind
+                  </span>
+                  <h2 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
+                    Family Loved One Check-In
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Know your loved one is safe every morning, without the home needing to make dozens of individual phone calls.
+                  </p>
+                </div>
               </div>
 
               <div className="flex items-center gap-2 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 text-xs">

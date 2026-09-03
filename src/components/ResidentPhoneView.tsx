@@ -16,6 +16,7 @@ import {
   LifeBuoy
 } from 'lucide-react';
 import { Resident, CheckInStatus } from '../types';
+import { Logo } from './Logo';
 
 interface ResidentPhoneViewProps {
   residents: Resident[];
@@ -217,12 +218,13 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
             
             {/* Top Status & Morning Header */}
             <div className="px-5 pt-4 pb-3 border-b border-slate-800/80 bg-slate-900/60 flex items-center justify-between text-slate-400 text-xs">
-              <span className="font-mono font-bold text-slate-200">
-                {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </span>
+              <div className="flex items-center gap-2">
+                <Logo className="w-5 h-5" />
+                <span className="font-bold text-slate-200 text-xs tracking-tight">ElderWatch</span>
+              </div>
               <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                ElderWatch Active
+                <span>Active Reassurance</span>
               </div>
             </div>
 

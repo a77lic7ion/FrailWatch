@@ -8,9 +8,11 @@ import {
   Clock, 
   Sliders, 
   RefreshCw,
-  Bell
+  Bell,
+  Database
 } from 'lucide-react';
 import { ActiveTab, CareHome } from '../types';
+import { Logo } from './Logo';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -23,6 +25,8 @@ interface HeaderProps {
   overdueCount: number;
   onOpenSimModal: () => void;
   onResetData: () => void;
+  onOpenDbModal?: () => void;
+  isDbConnected?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -36,6 +40,8 @@ export const Header: React.FC<HeaderProps> = ({
   overdueCount,
   onOpenSimModal,
   onResetData,
+  onOpenDbModal,
+  isDbConnected = true,
 }) => {
   const attentionCount = urgentCount + overdueCount;
 
@@ -47,9 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
           
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md shadow-emerald-500/20">
-              E
-            </div>
+            <Logo className="w-10 h-10 drop-shadow-md" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-xl tracking-tight text-white">ElderWatch</span>
@@ -88,6 +92,20 @@ export const Header: React.FC<HeaderProps> = ({
               <Clock className="w-3.5 h-3.5 text-slate-400" />
               <span className="font-mono font-medium">{currentTimeStr}</span>
             </div>
+
+            {/* Firebase Database Status Badge */}
+            {onOpenDbModal && (
+              <button
+                id="firebase-db-status-btn"
+                onClick={onOpenDbModal}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs transition"
+                title="View Firebase Firestore connection status (frailcare-checkin)"
+              >
+                <Database className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden sm:inline font-mono text-[11px]">frailcare-checkin</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              </button>
+            )}
 
             {/* Powered by 4TIFY Badge */}
             <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-xl border border-slate-700/80">
