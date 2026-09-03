@@ -76,7 +76,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [newContactName, setNewContactName] = useState('');
   const [newContactPhone, setNewContactPhone] = useState('');
   const [newContactRel, setNewContactRel] = useState('Child');
-  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(home.id);
+  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(home?.id || 'home-benoni-01');
 
   // Verification modal state after admin creates user
   const [createdVerificationData, setCreatedVerificationData] = useState<{

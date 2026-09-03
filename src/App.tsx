@@ -49,38 +49,12 @@ export default function App() {
     });
   }, []);
 
-  if (staffLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-600">Loading...</p>
-      </div>
-    );
-  }
-
-  if (!staff) {
-    return (
-      <StaffLogin
-        loading={false}
-        error={loginError}
-        onLogin={async (email, password) => {
-          setLoginError(null);
-          try {
-            const result = await staffLogin(email, password);
-            setStaff(result.staff);
-          } catch (err: any) {
-            setLoginError(err.message || 'Login failed');
-          }
-        }}
-      />
-    );
-  }
-
-  const isGlobal = staff.role === 'superadmin' || staff.homeId === '*';
-  const effectiveHomes = isGlobal ? homes : homes.filter((h) => h.id === staff.homeId);
+  const isGlobal = staff?.role === 'superadmin' || staff?.homeId === '*';
+  const effectiveHomes = isGlobal ? homes : homes.filter((h) => h.id === staff?.homeId);
   const effectiveSelectedHomeId = isGlobal ? selectedHomeId : (effectiveHomes[0]?.id || selectedHomeId);
 
   useEffect(() => {
-    if (!isGlobal) {
+    if (!isGlobal && effectiveSelectedHomeId) {
       setSelectedHomeId(effectiveSelectedHomeId);
     }
   }, [isGlobal, effectiveSelectedHomeId]);
@@ -140,8 +114,8 @@ export default function App() {
     loadDbStatus();
   }, [loadDbStatus]);
 
-  const selectedHome = effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || effectiveHomes[0];
-  const visibleResidents = isGlobal ? residents : residents.filter((r) => r.homeId === staff.homeId);
+  const selectedHome = (effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || effectiveHomes[0] || (homes[0] || { id: 'home-benoni-01', name: 'Default Home', location: '', cutoffTime: '09:15', careStaffOnDuty: 0, primaryNurse: '', providerPartner: '' }));
+  const visibleResidents = isGlobal ? residents : residents.filter((r) => r.homeId === staff?.homeId);
   const urgentCount = visibleResidents.filter((r) => r.status === 'not_ok').length;
   const overdueCount = visibleResidents.filter((r) => r.status === 'overdue').length;
 
@@ -172,6 +146,8 @@ export default function App() {
     api.recordCheckIn(residentId, status);
   };
 
+  const showLogin = !staff || staffLoading;
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header
@@ -184,7 +160,23 @@ export default function App() {
       />
 
       <main className="flex-1">
-        {activeTab === 'dashboard' && (
+        {showLogin && (
+          <StaffLogin
+            loading={staffLoading}
+            error={loginError}
+            onLogin={async (email, password) => {
+              setLoginError(null);
+              try {
+                const result = await staffLogin(email, password);
+                setStaff(result.staff);
+              } catch (err: any) {
+                setLoginError(err.message || 'Login failed');
+              }
+            }}
+          />
+        )}
+
+        {!showLogin && activeTab === 'dashboard' && (
           <StaffDashboard
             home={selectedHome}
             allHomes={effectiveHomes}
@@ -211,7 +203,7 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'senior-checkin' && (
+        {!showLogin && activeTab === 'senior-checkin' && (
           <SeniorCheckInWebsite
             initialResident={residents.find((r) => r.id === activeResidentId)}
             allResidents={residents}
@@ -220,7 +212,7 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'resident-login' && (
+        {!showLogin && activeTab === 'resident-login' && (
           <ResidentPhoneLogin
             residents={residents}
             onLoginSuccess={(resident) => {
@@ -230,10 +222,10 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'family-view' && <FamilyAndProviderView />}
-        {activeTab === 'comparison' && <ComparisonCritique />}
+        {!showLogin && activeTab === 'family-view' && <FamilyAndProviderView />}
+        {!showLogin && activeTab === 'comparison' && <ComparisonCritique />}
 
-        {activeTab === 'database' && (
+        {!showLogin && activeTab === 'database' && (
           <DatabaseModal
             isOpen={isDbModalOpen}
             onClose={() => setIsDbModalOpen(false)}
