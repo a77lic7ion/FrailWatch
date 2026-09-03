@@ -191,6 +191,17 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
+
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-semibold transition"
+                  title="Sign out"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign out</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
