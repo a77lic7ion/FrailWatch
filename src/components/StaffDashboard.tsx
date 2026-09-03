@@ -1131,17 +1131,14 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
                     Wing / Section
                   </label>
-                  <select
-                    id="new-resident-wing-select"
+                  <input
+                    id="new-resident-wing-input"
+                    type="text"
+                    placeholder="e.g. Willow Cottage"
                     value={newWing}
                     onChange={(e) => setNewWing(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer bg-white text-slate-900"
-                  >
-                    <option key="willow" value="Willow Cottage">Willow Cottage</option>
-                    <option key="rose" value="Rose Wing">Rose Wing</option>
-                    <option key="garden" value="Garden Suites">Garden Suites</option>
-                    <option key="cedar" value="Cedar Home">Cedar Home</option>
-                  </select>
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                  />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
