@@ -1,22 +1,38 @@
 import React, { useState, useMemo } from 'react';
-import { Users, Search, UserCog, ArrowLeft } from 'lucide-react';
+import { Users, Search, UserCog, ArrowLeft, Trash2 } from 'lucide-react';
 import { Resident, CareHome } from '../types';
+import { api } from '../services/api';
 
 interface GlobalAdminResidentListProps {
   home: CareHome;
   residents: Resident[];
   onBack: () => void;
   onOpenStaffManagement: () => void;
+  onDeleteResident?: (id: string) => Promise<boolean> | boolean;
 }
 
-export function GlobalAdminResidentList({ home, residents, onBack, onOpenStaffManagement }: GlobalAdminResidentListProps) {
+export function GlobalAdminResidentList({ home, residents, onBack, onOpenStaffManagement, onDeleteResident }: GlobalAdminResidentListProps) {
   const [query, setQuery] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const scoped = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = residents.filter((r) => r.homeId === home.id);
     if (!q) return list;
     return list.filter((r) => (r.name || '').toLowerCase().includes(q) || (r.room || '').toLowerCase().includes(q) || (r.phone || '').includes(q));
   }, [residents, home.id, query]);
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Remove this resident?')) return;
+    setDeletingId(id);
+    try {
+      const ok = onDeleteResident ? await onDeleteResident(id) : await api.deleteResident(id);
+      if (!ok) alert('Failed to delete resident');
+    } catch (e: any) {
+      alert(e?.message || 'Failed to delete resident');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-3 sm:px-6 py-6 space-y-4">
@@ -51,14 +67,24 @@ export function GlobalAdminResidentList({ home, residents, onBack, onOpenStaffMa
           <div className="p-6 text-center text-xs text-slate-500">No residents match.</div>
         )}
         {scoped.map((r) => (
-          <div key={r.id} className="px-4 py-3 flex items-center justify-between">
+          <div key={r.id} className="px-4 py-3 flex items-center justify-between gap-2">
             <div>
               <p className="text-sm font-semibold text-slate-900">{r.name}</p>
               <p className="text-xs text-slate-500">{r.room || 'No room'} · {r.wing || ''}</p>
             </div>
-            <div className="text-right">
-              <p className="text-xs font-medium text-slate-700">{r.status === 'not_ok' ? 'Needs help' : r.status === 'overdue' ? 'Overdue' : r.status === 'awaiting' ? 'Awaiting' : 'OK'}</p>
-              {r.phone && <p className="text-[11px] text-slate-500">{r.phone}</p>}
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-xs font-medium text-slate-700">{r.status === 'not_ok' ? 'Needs help' : r.status === 'overdue' ? 'Overdue' : r.status === 'awaiting' ? 'Awaiting' : 'OK'}</p>
+                {r.phone && <p className="text-[11px] text-slate-500">{r.phone}</p>}
+              </div>
+              <button
+                onClick={() => handleDelete(r.id)}
+                disabled={deletingId === r.id}
+                className="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 disabled:opacity-50"
+                title="Delete resident"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
             </div>
           </div>
         ))}

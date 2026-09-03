@@ -3,7 +3,6 @@ import {
   ShieldCheck, 
   Activity, 
   Clock, 
-  Sliders, 
   RefreshCw,
   Bell,
   BookOpen,
@@ -25,9 +24,7 @@ interface HeaderProps {
   currentTimeStr: string;
   urgentCount: number;
   overdueCount: number;
-  onOpenSimModal: () => void;
   onResetData: () => void;
-  onOpenDbModal?: () => void;
   onOpenGuideModal?: () => void;
   isDbConnected?: boolean;
   staff?: any;
@@ -35,6 +32,7 @@ interface HeaderProps {
   onOpenStaffManagement?: () => void;
   onOpenHomeManagement?: () => void;
   onOpenDbVerify?: () => void;
+  dbStatus?: any;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -46,9 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
   currentTimeStr,
   urgentCount,
   overdueCount,
-  onOpenSimModal,
   onResetData,
-  onOpenDbModal,
   onOpenGuideModal,
   isDbConnected,
   staff,
@@ -56,6 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenStaffManagement,
   onOpenHomeManagement,
   onOpenDbVerify,
+  dbStatus,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const attentionCount = urgentCount + overdueCount;
@@ -172,30 +169,17 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
               )}
 
-              {/* Firebase Database Status Badge */}
-              {onOpenDbModal && (
-                <button
-                  id="firebase-db-status-btn"
-                  onClick={onOpenDbModal}
-                  className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs transition"
-                  title="View Firebase Firestore status"
-                >
-                  <Database className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="hidden lg:inline font-mono text-[11px]">Firestore</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                </button>
-              )}
-
-              {/* Simulation controls */}
-              <button
-                id="simulate-scenarios-btn"
-                onClick={onOpenSimModal}
-                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-semibold transition"
-                title="Test real-time checkin scenarios"
+              {/* Firebase connection status indicator */}
+              <span
+                title={dbStatus?.error ? `Firebase error: ${dbStatus.error}` : 'Connected to Firebase'}
+                className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs transition"
               >
-                <Sliders className="w-3.5 h-3.5" />
-                <span className="hidden lg:inline">Simulate</span>
-              </button>
+                <span className={`w-2 h-2 rounded-full ${dbStatus?.error ? 'bg-rose-500' : 'bg-emerald-500 animate-pulse'}`}></span>
+                <span className="hidden lg:inline font-mono text-[11px] text-slate-200">
+                  {dbStatus?.error ? 'Firebase error' : 'Firebase'}
+                </span>
+              </span>
+
 
               <button
                 id="reset-demo-btn"

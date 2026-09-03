@@ -208,6 +208,11 @@ export default function App() {
             residents={residents}
             onBack={() => setSelectedGlobalHomeId(null)}
             onOpenStaffManagement={() => setIsStaffMgmtOpen(true)}
+            onDeleteResident={async (id) => {
+              const ok = await api.deleteResident(id);
+              if (ok) await loadDbStatus();
+              return ok;
+            }}
           />
         )}
 
