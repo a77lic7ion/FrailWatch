@@ -41,6 +41,37 @@ export default function App() {
   const [residentUser, setResidentUser] = useState<Resident | null>(null);
   const [showSplash, setShowSplash] = useState<boolean>(true);
 
+  const isResidentLink = typeof window !== 'undefined' && (() => {
+    const p = new URLSearchParams(window.location.search);
+    return p.has('verify') || p.has('token') || p.has('residentId') || p.has('id') || p.get('mode') === 'checkin';
+  })();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('verify') || params.get('token');
+      const residentId = params.get('residentId') || params.get('id');
+      if (token || residentId || params.get('mode') === 'checkin') {
+        setActiveTab('senior-checkin');
+        setShowSplash(false);
+        const lookup = token || residentId;
+        if (lookup) {
+          api.getResidentProfile(lookup).then((profile) => {
+            if (profile?.resident) {
+              api.verifyResident(lookup).catch(() => {});
+              setResidentUser(profile.resident);
+              setViewMode('resident');
+              try {
+                localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
+                if (token) localStorage.setItem('elderwatch_linked_token', token);
+              } catch {}
+            }
+          }).catch(() => {});
+        }
+      }
+    }
+  }, []);
+
   const logout = async () => {
     try { markLoggingOut(); await staffLogout(); } catch {}
     setStaff(null);
@@ -51,6 +82,7 @@ export default function App() {
     setStaffLoading(true);
     setViewMode('admin');
     setResidentUser(null);
+    setShowSplash(true);
   };
 
   useEffect(() => {
@@ -265,7 +297,7 @@ export default function App() {
           </div>
         )}
 
-        {showLogin && viewMode !== 'resident' && showSplash && (
+        {!isResidentLink && showLogin && showSplash && (
           <div className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-between py-12 px-6">
             <div className="text-center">
               <Logo className="w-16 h-16 mx-auto mb-4" />
@@ -281,7 +313,7 @@ export default function App() {
           </div>
         )}
 
-        {showLogin && viewMode !== 'resident' && !showSplash && (
+        {!isResidentLink && showLogin && !showSplash && (
           <StaffLogin
             loading={staffLoading}
             error={loginError}
