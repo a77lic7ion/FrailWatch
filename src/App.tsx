@@ -108,7 +108,7 @@ export default function App() {
     loadDbStatus();
   }, [loadDbStatus, staff?.homeId, isGlobal]);
 
-  const selectedHome = (effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || effectiveHomes[0] || homes.find((h) => h.id === staff?.homeId) || (homes[0] || { id: 'home-benoni-01', name: 'Default Home', location: '', cutoffTime: '09:15', careStaffOnDuty: 0, primaryNurse: '', providerPartner: '' }));
+  const selectedHome = (effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || homes.find((h) => h.id === staff?.homeId) || effectiveHomes[0] || (homes[0] || { id: 'home-benoni-01', name: 'Default Home', location: '', cutoffTime: '09:15', careStaffOnDuty: 0, primaryNurse: '', providerPartner: '' }));
   const visibleResidents = isGlobal ? residents : residents.filter((r) => r.homeId === staff?.homeId);
   const urgentCount = visibleResidents.filter((r) => r.status === 'not_ok').length;
   const overdueCount = visibleResidents.filter((r) => r.status === 'overdue').length;
