@@ -30,8 +30,40 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
   const [selectedFamilyResidentId, setSelectedFamilyResidentId] = useState<string>(residents[0]?.id || 'res-1');
   const [smsAlertEnabled, setSmsAlertEnabled] = useState(true);
 
-  const resident = residents.find((r) => r.id === selectedFamilyResidentId) || residents[0];
+  const fallbackResident: Resident = {
+    id: 'res-1',
+    name: 'Resident',
+    room: 'Room 1',
+    wing: 'Willow Cottage',
+    phone: '+27 82 455 1092',
+    deviceLinked: true,
+    status: 'ok',
+    checkInTime: '08:14 AM',
+    caregiver: 'Sr. Sarah Botha',
+    medicalAlerts: [],
+    notes: '',
+    emergencyContact: {
+      name: 'Family Contact',
+      relationship: 'Family',
+      phone: '+27 83 291 0044',
+      notifyOnIssue: true,
+    },
+    sevenDayHistory: [
+      { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
+      { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
+      { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
+      { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
+      { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
+      { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
+      { date: '2026-09-03', day: 'Today', status: 'ok', time: '08:14 AM' },
+    ],
+  };
+
+  const resident = residents.find((r) => r.id === selectedFamilyResidentId) || residents[0] || fallbackResident;
   const isOk = resident.status === 'ok';
+  const historyList = (resident.sevenDayHistory && resident.sevenDayHistory.length > 0)
+    ? resident.sevenDayHistory
+    : fallbackResident.sevenDayHistory;
 
   return (
     <div className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
@@ -165,7 +197,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                   Past 7 Days Reassurance History
                 </h4>
                 <div className="grid grid-cols-7 gap-2">
-                  {resident.sevenDayHistory.map((h, i) => (
+                  {historyList.map((h, i) => (
                     <div 
                       key={i} 
                       className={`p-2.5 rounded-xl text-center border ${

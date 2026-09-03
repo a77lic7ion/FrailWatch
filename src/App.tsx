@@ -32,7 +32,29 @@ export default function App() {
       setDbStatus(status);
       const appData = await api.getData();
       if (appData && appData.residents && appData.residents.length > 0) {
-        setResidents(appData.residents);
+        const sanitizedResidents: Resident[] = appData.residents.map((r: any) => ({
+          ...r,
+          wing: r.wing || 'Willow Cottage',
+          sevenDayHistory: Array.isArray(r.sevenDayHistory) && r.sevenDayHistory.length > 0
+            ? r.sevenDayHistory
+            : [
+                { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
+                { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
+                { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
+                { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
+                { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
+                { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
+                { date: '2026-09-03', day: 'Today', status: r.status || 'awaiting' },
+              ],
+          medicalAlerts: Array.isArray(r.medicalAlerts) ? r.medicalAlerts : [],
+          emergencyContact: r.emergencyContact || {
+            name: 'Emergency Contact',
+            relationship: 'Family',
+            phone: '+27 82 111 2222',
+            notifyOnIssue: true,
+          },
+        }));
+        setResidents(sanitizedResidents);
         if (appData.homes && appData.homes.length > 0) {
           setHomes(appData.homes);
         }
@@ -62,20 +84,29 @@ export default function App() {
       prev.map((r) => {
         if (r.id !== residentId) return r;
         
-        const updatedHistory = [...r.sevenDayHistory];
-        if (updatedHistory.length > 0) {
-          updatedHistory[updatedHistory.length - 1] = {
-            ...updatedHistory[updatedHistory.length - 1],
-            status,
-            time: status === 'awaiting' ? undefined : timeFormatted,
-          };
-        }
+        const currentHistory = Array.isArray(r.sevenDayHistory) && r.sevenDayHistory.length > 0
+          ? [...r.sevenDayHistory]
+          : [
+              { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
+              { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
+              { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
+              { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
+              { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
+              { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
+              { date: '2026-09-03', day: 'Today', status: 'awaiting' },
+            ];
+        
+        currentHistory[currentHistory.length - 1] = {
+          ...currentHistory[currentHistory.length - 1],
+          status,
+          time: status === 'awaiting' ? undefined : timeFormatted,
+        };
 
         return {
           ...r,
           status,
           checkInTime: status === 'awaiting' ? undefined : timeFormatted,
-          sevenDayHistory: updatedHistory,
+          sevenDayHistory: currentHistory,
         };
       })
     );

@@ -39,7 +39,27 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
   const [showUndoNotice, setShowUndoNotice] = useState(false);
   const [showPairModal, setShowPairModal] = useState(false);
 
-  const resident = residents.find((r) => r.id === activeResidentId) || residents[0];
+  const fallbackResident: Resident = {
+    id: 'res-1',
+    name: 'Resident',
+    room: 'Room 1',
+    wing: 'Willow Cottage',
+    phone: '+27 82 455 1092',
+    deviceLinked: true,
+    status: 'awaiting',
+    caregiver: 'Sr. Sarah Botha',
+    medicalAlerts: [],
+    notes: '',
+    emergencyContact: {
+      name: 'Family Contact',
+      relationship: 'Family',
+      phone: '+27 83 291 0044',
+      notifyOnIssue: true,
+    },
+    sevenDayHistory: [],
+  };
+
+  const resident = residents.find((r) => r.id === activeResidentId) || residents[0] || fallbackResident;
 
   // Web Audio synthesizer tone for tactile feedback
   const playTone = (isOk: boolean) => {

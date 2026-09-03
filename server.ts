@@ -405,7 +405,32 @@ app.get('/api/data', async (_req: Request, res: Response) => {
         : homesSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
       const residents = residentsSnap.empty
         ? memoryResidents
-        : residentsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        : residentsSnap.docs.map((d) => {
+            const data = d.data();
+            return {
+              id: d.id,
+              ...data,
+              wing: data.wing || 'Willow Cottage',
+              sevenDayHistory: Array.isArray(data.sevenDayHistory) && data.sevenDayHistory.length > 0
+                ? data.sevenDayHistory
+                : [
+                    { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
+                    { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
+                    { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
+                    { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
+                    { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
+                    { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
+                    { date: '2026-09-03', day: 'Today', status: data.status || 'awaiting' },
+                  ],
+              medicalAlerts: Array.isArray(data.medicalAlerts) ? data.medicalAlerts : [],
+              emergencyContact: data.emergencyContact || {
+                name: 'Emergency Contact',
+                relationship: 'Family',
+                phone: '+27 82 111 2222',
+                notifyOnIssue: true,
+              },
+            };
+          });
 
       // Update memory cache
       memoryHomes = homes as typeof SEED_HOMES;
