@@ -9,7 +9,7 @@ import { HomeManagement } from './components/HomeManagement';
 import { DbVerificationModal } from './components/DbVerificationModal';
 import { GlobalAdminHomeSelector } from './components/GlobalAdminHomeSelector';
 import { GlobalAdminResidentList } from './components/GlobalAdminResidentList';
-import { HomeWeeklyOverview } from './components/HomeWeeklyOverview';
+import { SplashScreen } from './components/SplashScreen';
 import { CutoffModal } from './components/CutoffModal';
 import { Logo } from './components/Logo';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
@@ -298,19 +298,7 @@ export default function App() {
         )}
 
         {!isResidentLink && showLogin && showSplash && (
-          <div className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-between py-12 px-6">
-            <div className="text-center">
-              <Logo className="w-16 h-16 mx-auto mb-4" />
-              <h1 className="text-2xl font-black text-slate-900">ElderWatch</h1>
-              <p className="text-sm text-slate-500 mt-2">Morning reassurance check-in for residents and care teams.</p>
-            </div>
-            <button
-              onClick={() => setShowSplash(false)}
-              className="w-full max-w-sm rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 transition"
-            >
-              Continue to Login
-            </button>
-          </div>
+          <SplashScreen onContinue={() => setShowSplash(false)} />
         )}
 
         {!isResidentLink && showLogin && !showSplash && (
