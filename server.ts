@@ -238,6 +238,19 @@ app.get('/api/homes', requireStaff, async (req: Request, res: Response) => {
   res.json({ homes });
 });
 
+app.post('/api/homes', requireStaff, async (req: Request, res: Response) => {
+  const staff: any = (req as any).staff;
+  if (!canAccessHome(staff, '*')) return res.status(403).json({ error: 'Forbidden' });
+  const { id, name, location, cutoffTime, careStaffOnDuty, primaryNurse, providerPartner } = req.body || {};
+  if (!id || !name) return res.status(400).json({ error: 'Missing id or name' });
+  const home = { id, name, location: location || '', cutoffTime: cutoffTime || '09:00', careStaffOnDuty: Number(careStaffOnDuty || 0), primaryNurse: primaryNurse || '', providerPartner: providerPartner || '' };
+  memoryHomes.push(home);
+  if (firestoreDb) {
+    try { await firestoreDb.collection('homes').doc(id).set(home); } catch {}
+  }
+  res.json({ home });
+});
+
 app.get('/api/residents', requireStaff, async (req: Request, res: Response) => {
   const staff: any = (req as any).staff;
   const homeId = String(req.query.homeId || '');

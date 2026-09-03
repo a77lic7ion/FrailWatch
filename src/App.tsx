@@ -166,10 +166,13 @@ export default function App() {
             error={loginError}
             onLogin={async (email, password) => {
               setLoginError(null);
+              setStaffLoading(true);
               try {
                 const result = await staffLogin(email, password);
                 setStaff(result.staff);
+                setStaffLoading(false);
               } catch (err: any) {
+                setStaffLoading(false);
                 setLoginError(err.message || 'Login failed');
               }
             }}

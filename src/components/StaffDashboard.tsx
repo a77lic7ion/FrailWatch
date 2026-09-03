@@ -27,6 +27,7 @@ import {
   UserCog
 } from 'lucide-react';
 import { Resident, CareHome, CheckInStatus } from '../types';
+import { getAuthHeaders } from '../services/api';
 
 interface StaffDashboardProps {
   home?: CareHome;
@@ -64,6 +65,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [wingFilter, setWingFilter] = useState<string>('all');
   const [selectedResident, setSelectedResident] = useState<Resident | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showCreateHomeModal, setShowCreateHomeModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -100,9 +102,42 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedSms, setCopiedSms] = useState(false);
 
+  // Create home form state
+  const [newHomeId, setNewHomeId] = useState('');
+  const [newHomeName, setNewHomeName] = useState('');
+  const [newHomeLocation, setNewHomeLocation] = useState('');
+  const [newHomeCutoff, setNewHomeCutoff] = useState('09:00');
+  const [creatingHome, setCreatingHome] = useState(false);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const createHome = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreatingHome(true);
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch('/api/homes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...headers },
+        body: JSON.stringify({ id: newHomeId, name: newHomeName, location: newHomeLocation, cutoffTime: newHomeCutoff }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create home');
+      showToast(`Home created: ${data.home.name}`);
+      setNewHomeId('');
+      setNewHomeName('');
+      setNewHomeLocation('');
+      setNewHomeCutoff('09:00');
+      setShowCreateHomeModal(false);
+      onAddResident({}).catch(() => {});
+    } catch (e: any) {
+      showToast(e.message || 'Failed to create home');
+    } finally {
+      setCreatingHome(false);
+    }
   };
 
   // Metrics calculation
@@ -1284,6 +1319,45 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* CREATE HOME MODAL */}
+      {showCreateHomeModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+            <div className="flex items-center justify-between p-6 border-b">
+              <div>
+                <h3 className="text-lg font-bold">Create New Home</h3>
+                <p className="text-xs text-slate-500">Add a care home, then assign a home admin in Staff Management.</p>
+              </div>
+              <button onClick={() => setShowCreateHomeModal(false)} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+            </div>
+            <form onSubmit={createHome} className="p-6 space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Home ID *</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="e.g. home-pretoria-03" value={newHomeId} onChange={(e) => setNewHomeId(e.target.value)} required />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Home Name *</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="e.g. Pretoria Frail Care" value={newHomeName} onChange={(e) => setNewHomeName(e.target.value)} required />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Location</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="e.g. Hatfield, Pretoria" value={newHomeLocation} onChange={(e) => setNewHomeLocation(e.target.value)} />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Cutoff Time</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="09:00" value={newHomeCutoff} onChange={(e) => setNewHomeCutoff(e.target.value)} />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button type="submit" disabled={creatingHome} className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm disabled:opacity-60">
+                  {creatingHome ? 'Creating...' : 'Create Home'}
+                </button>
+                <button type="button" onClick={() => setShowCreateHomeModal(false)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
+              </div>
+            </form>
           </div>
         </div>
       )}
