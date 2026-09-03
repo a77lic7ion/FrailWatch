@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Users, X, UserPlus } from 'lucide-react';
+import { Shield, Plus, Users, X, UserPlus, Trash2 } from 'lucide-react';
 import { getAuthHeaders } from '../services/api';
+import { api } from '../services/api';
 
 interface StaffManagementProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
   const [homes, setHomes] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [editingStaff, setEditingStaff] = useState<StaffMember | null>(null);
 
   const canGlobalManage = staff.role === 'superadmin' || staff.homeId === '*';
 
@@ -92,6 +94,39 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
     }
   };
 
+  const saveEditingStaff = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingStaff) return;
+    const updates: any = {};
+    const form = e.target as HTMLFormElement;
+    const nameInput = form.elements.namedItem('edit-staff-name') as HTMLInputElement | null;
+    const roleInput = form.elements.namedItem('edit-staff-role') as HTMLSelectElement | null;
+    const homeInput = form.elements.namedItem('edit-staff-home') as HTMLSelectElement | null;
+    if (nameInput?.value) updates.name = nameInput.value;
+    if (roleInput?.value) updates.role = roleInput.value;
+    if (homeInput?.value) updates.homeId = homeInput.value;
+    const ok = await api.updateStaff(editingStaff.uid, updates);
+    if (ok) {
+      setSuccess('Staff updated');
+      await loadStaff();
+      setEditingStaff(null);
+    } else {
+      setError('Failed to update staff');
+    }
+  };
+
+  const removeStaff = async (uid: string) => {
+    const ok = window.confirm('Remove this staff account?');
+    if (!ok) return;
+    const removed = await api.deleteStaff(uid);
+    if (removed) {
+      setSuccess('Staff removed');
+      await loadStaff();
+    } else {
+      setError('Failed to remove staff');
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -146,12 +181,61 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                       <p className="text-sm font-semibold">{s.name || s.email}</p>
                       <p className="text-xs text-slate-500">{s.email} · {s.role || 'home_admin'} · {s.homeId}</p>
                     </div>
+                    <div className="flex items-center gap-2">
+                      {canGlobalManage && (
+                        <>
+                          <button onClick={() => setEditingStaff(s)} className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 underline">Edit</button>
+                          <button onClick={() => removeStaff(s.uid)} className="text-xs font-semibold text-rose-700 hover:text-rose-900 underline flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> Delete</button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 ))}
                 {!staffList.length && <p className="text-xs text-slate-500">No staff found.</p>}
               </div>
             )}
           </div>
+
+          {editingStaff && (
+            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+                <div className="flex items-center justify-between p-6 border-b">
+                  <div>
+                    <h3 className="text-lg font-bold">Edit Staff</h3>
+                    <p className="text-xs text-slate-500">{editingStaff.email}</p>
+                  </div>
+                  <button onClick={() => setEditingStaff(null)} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+                </div>
+                <form onSubmit={saveEditingStaff} className="p-6 space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Name</label>
+                    <input id="edit-staff-name" name="edit-staff-name" className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" defaultValue={editingStaff.name || ''} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Role</label>
+                      <select id="edit-staff-role" name="edit-staff-role" className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" defaultValue={editingStaff.role || 'home_admin'}>
+                        <option value="superadmin">Global Admin</option>
+                        <option value="home_admin">Home Admin</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Home</label>
+                      <select id="edit-staff-home" name="edit-staff-home" className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" defaultValue={editingStaff.homeId || homeId}>
+                        {homes.map((h) => (
+                          <option key={h.id} value={h.id}>{h.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Save Changes</button>
+                    <button type="button" onClick={() => setEditingStaff(null)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

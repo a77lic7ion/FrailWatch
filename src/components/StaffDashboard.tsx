@@ -27,7 +27,7 @@ import {
   UserCog
 } from 'lucide-react';
 import { Resident, CareHome, CheckInStatus } from '../types';
-import { getAuthHeaders } from '../services/api';
+import { api } from '../services/api';
 
 interface StaffDashboardProps {
   home?: CareHome;
@@ -68,6 +68,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [showCreateHomeModal, setShowCreateHomeModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [editingHome, setEditingHome] = useState<CareHome | null>(null);
+  const [editingResident, setEditingResident] = useState<Resident | null>(null);
 
   // New resident form state (admin sets name and phone per home)
   const [newName, setNewName] = useState('');
@@ -118,14 +120,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
     e.preventDefault();
     setCreatingHome(true);
     try {
-      const headers = await getAuthHeaders();
-      const res = await fetch('/api/homes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify({ id: newHomeId, name: newHomeName, location: newHomeLocation, cutoffTime: newHomeCutoff }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to create home');
+      const data = await api.createHome({ id: newHomeId, name: newHomeName, location: newHomeLocation, cutoffTime: newHomeCutoff });
       showToast(`Home created: ${data.home.name}`);
       setNewHomeId('');
       setNewHomeName('');
@@ -137,6 +132,53 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       showToast(e.message || 'Failed to create home');
     } finally {
       setCreatingHome(false);
+    }
+  };
+
+  const saveEditingHome = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingHome) return;
+    const updated = await api.updateHome(editingHome.id, { name: editingHome.name, location: editingHome.location, cutoffTime: editingHome.cutoffTime, primaryNurse: editingHome.primaryNurse, providerPartner: editingHome.providerPartner });
+    if (updated) showToast('Home updated');
+    setEditingHome(null);
+    onAddResident({}).catch(() => {});
+  };
+
+  const removeHome = async (id: string) => {
+    const ok = window.confirm('Delete this home? This cannot be undone.');
+    if (!ok) return;
+    const removed = await api.deleteHome(id);
+    if (removed) {
+      showToast('Home deleted');
+      onAddResident({}).catch(() => {});
+    }
+  };
+
+  const saveEditingResident = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingResident) return;
+    const updates = {
+      name: editingResident.name,
+      room: editingResident.room,
+      wing: editingResident.wing,
+      phone: editingResident.phone,
+      caregiver: editingResident.caregiver,
+    };
+    const updated = await api.updateResident(editingResident.id, updates);
+    if (updated) {
+      showToast('Resident updated');
+      setEditingResident(null);
+      onAddResident({}).catch(() => {});
+    }
+  };
+
+  const removeResident = async (id: string) => {
+    const ok = window.confirm('Remove this resident record?');
+    if (!ok) return;
+    const removed = await api.deleteResident(id);
+    if (removed) {
+      showToast('Resident removed');
+      onAddResident({}).catch(() => {});
     }
   };
 
@@ -278,6 +320,12 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
                 {homeOrDefault.providerPartner}
               </span>
+              {staff?.role === 'superadmin' && (
+                <>
+                  <button onClick={() => setEditingHome(homeOrDefault)} className="text-[11px] font-bold text-indigo-700 hover:text-indigo-900 underline">Edit</button>
+                  <button onClick={() => removeHome(homeOrDefault.id)} className="text-[11px] font-bold text-rose-700 hover:text-rose-900 underline">Delete</button>
+                </>
+              )}
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Morning Care Triage Dashboard
@@ -734,13 +782,30 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   >
                     <Phone className="w-4 h-4" />
                   </a>
-                  
+
                   <button
                     onClick={() => setSelectedResident(r)}
                     className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
                   >
                     Profile
                   </button>
+
+                  {staff?.role === 'superadmin' && (
+                    <>
+                      <button
+                        onClick={() => setEditingResident(r)}
+                        className="px-2 py-1 rounded-lg text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => removeResident(r.id)}
+                        className="px-2 py-1 rounded-lg text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-700 transition"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -1356,6 +1421,82 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   {creatingHome ? 'Creating...' : 'Create Home'}
                 </button>
                 <button type="button" onClick={() => setShowCreateHomeModal(false)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT HOME MODAL */}
+      {editingHome && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+            <div className="flex items-center justify-between p-6 border-b">
+              <div>
+                <h3 className="text-lg font-bold">Edit Home</h3>
+                <p className="text-xs text-slate-500">Update home details.</p>
+              </div>
+              <button onClick={() => setEditingHome(null)} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+            </div>
+            <form onSubmit={saveEditingHome} className="p-6 space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Name</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingHome.name} onChange={(e) => setEditingHome({ ...editingHome, name: e.target.value })} required />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Location</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingHome.location} onChange={(e) => setEditingHome({ ...editingHome, location: e.target.value })} />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Cutoff Time</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingHome.cutoffTime} onChange={(e) => setEditingHome({ ...editingHome, cutoffTime: e.target.value })} />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Save Changes</button>
+                <button type="button" onClick={() => setEditingHome(null)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT RESIDENT MODAL */}
+      {editingResident && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+            <div className="flex items-center justify-between p-6 border-b">
+              <div>
+                <h3 className="text-lg font-bold">Edit Resident</h3>
+                <p className="text-xs text-slate-500">Update resident info or home assignment.</p>
+              </div>
+              <button onClick={() => setEditingResident(null)} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+            </div>
+            <form onSubmit={saveEditingResident} className="p-6 space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Name</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.name} onChange={(e) => setEditingResident({ ...editingResident, name: e.target.value })} required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Room</label>
+                  <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.room} onChange={(e) => setEditingResident({ ...editingResident, room: e.target.value })} />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Wing</label>
+                  <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.wing} onChange={(e) => setEditingResident({ ...editingResident, wing: e.target.value })} />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Phone</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.phone} onChange={(e) => setEditingResident({ ...editingResident, phone: e.target.value })} />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Caregiver</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.caregiver} onChange={(e) => setEditingResident({ ...editingResident, caregiver: e.target.value })} />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Save Changes</button>
+                <button type="button" onClick={() => setEditingResident(null)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
               </div>
             </form>
           </div>

@@ -165,4 +165,76 @@ export const api = {
       return false;
     }
   },
+
+  async createHome(payload: { id: string; name: string; location?: string; cutoffTime?: string; careStaffOnDuty?: number; primaryNurse?: string; providerPartner?: string }): Promise<any> {
+    try {
+      const res = await fetch('/api/homes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      return await res.json();
+    } catch (e) {
+      console.warn('Failed to create home:', e);
+      throw e;
+    }
+  },
+
+  async updateHome(id: string, updates: any): Promise<boolean> {
+    try {
+      const res = await fetch(`/api/homes/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify(updates),
+      });
+      return res.ok;
+    } catch (e) {
+      console.warn('Failed to update home:', e);
+      return false;
+    }
+  },
+
+  async deleteHome(id: string): Promise<boolean> {
+    try {
+      const res = await fetch(`/api/homes/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: { ...(await getAuthHeaders()) },
+      });
+      return res.ok;
+    } catch (e) {
+      console.warn('Failed to delete home:', e);
+      return false;
+    }
+  },
+
+  async updateStaff(uid: string, updates: any): Promise<boolean> {
+    try {
+      const res = await fetch(`/api/staff/${encodeURIComponent(uid)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify(updates),
+      });
+      return res.ok;
+    } catch (e) {
+      console.warn('Failed to update staff:', e);
+      return false;
+    }
+  },
+
+  async deleteStaff(uid: string): Promise<boolean> {
+    try {
+      const res = await fetch(`/api/staff/${encodeURIComponent(uid)}`, {
+        method: 'DELETE',
+        headers: { ...(await getAuthHeaders()) },
+      });
+      return res.ok;
+    } catch (e) {
+      console.warn('Failed to delete staff:', e);
+      return false;
+    }
+  },
 };

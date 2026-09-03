@@ -322,6 +322,60 @@ app.get('/api/resident/:idOrToken', async (req: Request, res: Response) => {
   res.json({ resident, home });
 });
 
+app.delete('/api/homes/:id', requireStaff, async (req: Request, res: Response) => {
+  const staff: any = (req as any).staff;
+  const { id } = req.params;
+  const home = memoryHomes.find((h) => h.id === id);
+  if (!home) return res.status(404).json({ error: 'Home not found' });
+  if (!canAccessHome(staff, id)) return res.status(403).json({ error: 'Forbidden' });
+  memoryHomes = memoryHomes.filter((h) => h.id !== id);
+  if (firestoreDb) {
+    try { await firestoreDb.collection('homes').doc(id).delete(); } catch {}
+  }
+  res.json({ success: true, id });
+});
+
+app.put('/api/homes/:id', requireStaff, async (req: Request, res: Response) => {
+  const staff: any = (req as any).staff;
+  const { id } = req.params;
+  if (!canAccessHome(staff, id)) return res.status(403).json({ error: 'Forbidden' });
+  const updates = req.body || {};
+  const idx = memoryHomes.findIndex((h) => h.id === id);
+  if (idx === -1) return res.status(404).json({ error: 'Home not found' });
+  memoryHomes[idx] = { ...memoryHomes[idx], ...updates };
+  if (firestoreDb) {
+    try { await firestoreDb.collection('homes').doc(id).set(updates, { merge: true }); } catch {}
+  }
+  res.json({ success: true, home: memoryHomes[idx] });
+});
+
+app.put('/api/staff/:uid', requireStaff, async (req: Request, res: Response) => {
+  const staff: any = (req as any).staff;
+  const { uid } = req.params;
+  const target = (await firestoreDb?.collection('staff').doc(uid).get());
+  const targetData = target?.data();
+  const targetHomeId = targetData?.homeId;
+  if (!canAccessHome(staff, targetHomeId)) return res.status(403).json({ error: 'Forbidden' });
+  const updates = req.body || {};
+  if (firestoreDb) {
+    try { await firestoreDb.collection('staff').doc(uid).set(updates, { merge: true }); } catch (e: unknown) { return res.status(500).json({ error: 'Firestore update failed' }); }
+  }
+  res.json({ success: true, uid, updates });
+});
+
+app.delete('/api/staff/:uid', requireStaff, async (req: Request, res: Response) => {
+  const staff: any = (req as any).staff;
+  const { uid } = req.params;
+  const target = await firestoreDb?.collection('staff').doc(uid).get();
+  const targetData = target?.data();
+  const targetHomeId = targetData?.homeId;
+  if (!canAccessHome(staff, targetHomeId)) return res.status(403).json({ error: 'Forbidden' });
+  if (firestoreDb) {
+    try { await firestoreDb.collection('staff').doc(uid).delete(); } catch (e: unknown) { return res.status(500).json({ error: 'Firestore delete failed' }); }
+  }
+  res.json({ success: true, uid });
+});
+
 app.put('/api/residents/:id', requireStaff, async (req: Request, res: Response) => {
   const staff: any = (req as any).staff;
   const { id } = req.params;
