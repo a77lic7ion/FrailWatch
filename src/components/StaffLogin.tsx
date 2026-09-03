@@ -29,9 +29,17 @@ export function StaffLogin({ onLogin, error, loading }: StaffLoginProps) {
         )}
 
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            onLogin(email, password);
+            try {
+              await onLogin(email, password);
+            } catch (err: any) {
+              const msg = err?.message || String(err);
+              const codeMatch = msg.match(/\(([^)]+)\)/);
+              const code = codeMatch ? codeMatch[1] : '';
+              const reason = code ? `Firebase: Error (${code}).` : msg;
+              throw err;
+            }
           }}
           className="space-y-4"
         >
