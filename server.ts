@@ -103,11 +103,14 @@ app.get('/api/data', requireStaff, async (req: Request, res: Response) => {
       firestoreDb?.collection('homes').get() as any,
       firestoreDb?.collection('residents').get() as any,
     ]);
-    let homes = homesSnap?.docs.map((d: any) => ({ id: d.id, ...d.data() })) || memoryHomes;
+    let homes = homesSnap?.docs.map((d: any) => ({ id: d.id, ...d.data() })) || [];
     let residents = residentsSnap?.docs.map((d: any) => {
       const data = d.data();
       return { id: d.id, ...data, homeId: data.homeId || 'home-benoni-01', verificationToken: data.verificationToken || `ew_${d.id}`, deviceLinked: !!data.deviceLinked, wing: data.wing || 'Willow Cottage', sevenDayHistory: Array.isArray(data.sevenDayHistory) && data.sevenDayHistory.length ? data.sevenDayHistory : [{ date: '2026-09-03', day: 'Today', status: data.status || 'awaiting' }], emergencyContact: data.emergencyContact || { name: 'Emergency Contact', relationship: 'Family', phone: '+27 82 111 2222', notifyOnIssue: true } };
-    }) || memoryResidents;
+    }) || [];
+
+    if (!homes.length) homes = memoryHomes;
+    if (!residents.length) residents = memoryResidents;
 
     if (!canAccessHome(staff, '*')) {
       homes = homes.filter((h: any) => h.id === staff.homeId);

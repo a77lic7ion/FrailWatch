@@ -83,22 +83,47 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-1.5 sm:gap-2.5">
               
               {/* Facility Selector */}
-              <div className="relative flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-700 text-xs">
-                <Building2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <select
-                  id="facility-select"
-                  aria-label="Select Care Home Facility"
-                  value={selectedHome?.id || ''}
-                  onChange={(e) => setSelectedHomeId(e.target.value)}
-                  className="bg-transparent text-slate-100 font-semibold focus:outline-none cursor-pointer text-xs max-w-[120px] sm:max-w-[190px] truncate"
-                >
-                  {(allHomes || []).map((home) => (
-                    <option key={home.id} value={home.id} className="bg-slate-800 text-slate-100">
-                      {home.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {(() => {
+                const isGlobal = staff?.role === 'superadmin' || staff?.homeId === '*';
+                if (isGlobal) {
+                  const homeOptions = allHomes || [];
+                  if (homeOptions.length === 0) return null;
+                  return (
+                    <div className="relative flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-700 text-xs">
+                      <Building2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <select
+                        id="facility-select"
+                        aria-label="Select Care Home Facility"
+                        value={selectedHome?.id || ''}
+                        onChange={(e) => setSelectedHomeId(e.target.value)}
+                        className="bg-transparent text-slate-100 font-semibold focus:outline-none cursor-pointer text-xs max-w-[120px] sm:max-w-[190px] truncate"
+                      >
+                        {homeOptions.map((home) => (
+                          <option key={home.id} value={home.id} className="bg-slate-800 text-slate-100">
+                            {home.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                }
+                const assignedHome = (allHomes || []).find((h) => h.id === staff?.homeId) || selectedHome;
+                if (!assignedHome && staff?.homeId) {
+                  return (
+                    <div className="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300">
+                      <Building2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="font-semibold truncate max-w-[120px] sm:max-w-[190px]">Home: {staff.homeId}</span>
+                    </div>
+                  );
+                }
+                if (!assignedHome) return null;
+                return (
+                  <div className="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1.5 rounded-xl border border-slate-700 text-xs text-slate-300">
+                    <Building2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="font-semibold truncate max-w-[120px] sm:max-w-[190px]">{assignedHome.name}</span>
+                  </div>
+                );
+              })()}
 
               {/* Time badge */}
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-slate-300">

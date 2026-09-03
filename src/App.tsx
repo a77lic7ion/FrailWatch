@@ -45,10 +45,13 @@ export default function App() {
   const effectiveSelectedHomeId = isGlobal ? selectedHomeId : (effectiveHomes[0]?.id || selectedHomeId);
 
   useEffect(() => {
-    if (!isGlobal && effectiveSelectedHomeId) {
-      setSelectedHomeId(effectiveSelectedHomeId);
+    if (!isGlobal && staff?.homeId) {
+      const match = homes.find((h) => h.id === staff.homeId);
+      if (match && match.id !== selectedHomeId) {
+        setSelectedHomeId(match.id);
+      }
     }
-  }, [isGlobal, effectiveSelectedHomeId]);
+  }, [isGlobal, staff?.homeId, homes, selectedHomeId]);
 
   useEffect(() => {
     try {
