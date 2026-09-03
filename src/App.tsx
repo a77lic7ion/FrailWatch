@@ -38,6 +38,9 @@ export default function App() {
     try { await staffLogout(); } catch {}
     setStaff(null);
     setActiveTab('dashboard');
+    setSelectedGlobalHomeId(null);
+    setResidents([]);
+    setHomes(INITIAL_HOMES);
   };
 
   useEffect(() => {

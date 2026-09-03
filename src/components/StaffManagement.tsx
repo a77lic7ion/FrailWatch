@@ -39,12 +39,8 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
   const loadStaff = async () => {
     setLoading(true);
     try {
-      const headers = await getAuthHeaders();
-      const res = await fetch('/api/staff', { headers });
-      if (res.ok) {
-        const data = await res.json();
-        setStaffList(data.staff || []);
-      }
+      const list = await api.getStaffList();
+      setStaffList(list || []);
     } catch (e: any) {
       setError(e.message || 'Failed to load staff');
     } finally {
@@ -54,12 +50,8 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
 
   const loadHomes = async () => {
     try {
-      const headers = await getAuthHeaders();
-      const res = await fetch('/api/homes', { headers });
-      if (res.ok) {
-        const data = await res.json();
-        setHomes(data.homes || []);
-      }
+      const homes = await api.getHomes();
+      setHomes(homes || []);
     } catch {}
   };
 
@@ -76,14 +68,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
     setError(null);
     setSuccess(null);
     try {
-      const headers = await getAuthHeaders();
-      const res = await fetch('/api/staff', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify({ email, password, name, homeId, role }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to create staff');
+      const data = await api.createStaff({ email, password, name, homeId, role });
       setSuccess(`Staff created: ${email}`);
       setEmail('');
       setPassword('');
