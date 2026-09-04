@@ -52,6 +52,10 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
     }
   };
 
+  const refreshAll = async () => {
+    await Promise.all([loadHomes(), onRefresh()]);
+  };
+
   useEffect(() => {
     if (isOpen) {
       loadHomes();
@@ -159,28 +163,28 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input
-                  className="border rounded-lg p-2"
+                  className="border rounded-lg p-2 text-xs text-white bg-[#0f1722]"
                   placeholder="Home ID (e.g. home-test-2)"
                   value={newHome.id}
                   onChange={(e) => setNewHome({ ...newHome, id: e.target.value })}
                   required
                 />
                 <input
-                  className="border rounded-lg p-2"
+                  className="border rounded-lg p-2 text-xs text-white bg-[#0f1722]"
                   placeholder="Home Name"
                   value={newHome.name}
                   onChange={(e) => setNewHome({ ...newHome, name: e.target.value })}
                   required
                 />
                 <input
-                  className="border rounded-lg p-2"
+                  className="border rounded-lg p-2 text-xs text-white bg-[#0f1722]"
                   placeholder="Location"
                   value={newHome.location}
                   onChange={(e) => setNewHome({ ...newHome, location: e.target.value })}
                 />
                 <input
                   type="time"
-                  className="border rounded-lg p-2"
+                  className="border rounded-lg p-2 text-xs text-white bg-[#0f1722]"
                   value={newHome.cutoffTime}
                   onChange={(e) => setNewHome({ ...newHome, cutoffTime: e.target.value })}
                 />
