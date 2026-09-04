@@ -1,17 +1,18 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { 
-  getFirestore, 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  setDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
+  getFirestore,
+  collection,
+  doc,
+  getDocs,
+  getDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
   onSnapshot,
-  getDocFromServer
+  getDocFromServer,
+  enableIndexedDbPersistence
 } from 'firebase/firestore';
 import firebaseConfigData from '../firebase-applet-config.json';
 
@@ -66,6 +67,17 @@ export const app = getApps().length > 0 ? getApp() : initializeApp(activeConfig)
 export const db = activeConfig.firestoreDatabaseId 
   ? getFirestore(app, activeConfig.firestoreDatabaseId)
   : getFirestore(app);
+
+// Enable offline persistence for instant local reads/writes with automatic sync
+(async () => {
+  try {
+    await enableIndexedDbPersistence(db);
+  } catch (err: any) {
+    // Common: multiple tabs open or browser restrictions; ignore and continue online
+    // eslint-disable-next-line no-console
+    console.warn('Firestore persistence could not be enabled:', err?.message || err);
+  }
+})();
 
 // Connection test
 export async function testFirestoreConnection(): Promise<{ connected: boolean; message: string; projectId: string }> {
