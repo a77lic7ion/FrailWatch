@@ -1,4 +1,4 @@
-const CACHE_NAME = 'elderwatch-app-v2';
+const CACHE_NAME = 'elderwatch-app-v3';
 const PRECACHE_URLS = ['/'];
 
 self.addEventListener('install', (event) => {
