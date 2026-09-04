@@ -678,6 +678,22 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             <Plus className="w-3.5 h-3.5" />
             <span>Create Home</span>
           </button>
+
+          {/* Revoke All Device Links */}
+          <button
+            id="revoke-all-links-btn"
+            onClick={async () => {
+              const ok = window.confirm('Revoke ALL resident device links? Everyone will need a new verification link.');
+              if (!ok) return;
+              const count = await api.revokeAllResidentVerifications();
+              showToast(`Revoked ${count} resident device link(s)`);
+              onUpdateResident({}).catch(() => {});
+            }}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1 shadow-sm ml-2"
+          >
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>Revoke all device links</span>
+          </button>
         </div>
 
       </div>

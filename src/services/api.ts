@@ -186,6 +186,31 @@ export const api = {
     }
   },
 
+  async revokeAllResidentVerifications(): Promise<number> {
+    try {
+      const q = query(collection(db, 'residents'));
+      const snap = await getDocs(q);
+      let count = 0;
+      for (const d of snap.docs) {
+        const data = d.data() as any;
+        const currentVersion = Number(data.verificationVersion || 1);
+        const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
+        await updateDoc(firestoreDoc(db, 'residents', d.id), {
+          deviceLinked: false,
+          linkedAt: null,
+          verificationToken: token,
+          verificationVersion: currentVersion + 1,
+          revokedAt: new Date().toISOString(),
+        });
+        count++;
+      }
+      return count;
+    } catch (e) {
+      console.warn('Failed to revoke all resident verifications:', e);
+      return 0;
+    }
+  },
+
   async deleteResident(id: string): Promise<boolean> {
     try {
       await deleteDoc(firestoreDoc(db, 'residents', id));
