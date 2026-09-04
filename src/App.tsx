@@ -40,33 +40,32 @@ export default function App() {
   const [residentUser, setResidentUser] = useState<Resident | null>(null);
 
   const isResidentLink = typeof window !== 'undefined' && (() => {
-    const p = new URLSearchParams(window.location.search);
-    return p.has('verify') || p.has('token') || p.has('residentId') || p.has('id') || p.has('phone') || p.get('mode') === 'checkin';
+    const p = window.location.pathname || '';
+    return p !== '/' && p !== '/index.html';
   })();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
       const params = new URLSearchParams(window.location.search);
+      const phone = params.get('phone');
       const token = params.get('verify') || params.get('token');
       const residentId = params.get('residentId') || params.get('id');
-      const phone = params.get('phone');
-      if (token || residentId || phone || params.get('mode') === 'checkin') {
+      const lookup = path || phone || token || residentId;
+      if (lookup) {
         setActiveTab('senior-checkin');
-        const lookup = token || residentId || phone;
-        if (lookup) {
-          api.getResidentProfile(lookup).then((profile) => {
-            if (profile?.resident) {
-              api.verifyResident(lookup).catch(() => {});
-              setResidentUser(profile.resident);
-              setViewMode('resident');
-              try {
-                localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
-                if (token) localStorage.setItem('elderwatch_linked_token', token);
-                if (phone) localStorage.setItem('elderwatch_linked_phone', phone);
-              } catch {}
-            }
-          }).catch(() => {});
-        }
+        api.getResidentProfile(lookup).then((profile) => {
+          if (profile?.resident) {
+            api.verifyResident(lookup).catch(() => {});
+            setResidentUser(profile.resident);
+            setViewMode('resident');
+            try {
+              localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
+              if (token) localStorage.setItem('elderwatch_linked_token', token);
+              if (phone) localStorage.setItem('elderwatch_linked_phone', phone);
+            } catch {}
+          }
+        }).catch(() => {});
       } else if (!staff) {
         const savedId = localStorage.getItem('elderwatch_linked_resident_id');
         const savedToken = localStorage.getItem('elderwatch_linked_token');
