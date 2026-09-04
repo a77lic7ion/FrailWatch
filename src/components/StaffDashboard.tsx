@@ -41,6 +41,8 @@ interface StaffDashboardProps {
   onOpenGuideModal?: () => void;
   staff?: any;
   onOpenStaffManagement?: () => void;
+  onRefresh?: () => void;
+  onRevokeAll?: () => void;
 }
 
 export const StaffDashboard: React.FC<StaffDashboardProps> = ({
@@ -56,6 +58,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   onOpenGuideModal,
   staff,
   onOpenStaffManagement,
+  onRefresh,
+  onRevokeAll,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'action' | 'ok' | 'awaiting'>('all');
@@ -67,6 +71,12 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [editingHome, setEditingHome] = useState<CareHome | null>(null);
   const [editingResident, setEditingResident] = useState<Resident | null>(null);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importHomeId, setImportHomeId] = useState<string>(staff?.homeId || 'home-benoni-01');
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importPreview, setImportPreview] = useState<any[] | null>(null);
+  const [importResults, setImportResults] = useState<{ imported: number; failed: number; results: any[] } | null>(null);
+  const [importing, setImporting] = useState(false);
 
   // New resident form state (admin sets name and phone per home)
   const [newName, setNewName] = useState('');
@@ -86,7 +96,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
     primaryNurse: '',
     providerPartner: '',
   } as CareHome;
-  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(home?.id || homeOrDefault.id);
+  const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(staff?.homeId || home?.id || homeOrDefault.id);
 
   // Verification modal state after admin creates user
   const [createdVerificationData, setCreatedVerificationData] = useState<{
@@ -669,6 +679,16 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             <span>Add Resident</span>
           </button>
 
+          {/* Bulk Import Button */}
+          <button
+            id="bulk-import-btn"
+            onClick={() => setShowImportModal(true)}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#131d27] hover:bg-[#1e293b] text-[#e2e8f0] transition flex items-center gap-1 shadow-sm mr-2"
+          >
+            <FileDown className="w-3.5 h-3.5" />
+            <span>Bulk Import</span>
+          </button>
+
           {/* Create Home Button */}
           <button
             id="create-home-btn"
@@ -679,15 +699,34 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             <span>Create Home</span>
           </button>
 
+          {/* Manual Refresh Button */}
+          <button
+            id="refresh-dashboard-btn"
+            onClick={async () => {
+              if (typeof onRefresh === 'function') {
+                await onRefresh();
+                showToast('Refreshed from Firebase');
+              }
+            }}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#131d27] hover:bg-[#1e293b] text-[#e2e8f0] transition flex items-center gap-1 shadow-sm ml-2"
+          >
+            <RotateCw className="w-3.5 h-3.5" />
+            <span>Refresh</span>
+          </button>
+
           {/* Revoke All Device Links */}
           <button
             id="revoke-all-links-btn"
             onClick={async () => {
               const ok = window.confirm('Revoke ALL resident device links? Everyone will need a new verification link.');
               if (!ok) return;
-              const count = await api.revokeAllResidentVerifications();
-              showToast(`Revoked ${count} resident device link(s)`);
-              onUpdateResident({}).catch(() => {});
+              if (typeof onRevokeAll === 'function') {
+                await onRevokeAll();
+              } else {
+                const count = await api.revokeAllResidentVerifications();
+                showToast(`Revoked ${count} resident device link(s)`);
+                if (typeof onRefresh === 'function') await onRefresh();
+              }
             }}
             className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-[#e2e8f0] transition flex items-center gap-1 shadow-sm ml-2"
           >
@@ -1087,22 +1126,14 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             <form onSubmit={handleCreateResident} className="space-y-4 py-4">
               <div>
                 <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
-                  Assign to Care Home Facility *
+                  Assigned Facility
                 </label>
-                <select
-                  id="new-resident-home-select"
-                  value={selectedHomeForResident}
-                  onChange={(e) => setSelectedHomeForResident(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer bg-[#0f1722] text-[#e2e8f0]"
-                >
-                  {(allHomes || [homeOrDefault]).map((h) => (
-                    <option key={h.id} value={h.id}>
-                      {h.name} ({h.location})
-                    </option>
-                  ))}
-                </select>
+                <div className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]">
+                  {homeOrDefault.name} · {homeOrDefault.location}
+                </div>
+                <input type="hidden" value={selectedHomeForResident} readOnly />
                 <p className="text-[11px] text-[#cbd5e1] mt-1">
-                  Stored in database per home. The resident will verify via link to attach their device to this facility.
+                  This resident will be added to your assigned facility.
                 </p>
               </div>
 
@@ -1215,6 +1246,152 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* BULK IMPORT MODAL */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 bg-[#0f1722]/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0f1722] rounded-3xl p-6 max-w-3xl w-full shadow-2xl border border-[#1e293b] text-[#e2e8f0]">
+            <div className="flex items-center justify-between pb-4 border-b border-[#1e293b]">
+              <div>
+                <h3 className="text-lg font-bold">Bulk Import Residents</h3>
+                <p className="text-xs text-[#cbd5e1]">Download the sample CSV, fill it in, then upload to import all residents at once.</p>
+              </div>
+              <button
+                onClick={() => { setShowImportModal(false); setImportPreview(null); setImportResults(null); setImportFile(null); }}
+                className="p-1.5 rounded-lg text-[#cbd5e1] hover:text-[#cbd5e1] hover:bg-[#141d27] transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="py-4 space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => api.downloadResidentCsvSample()}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] transition flex items-center gap-1"
+                >
+                  <FileDown className="w-3.5 h-3.5" />
+                  <span>Download Sample CSV</span>
+                </button>
+
+                <label className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#131d27] hover:bg-[#1e293b] text-[#e2e8f0] transition flex items-center gap-1 cursor-pointer">
+                  <span>Upload CSV</span>
+                  <input
+                    type="file"
+                    accept=".csv,text/csv"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      setImportFile(file || null);
+                      setImportPreview(null);
+                      setImportResults(null);
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        const text = String(reader.result || '');
+                        const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+                        if (!lines.length) return;
+                        const headers = lines[0].split(',').map((h) => h.replace(/^"|"$/g, '').trim().toLowerCase());
+                        const rows: any[] = [];
+                        for (let i = 1; i < lines.length; i++) {
+                          const cols = lines[i].split(',').map((c) => c.replace(/^"|"$/g, '').trim());
+                          const row: any = {};
+                          headers.forEach((h, idx) => (row[h] = cols[idx] || ''));
+                          rows.push(row);
+                        }
+                        setImportPreview(rows);
+                      };
+                      reader.readAsText(file);
+                    }}
+                  />
+                </label>
+
+                <select
+                  value={importHomeId}
+                  onChange={(e) => setImportHomeId(e.target.value)}
+                  className="text-xs bg-[#141d27] border border-[#1e293b] rounded-xl px-2.5 py-1.5 text-[#e2e8f0] font-semibold focus:outline-none cursor-pointer"
+                >
+                  {(allHomes || (home ? [home] : [])).map((h) => (
+                    <option key={h.id} value={h.id}>{h.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {importPreview && !importResults && (
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-[#cbd5e1]">Preview ({importPreview.length} rows)</p>
+                  <div className="max-h-56 overflow-auto border border-[#1e293b] rounded-xl">
+                    <table className="w-full text-xs text-left">
+                      <thead className="bg-[#141d27] text-[#e2e8f0]">
+                        <tr>
+                          <th className="px-2 py-1.5">name</th>
+                          <th className="px-2 py-1.5">phone</th>
+                          <th className="px-2 py-1.5">room</th>
+                          <th className="px-2 py-1.5">wing</th>
+                          <th className="px-2 py-1.5">emergencyName</th>
+                          <th className="px-2 py-1.5">emergencyRelationship</th>
+                          <th className="px-2 py-1.5">emergencyPhone</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {importPreview.slice(0, 20).map((row, idx) => (
+                          <tr key={idx} className="border-t border-[#1e293b]">
+                            <td className="px-2 py-1.5">{row.name || '—'}</td>
+                            <td className="px-2 py-1.5">{row.phone || '—'}</td>
+                            <td className="px-2 py-1.5">{row.room || '—'}</td>
+                            <td className="px-2 py-1.5">{row.wing || '—'}</td>
+                            <td className="px-2 py-1.5">{row.emergencyName || row.emergencyContactName || '—'}</td>
+                            <td className="px-2 py-1.5">{row.emergencyRelationship || '—'}</td>
+                            <td className="px-2 py-1.5">{row.emergencyPhone || row.emergencyContactPhone || '—'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={importing}
+                    onClick={async () => {
+                      setImporting(true);
+                      const result = await api.importResidentsFromCsv(importHomeId, importPreview);
+                      setImportResults({ imported: result.imported || 0, failed: result.failed || 0, results: result.results || [] });
+                      setImporting(false);
+                      if (result.success && typeof onRefresh === 'function') {
+                        await onRefresh();
+                      }
+                    }}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] transition"
+                  >
+                    {importing ? 'Importing...' : `Import ${importPreview.length} Residents`}
+                  </button>
+                </div>
+              )}
+
+              {importResults && (
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-[#e2e8f0]">Import complete: {importResults.imported} imported, {importResults.failed} failed</p>
+                  <div className="max-h-56 overflow-auto border border-[#1e293b] rounded-xl p-2">
+                    {importResults.results.map((r, idx) => (
+                      <div key={idx} className="text-xs py-1 border-b border-[#1e293b] last:border-0">
+                        <span className={`font-bold ${r.status === 'imported' ? 'text-emerald-400' : 'text-rose-400'}`}>{r.status.toUpperCase()}</span>
+                        <span className="text-[#cbd5e1]"> — {r.id || r.reason || r.row?.name || 'Row'}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setShowImportModal(false); setImportPreview(null); setImportResults(null); setImportFile(null); }}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#131d27] hover:bg-[#1e293b] text-[#e2e8f0] transition"
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

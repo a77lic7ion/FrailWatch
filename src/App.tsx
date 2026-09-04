@@ -17,6 +17,8 @@ import { INITIAL_HOMES, INITIAL_RESIDENTS } from './data/mockData';
 import { ActiveTab, CareHome, Resident, CheckInStatus } from './types';
 import { api, DatabaseStatus } from './services/api';
 import { onStaffAuthChange, staffLogin, staffLogout, markLoggingOut } from './services/staffAuth';
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from './firebase';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
@@ -184,7 +186,82 @@ export default function App() {
     loadDbStatus();
   }, [loadDbStatus, staff?.homeId, isGlobal]);
 
-  const selectedHome = (effectiveHomes.find((h) => h.id === effectiveSelectedHomeId) || homes.find((h) => h.id === staff?.homeId) || effectiveHomes[0] || (homes[0] || { id: 'home-benoni-01', name: 'Default Home', location: '', cutoffTime: '09:15', careStaffOnDuty: 0, primaryNurse: '', providerPartner: '' }));
+  useEffect(() => {
+    if (!staff || staffLoading) return;
+    let unsubscribe: (() => void) | undefined;
+
+    const startListener = () => {
+      const homeId = isGlobal ? (selectedGlobalHomeId || selectedHomeId || staff.homeId) : staff.homeId;
+      if (!homeId) return;
+      const q = query(collection(db, 'residents'), where('homeId', '==', homeId));
+      unsubscribe = onSnapshot(q, (snap) => {
+        const next = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Resident[];
+        setResidents((prev) => {
+          const merged = prev.map((r) => {
+            const fresh = next.find((n) => n.id === r.id);
+            if (!fresh) return r;
+            return { ...fresh };
+          });
+          return merged;
+        });
+      }, (err) => {
+        console.warn('Realtime resident listener error:', err);
+      });
+    };
+
+    startListener();
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, [staff, staffLoading, isGlobal, selectedGlobalHomeId, selectedHomeId]);
+
+  useEffect(() => {
+    if (!staff || staffLoading) return;
+    const id = window.setInterval(async () => {
+      const now = new Date();
+      const minutes = now.getHours() * 60 + now.getMinutes();
+      const inWindow = minutes >= 525 && minutes <= 555;
+      if (inWindow || isDbRefreshing) return;
+      await loadDbStatus();
+    }, 120000);
+    return () => window.clearInterval(id);
+  }, [staff, staffLoading, loadDbStatus, isDbRefreshing]);
+
+  const selectedHome = (() => {
+    const staffHomeId = staff?.homeId ? String(staff.homeId).trim() : '';
+    const globalHomeId = selectedGlobalHomeId ? String(selectedGlobalHomeId).trim() : '';
+
+    const buildMinimal = (id: string): CareHome => ({
+      id,
+      name: id,
+      location: '',
+      cutoffTime: '09:15',
+      careStaffOnDuty: 0,
+      primaryNurse: '',
+      providerPartner: '',
+    });
+
+    if (isGlobal && globalHomeId) {
+      return (
+        effectiveHomes.find((h) => h.id === globalHomeId) ||
+        homes.find((h) => h.id === globalHomeId) ||
+        homes.find((h) => h.id.toLowerCase() === globalHomeId.toLowerCase()) ||
+        buildMinimal(globalHomeId)
+      );
+    }
+
+    if (!isGlobal && staffHomeId) {
+      return (
+        effectiveHomes.find((h) => h.id === staffHomeId) ||
+        homes.find((h) => h.id === staffHomeId) ||
+        homes.find((h) => h.id.toLowerCase() === staffHomeId.toLowerCase()) ||
+        buildMinimal(staffHomeId)
+      );
+    }
+
+    return effectiveHomes[0] || homes[0] || buildMinimal('home-benoni-01');
+  })();
   const visibleResidents = isGlobal ? residents : residents.filter((r) => r.homeId === staff?.homeId);
   const urgentCount = visibleResidents.filter((r) => r.status === 'not_ok').length;
   const overdueCount = visibleResidents.filter((r) => r.status === 'overdue').length;
@@ -199,21 +276,33 @@ export default function App() {
           : [
               { date: '2026-08-28', day: 'Fri', status: 'ok', time: '08:10 AM' },
               { date: '2026-08-29', day: 'Sat', status: 'ok', time: '08:15 AM' },
-              { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:12 AM' },
+              { date: '2026-08-30', day: 'Sun', status: 'ok', time: '08:05 AM' },
               { date: '2026-08-31', day: 'Mon', status: 'ok', time: '08:20 AM' },
               { date: '2026-09-01', day: 'Tue', status: 'ok', time: '08:12 AM' },
               { date: '2026-09-02', day: 'Wed', status: 'ok', time: '08:18 AM' },
-              { date: '2026-09-03', day: 'Today', status: 'awaiting' },
+              { date: '2026-09-03', day: 'Today', status: r.status || 'awaiting' },
             ];
         currentHistory[currentHistory.length - 1] = {
           ...currentHistory[currentHistory.length - 1],
           status,
-          time: status === 'awaiting' ? undefined : timeFormatted,
+          time: timeFormatted,
         };
-        return { ...r, status, checkInTime: timeFormatted, sevenDayHistory: currentHistory };
+        return {
+          ...r,
+          status,
+          checkInTime: status === 'awaiting' ? undefined : timeFormatted,
+          sevenDayHistory: currentHistory,
+        };
       })
     );
     api.recordCheckIn(residentId, status);
+  };
+
+  const handleRevokeAll = async () => {
+    const count = await api.revokeAllResidentVerifications();
+    showToast(`Revoked ${count} resident device link(s)`);
+    setResidents((prev) => prev.map((r) => ({ ...r, deviceLinked: false })));
+    await loadDbStatus();
   };
 
   const showLogin = !staff || staffLoading;
@@ -400,6 +489,8 @@ export default function App() {
             onOpenGuideModal={() => setIsGuideModalOpen(true)}
             staff={staff}
             onOpenStaffManagement={undefined}
+            onRefresh={loadDbStatus}
+            onRevokeAll={handleRevokeAll}
           />
         )}
 
