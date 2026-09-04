@@ -3,15 +3,17 @@ import { app } from '../firebase';
 import { db } from '../firebase';
 import { 
   collection, 
-  getDocs, 
-  getDoc, 
-  setDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
+  getDocs,
+  getDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
   doc as firestoreDoc,
-  addDoc
+  addDoc,
+  getDocsFromServer,
+  getDocFromServer
 } from 'firebase/firestore';
 
 export interface DatabaseStatus {
@@ -70,8 +72,8 @@ export const api = {
   async getData(): Promise<AppDataResponse | null> {
     try {
       const [homesSnap, residentsSnap] = await Promise.all([
-        getDocs(collection(db, 'homes')),
-        getDocs(collection(db, 'residents')),
+        getDocsFromServer(query(collection(db, 'homes')) as any),
+        getDocsFromServer(query(collection(db, 'residents')) as any),
       ]);
       const homes = homesSnap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
       const residents = residentsSnap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
@@ -155,6 +157,40 @@ export const api = {
     } catch (e) {
       console.warn('Error verifying resident:', e);
       return false;
+    }
+  },
+
+  downloadResidentCsvSample(): void {
+    const headers = ['name', 'phone', 'room', 'wing', 'emergencyName', 'emergencyRelationship', 'emergencyPhone'];
+    const rows = [
+      ['Jane Doe', '0712345678', '12', 'Willow Cottage', 'John Doe', 'Family', '0799999999'],
+      ['John Smith', '0723456789', '5', 'Oak Wing', 'Jane Smith', 'Family', '0788888888'],
+    ];
+    const csv = [headers.join(','), ...rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'resident-import-sample.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  async importResidentsFromCsv(homeId: string, rows: any[]): Promise<{ success: boolean; imported: number; failed: number; results: any[] }> {
+    try {
+      const baseUrl = (import.meta as any)?.env?.VITE_API_URL || '';
+      const res = await fetch(`${baseUrl}/api/residents/import`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ homeId, residents: rows }),
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        return { success: false, imported: 0, failed: rows.length, results: [{ status: 'error', reason: text || `HTTP ${res.status}` }] };
+      }
+      return await res.json();
+    } catch (e: any) {
+      return { success: false, imported: 0, failed: rows.length, results: [{ status: 'error', reason: e?.message || 'Network error' }] };
     }
   },
 
