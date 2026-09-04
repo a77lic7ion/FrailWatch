@@ -44,6 +44,7 @@ export async function getAuthHeaders(): Promise<HeadersInit> {
 export const api = {
   async getStatus(): Promise<DatabaseStatus> {
     try {
+      await getDocs(query(collection(db, 'homes')));
       return {
         status: 'ok',
         firebaseInitialized: true,
@@ -56,7 +57,7 @@ export const api = {
     } catch (e: any) {
       return {
         status: 'error',
-        firebaseInitialized: false,
+        firebaseInitialized: true,
         firebaseConnected: false,
         projectId: 'frailcare-checkin',
         clientEmail: '',
