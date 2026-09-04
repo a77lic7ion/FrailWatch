@@ -59,12 +59,31 @@ export default function App() {
               api.verifyResident(lookup).catch(() => {});
               setResidentUser(profile.resident);
               setViewMode('resident');
+              try {
+                localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
+                if (token) localStorage.setItem('elderwatch_linked_token', token);
+                if (phone) localStorage.setItem('elderwatch_linked_phone', phone);
+              } catch {}
+            }
+          }).catch(() => {});
+        }
+      } else if (!staff) {
+        const savedId = localStorage.getItem('elderwatch_linked_resident_id');
+        const savedToken = localStorage.getItem('elderwatch_linked_token');
+        const savedPhone = localStorage.getItem('elderwatch_linked_phone');
+        const savedLookup = savedToken || savedPhone || savedId;
+        if (savedLookup) {
+          api.getResidentProfile(savedLookup).then((profile) => {
+            if (profile?.resident) {
+              setResidentUser(profile.resident);
+              setViewMode('resident');
+              setActiveTab('senior-checkin');
             }
           }).catch(() => {});
         }
       }
     }
-  }, []);
+  }, [staff]);
 
   const logout = async () => {
     try { markLoggingOut(); await staffLogout(); } catch {}
@@ -110,26 +129,6 @@ export default function App() {
     try {
       localStorage.removeItem('elderwatch_custom_firebase_config');
     } catch {}
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('verify') || params.get('token');
-    const residentId = params.get('residentId') || params.get('id');
-    if (token || residentId || params.get('mode') === 'checkin') {
-      setActiveTab('senior-checkin');
-      const lookup = token || residentId;
-      if (lookup) {
-        api.getResidentProfile(lookup).then((profile) => {
-          if (profile?.resident) {
-            api.verifyResident(lookup);
-            setResidentUser(profile.resident);
-            setViewMode('resident');
-            try {
-              localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
-              if (token) localStorage.setItem('elderwatch_linked_token', token);
-            } catch {}
-          }
-        }).catch(() => {});
-      }
-    }
   }, []);
 
   const loadDbStatus = useCallback(async () => {
@@ -286,6 +285,22 @@ export default function App() {
                   Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    localStorage.removeItem('elderwatch_linked_resident_id');
+                    localStorage.removeItem('elderwatch_linked_token');
+                    localStorage.removeItem('elderwatch_linked_phone');
+                  } catch {}
+                  setResidentUser(null);
+                  setViewMode('admin');
+                }}
+                className="mt-6 w-full rounded-2xl border border-slate-700 bg-slate-900/60 text-slate-300 py-3 text-sm font-semibold"
+              >
+                Switch device
+              </button>
             </div>
           </div>
         )}
