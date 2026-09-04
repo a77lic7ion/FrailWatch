@@ -65,6 +65,19 @@ export default function App() {
             }
           }).catch(() => {});
         }
+      } else {
+        const savedId = localStorage.getItem('elderwatch_linked_resident_id');
+        const savedToken = localStorage.getItem('elderwatch_linked_token');
+        const savedLookup = savedToken || savedId;
+        if (savedLookup) {
+          api.getResidentProfile(savedLookup).then((profile) => {
+            if (profile?.resident) {
+              setResidentUser(profile.resident);
+              setViewMode('resident');
+              setActiveTab('senior-checkin');
+            }
+          }).catch(() => {});
+        }
       }
     }
   }, []);
