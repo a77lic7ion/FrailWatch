@@ -97,11 +97,12 @@ export const api = {
   async addResident(resident: any): Promise<{ success: boolean; resident?: any; verificationToken?: string; verificationUrl?: string }> {
     try {
       const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
-      const data = { ...resident, verificationToken: token, createdAt: new Date().toISOString() };
+      const data = { ...resident, verificationToken: token, verificationVersion: 1, createdAt: new Date().toISOString() };
       const ref = collection(db, 'residents');
       const docRef = await addDoc(ref, data);
       const residentData = { id: docRef.id, ...data };
-      const phoneUrl = `${window.location.origin}/?phone=${encodeURIComponent(resident.phone || '')}`;
+      const phone = (resident.phone || '').trim();
+      const phoneUrl = phone ? `${window.location.origin}/?phone=${encodeURIComponent(phone)}&v=1` : `${window.location.origin}/?verify=${encodeURIComponent(token)}`;
       return { success: true, resident: residentData, verificationToken: token, verificationUrl: phoneUrl };
     } catch (e) {
       console.warn('Failed to add resident to backend:', e);
@@ -162,6 +163,25 @@ export const api = {
       return true;
     } catch (e) {
       console.warn('Failed to update resident:', e);
+      return false;
+    }
+  },
+
+  async revokeResidentVerification(id: string): Promise<boolean> {
+    try {
+      const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
+      const docSnap = await getDoc(firestoreDoc(db, 'residents', id));
+      const currentVersion = docSnap.exists() ? ((docSnap.data() as any).verificationVersion || 1) : 1;
+      await updateDoc(firestoreDoc(db, 'residents', id), {
+        deviceLinked: false,
+        linkedAt: null,
+        verificationToken: token,
+        verificationVersion: currentVersion + 1,
+        revokedAt: new Date().toISOString(),
+      });
+      return true;
+    } catch (e) {
+      console.warn('Failed to revoke resident verification:', e);
       return false;
     }
   },

@@ -9,6 +9,7 @@ export interface Resident {
   phone: string;
   deviceLinked: boolean;
   verificationToken?: string;
+  verificationVersion?: number;
   verifiedAt?: string;
   status: CheckInStatus;
   checkInTime?: string;

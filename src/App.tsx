@@ -49,21 +49,28 @@ export default function App() {
       const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
       const params = new URLSearchParams(window.location.search);
       const phone = params.get('phone');
+      const urlVersion = params.get('v');
       const token = params.get('verify') || params.get('token');
       const residentId = params.get('residentId') || params.get('id');
       const lookup = path || phone || token || residentId;
       if (lookup) {
         setActiveTab('senior-checkin');
         api.getResidentProfile(lookup).then((profile) => {
-          if (profile?.resident) {
-            api.verifyResident(lookup).catch(() => {});
-            setResidentUser(profile.resident);
-            setViewMode('resident');
-            try {
-              localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
-              if (token) localStorage.setItem('elderwatch_linked_token', token);
-              if (phone) localStorage.setItem('elderwatch_linked_phone', phone);
-            } catch {}
+          const resident = profile?.resident;
+          if (resident) {
+            const currentVersion = Number(resident.verificationVersion || 1);
+            const expectedVersion = urlVersion ? Number(urlVersion) : currentVersion;
+            const isValidVersion = !phone || currentVersion === expectedVersion;
+            if (isValidVersion) {
+              api.verifyResident(lookup).catch(() => {});
+              setResidentUser(resident as any);
+              setViewMode('resident');
+              try {
+                localStorage.setItem('elderwatch_linked_resident_id', resident.id);
+                if (token) localStorage.setItem('elderwatch_linked_token', token);
+                if (phone) localStorage.setItem('elderwatch_linked_phone', phone);
+              } catch {}
+            }
           }
         }).catch(() => {});
       } else if (!staff) {
@@ -287,7 +294,10 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={() => {
+                onClick={async () => {
+                  if (residentUser?.id) {
+                    await api.revokeResidentVerification(residentUser.id).catch(() => {});
+                  }
                   try {
                     localStorage.removeItem('elderwatch_linked_resident_id');
                     localStorage.removeItem('elderwatch_linked_token');
@@ -298,7 +308,7 @@ export default function App() {
                 }}
                 className="mt-6 w-full rounded-2xl border border-slate-700 bg-slate-900/60 text-slate-300 py-3 text-sm font-semibold"
               >
-                Switch device
+                Sign out of this device
               </button>
             </div>
           </div>
