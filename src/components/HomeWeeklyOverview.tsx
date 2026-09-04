@@ -61,16 +61,16 @@ export function HomeWeeklyOverview({ home, residents, onBack, onEditStaff, onEdi
   const actionCount = notOkCount + overdueCount;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <div className="bg-white border-b border-slate-200 px-4 py-4">
+    <div className="min-h-screen bg-[#0f1722] flex flex-col">
+      <div className="bg-[#0f1722] border-b border-[#1e293b] px-4 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={onBack} className="p-2 hover:bg-slate-100 rounded-lg transition">
-              <ArrowLeft className="w-5 h-5 text-slate-600" />
+            <button onClick={onBack} className="p-2 hover:bg-[#141d27] rounded-lg transition">
+              <ArrowLeft className="w-5 h-5 text-[#94a3b8]" />
             </button>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">{home.name}</h1>
-              <p className="text-xs text-slate-500">{home.location || 'No location'} · {home.id}</p>
+              <h1 className="text-xl font-bold text-[#e2e8f0]">{home.name}</h1>
+              <p className="text-xs text-[#94a3b8]">{home.location || 'No location'} · {home.id}</p>
             </div>
           </div>
           <div className="flex gap-2">
@@ -93,13 +93,13 @@ export function HomeWeeklyOverview({ home, residents, onBack, onEditStaff, onEdi
       <main className="flex-1 p-4 sm:p-6">
         <div className="max-w-5xl mx-auto space-y-6">
           {loading ? (
-            <p className="text-xs text-slate-500">Loading week overview...</p>
+            <p className="text-xs text-[#94a3b8]">Loading week overview...</p>
           ) : (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-                  <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total</div>
-                  <div className="text-2xl font-black text-slate-900 mt-1">{totalResidents}</div>
+                <div className="bg-[#0f1722] rounded-2xl p-4 border border-[#1e293b] shadow-sm">
+                  <div className="text-[11px] font-semibold text-[#94a3b8] uppercase tracking-wider">Total</div>
+                  <div className="text-2xl font-black text-[#e2e8f0] mt-1">{totalResidents}</div>
                 </div>
                 <div className="bg-emerald-50 rounded-2xl p-4 border border-emerald-100 shadow-sm">
                   <div className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">OK</div>
@@ -113,14 +113,14 @@ export function HomeWeeklyOverview({ home, residents, onBack, onEditStaff, onEdi
                   <div className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">Overdue</div>
                   <div className="text-2xl font-black text-amber-700 mt-1">{overdueCount}</div>
                 </div>
-                <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm col-span-2 sm:col-span-1">
-                  <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Action</div>
-                  <div className="text-2xl font-black text-slate-900 mt-1">{actionCount}</div>
+                <div className="bg-[#0f1722] rounded-2xl p-4 border border-[#1e293b] shadow-sm col-span-2 sm:col-span-1">
+                  <div className="text-[11px] font-semibold text-[#94a3b8] uppercase tracking-wider">Action</div>
+                  <div className="text-2xl font-black text-[#e2e8f0] mt-1">{actionCount}</div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <div className="bg-[#0f1722] rounded-2xl p-6 border border-[#1e293b] shadow-sm">
+                <h2 className="text-lg font-bold text-[#e2e8f0] mb-4 flex items-center gap-2">
                   <Activity className="w-5 h-5 text-indigo-600" /> Week Overview
                 </h2>
                 <div className="grid grid-cols-7 gap-2">
@@ -135,9 +135,9 @@ export function HomeWeeklyOverview({ home, residents, onBack, onEditStaff, onEdi
                           : 'bg-emerald-50 border-emerald-100'
                       }`}
                     >
-                      <div className="text-[10px] font-bold text-slate-500 uppercase mb-1">{d.day}</div>
-                      <div className="text-lg font-black text-slate-900">{d.ok}/{d.total}</div>
-                      <div className="text-[10px] text-slate-600">OK</div>
+                      <div className="text-[10px] font-bold text-[#94a3b8] uppercase mb-1">{d.day}</div>
+                      <div className="text-lg font-black text-[#e2e8f0]">{d.ok}/{d.total}</div>
+                      <div className="text-[10px] text-[#94a3b8]">OK</div>
                       {d.notOk > 0 && (
                         <div className="text-[10px] text-rose-700 font-bold mt-1">{d.notOk} help</div>
                       )}
@@ -147,7 +147,7 @@ export function HomeWeeklyOverview({ home, residents, onBack, onEditStaff, onEdi
                     </div>
                   ))}
                 </div>
-                <p className="text-[10px] text-slate-400 mt-3">Weekly check-in summary. Tap Staff/Residents to manage details.</p>
+                <p className="text-[10px] text-[#94a3b8] mt-3">Weekly check-in summary. Tap Staff/Residents to manage details.</p>
               </div>
             </>
           )}

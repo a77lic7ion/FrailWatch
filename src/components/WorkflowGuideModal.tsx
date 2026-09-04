@@ -59,30 +59,30 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 text-slate-900 overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-[#0b1118]/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-[#0f1722] rounded-3xl max-w-2xl w-full shadow-2xl border border-[#1e293b] text-[#e2e8f0] overflow-hidden flex flex-col max-h-[92vh] animate-in zoom-in-95 duration-200">
         
         {/* Modal Header */}
-        <div className="bg-slate-900 text-white p-5 sm:p-6 flex items-center justify-between border-b border-slate-800">
+        <div className="bg-[#0f1722] text-[#e2e8f0] p-5 sm:p-6 flex items-center justify-between border-b border-[#223040]">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-extrabold text-lg text-white">ElderWatch Workflow Guide</h2>
+                <h2 className="font-extrabold text-lg text-[#e2e8f0]">ElderWatch Workflow Guide</h2>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300">
                   Mobile & Staff
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-[#94a3b8] mt-0.5">
                 Complete operating instructions for residents, nursing staff & family
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-2 rounded-xl text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#131d27] transition"
             aria-label="Close Guide"
           >
             <X className="w-5 h-5" />
@@ -90,13 +90,13 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
         </div>
 
         {/* Section Navigation Tabs (Horizontal Scroll on Mobile) */}
-        <div className="flex items-center gap-1.5 p-3 bg-slate-100 border-b border-slate-200 overflow-x-auto scrollbar-none text-xs font-bold">
+        <div className="flex items-center gap-1.5 p-3 bg-[#141d27] border-b border-[#1e293b] overflow-x-auto scrollbar-none text-xs font-bold">
           <button
             onClick={() => setActiveSection('resident')}
             className={`px-3.5 py-2 rounded-xl whitespace-nowrap transition flex items-center gap-1.5 ${
               activeSection === 'resident'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-white text-slate-700 hover:bg-slate-200/80 border border-slate-200'
+                ? 'bg-emerald-600 text-[#e2e8f0] shadow-sm'
+                : 'bg-[#0f1722] text-[#e2e8f0] hover:bg-[#141d27]/80 border border-[#1e293b]'
             }`}
           >
             <Smartphone className="w-4 h-4" />
@@ -107,8 +107,8 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
             onClick={() => setActiveSection('links')}
             className={`px-3.5 py-2 rounded-xl whitespace-nowrap transition flex items-center gap-1.5 ${
               activeSection === 'links'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-white text-slate-700 hover:bg-slate-200/80 border border-slate-200'
+                ? 'bg-emerald-600 text-[#e2e8f0] shadow-sm'
+                : 'bg-[#0f1722] text-[#e2e8f0] hover:bg-[#141d27]/80 border border-[#1e293b]'
             }`}
           >
             <Link2 className="w-4 h-4" />
@@ -119,8 +119,8 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
             onClick={() => setActiveSection('staff')}
             className={`px-3.5 py-2 rounded-xl whitespace-nowrap transition flex items-center gap-1.5 ${
               activeSection === 'staff'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-white text-slate-700 hover:bg-slate-200/80 border border-slate-200'
+                ? 'bg-emerald-600 text-[#e2e8f0] shadow-sm'
+                : 'bg-[#0f1722] text-[#e2e8f0] hover:bg-[#141d27]/80 border border-[#1e293b]'
             }`}
           >
             <Clock className="w-4 h-4" />
@@ -131,8 +131,8 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
             onClick={() => setActiveSection('homescreen')}
             className={`px-3.5 py-2 rounded-xl whitespace-nowrap transition flex items-center gap-1.5 ${
               activeSection === 'homescreen'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-white text-slate-700 hover:bg-slate-200/80 border border-slate-200'
+                ? 'bg-emerald-600 text-[#e2e8f0] shadow-sm'
+                : 'bg-[#0f1722] text-[#e2e8f0] hover:bg-[#141d27]/80 border border-[#1e293b]'
             }`}
           >
             <Share2 className="w-4 h-4" />
@@ -141,7 +141,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 text-slate-700 text-xs sm:text-sm leading-relaxed">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 text-[#e2e8f0] text-xs sm:text-sm leading-relaxed">
           
           {/* SECTION 1: THE SENIOR YES/NO SCREEN */}
           {activeSection === 'resident' && (
@@ -158,12 +158,12 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Green Button Card */}
-                <div className="p-4 rounded-2xl bg-emerald-600 text-white space-y-2 shadow-md">
+                <div className="p-4 rounded-2xl bg-emerald-600 text-[#e2e8f0] space-y-2 shadow-md">
                   <div className="flex items-center justify-between">
                     <span className="font-extrabold text-base tracking-wide flex items-center gap-1.5">
                       <CheckCircle2 className="w-5 h-5" /> I AM OK (YES)
                     </span>
-                    <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded font-bold uppercase">Daily Safety</span>
+                    <span className="text-[10px] bg-[#0f1722]/20 px-2 py-0.5 rounded font-bold uppercase">Daily Safety</span>
                   </div>
                   <p className="text-emerald-100 text-xs leading-normal">
                     The senior taps this once every morning (e.g. between 07:00 and 09:15). It plays a pleasant chime, vibrates, and marks them <strong>Checked In OK</strong> on the nursing board.
@@ -171,12 +171,12 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                 </div>
 
                 {/* Red Button Card */}
-                <div className="p-4 rounded-2xl bg-rose-600 text-white space-y-2 shadow-md">
+                <div className="p-4 rounded-2xl bg-rose-600 text-[#e2e8f0] space-y-2 shadow-md">
                   <div className="flex items-center justify-between">
                     <span className="font-extrabold text-base tracking-wide flex items-center gap-1.5">
                       <AlertTriangle className="w-5 h-5" /> I NEED HELP (NO)
                     </span>
-                    <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded font-bold uppercase">Urgent Alert</span>
+                    <span className="text-[10px] bg-[#0f1722]/20 px-2 py-0.5 rounded font-bold uppercase">Urgent Alert</span>
                   </div>
                   <p className="text-rose-100 text-xs leading-normal">
                     If they feel dizzy, have fallen, or need nursing assistance, tapping this triggers a high-priority alert on the staff dashboard and dispatches the nurse on duty to their room.
@@ -184,9 +184,9 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-                <h4 className="font-bold text-slate-900">Key Senior-Friendly Features:</h4>
-                <ul className="list-disc pl-4 space-y-1 text-slate-600">
+              <div className="p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] space-y-2 text-xs">
+                <h4 className="font-bold text-[#e2e8f0]">Key Senior-Friendly Features:</h4>
+                <ul className="list-disc pl-4 space-y-1 text-[#94a3b8]">
                   <li><strong>Touch targets over 110px high</strong>: Designed specifically for arthritic hands and tremors.</li>
                   <li><strong>Tactile Tone & Vibration</strong>: Web Audio synthesizer tone and haptic rumble confirm every tap.</li>
                   <li><strong>7-Day Visual Strip</strong>: Reassures the resident with 7 daily checkmarks for peace of mind.</li>
@@ -201,7 +201,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                       onClose();
                       onOpenSeniorScreen(currentResident?.id);
                     }}
-                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition"
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-[#e2e8f0] font-bold text-xs flex items-center gap-2 shadow-sm transition"
                   >
                     <span>Open Live Senior Check-In Screen Now</span>
                     <ArrowRight className="w-4 h-4" />
@@ -225,47 +225,47 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
               </div>
 
               {/* Link Formats Card */}
-              <div className="p-4 rounded-2xl bg-slate-900 text-white space-y-3 font-mono text-xs">
+              <div className="p-4 rounded-2xl bg-[#0f1722] text-[#e2e8f0] space-y-3 font-mono text-xs">
                 <div>
-                  <span className="text-slate-400 block text-[11px] font-sans font-bold">1. One-Click Device Pairing Link:</span>
+                  <span className="text-[#94a3b8] block text-[11px] font-sans font-bold">1. One-Click Device Pairing Link:</span>
                   <p className="text-emerald-400 break-all select-all mt-0.5">
                     https://[APP-URL]/?verify=[TOKEN]&home=[HOME_ID]
                   </p>
-                  <p className="text-slate-400 font-sans text-[11px] mt-0.5">
+                  <p className="text-[#94a3b8] font-sans text-[11px] mt-0.5">
                     Auto-links the resident's phone to the care home upon first tap.
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-slate-800">
-                  <span className="text-slate-400 block text-[11px] font-sans font-bold">2. Direct Resident Profile Link:</span>
+                <div className="pt-2 border-t border-[#223040]">
+                  <span className="text-[#94a3b8] block text-[11px] font-sans font-bold">2. Direct Resident Profile Link:</span>
                   <p className="text-sky-300 break-all select-all mt-0.5">
                     https://[APP-URL]/?residentId=[RESIDENT_ID]
                   </p>
-                  <p className="text-slate-400 font-sans text-[11px] mt-0.5">
+                  <p className="text-[#94a3b8] font-sans text-[11px] mt-0.5">
                     Opens directly into that specific resident's check-in screen.
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-slate-800">
-                  <span className="text-slate-400 block text-[11px] font-sans font-bold">3. General Check-In Mode:</span>
+                <div className="pt-2 border-t border-[#223040]">
+                  <span className="text-[#94a3b8] block text-[11px] font-sans font-bold">3. General Check-In Mode:</span>
                   <p className="text-amber-300 break-all select-all mt-0.5">
                     https://[APP-URL]/?mode=checkin
                   </p>
-                  <p className="text-slate-400 font-sans text-[11px] mt-0.5">
+                  <p className="text-[#94a3b8] font-sans text-[11px] mt-0.5">
                     Re-opens the resident's saved screen from browser memory.
                   </p>
                 </div>
               </div>
 
               {/* Active Link Generator */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div className="p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <span className="font-bold text-slate-800 text-xs">Generate Link For Resident:</span>
+                  <span className="font-bold text-[#e2e8f0] text-xs">Generate Link For Resident:</span>
                   {residents.length > 0 ? (
                     <select
                       value={selectedResId}
                       onChange={(e) => setSelectedResId(e.target.value)}
-                      className="text-xs bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="text-xs bg-[#0f1722] border border-[#223040] rounded-xl px-2.5 py-1.5 font-semibold text-[#e2e8f0] focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                       {residents.map((r) => (
                         <option key={r.id} value={r.id}>
@@ -278,13 +278,13 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                   )}
                 </div>
 
-                <div className="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
-                  <code className="text-[11px] text-slate-700 font-mono truncate max-w-[320px] sm:max-w-md">
+                <div className="bg-[#0f1722] p-3 rounded-xl border border-[#1e293b] flex items-center justify-between gap-2">
+                  <code className="text-[11px] text-[#e2e8f0] font-mono truncate max-w-[320px] sm:max-w-md">
                     {currentUrl}
                   </code>
                   <button
                     onClick={copyLink}
-                    className="shrink-0 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition"
+                    className="shrink-0 px-3 py-1.5 rounded-lg bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs flex items-center gap-1.5 transition"
                   >
                     {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedLink ? 'Copied' : 'Copy'}</span>
@@ -294,7 +294,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                 <div className="flex items-center gap-2 pt-1">
                   <button
                     onClick={openWhatsApp}
-                    className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition"
+                    className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-[#e2e8f0] font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Send via WhatsApp</span>
@@ -305,7 +305,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                         onClose();
                         onOpenSeniorScreen(currentResident?.id);
                       }}
-                      className="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition"
+                      className="py-2 px-3 rounded-xl bg-[#0f1722] hover:bg-[#131d27] text-[#e2e8f0] font-bold text-xs flex items-center gap-1.5 transition"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>Test View</span>
@@ -331,20 +331,20 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
 
               {/* Timeline Steps */}
               <div className="space-y-3">
-                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                <div className="p-3.5 rounded-2xl bg-[#0f1722] border border-[#1e293b] flex items-start gap-3">
+                  <span className="w-6 h-6 rounded-full bg-[#0f1722] text-[#e2e8f0] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
                     1
                   </span>
                   <div>
-                    <h4 className="font-bold text-slate-900 text-xs">06:30 AM — Morning Board Opens</h4>
-                    <p className="text-slate-600 text-xs mt-0.5">
-                      All enrolled residents start in the <span className="bg-slate-200 px-1 rounded text-slate-800 font-semibold">Awaiting</span> state.
+                    <h4 className="font-bold text-[#e2e8f0] text-xs">06:30 AM — Morning Board Opens</h4>
+                    <p className="text-[#94a3b8] text-xs mt-0.5">
+                      All enrolled residents start in the <span className="bg-[#141d27] px-1 rounded text-[#e2e8f0] font-semibold">Awaiting</span> state.
                     </p>
                   </div>
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-emerald-600 text-[#e2e8f0] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
                     2
                   </span>
                   <div>
@@ -356,7 +356,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-rose-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-600 text-[#e2e8f0] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
                     3
                   </span>
                   <div>
@@ -368,7 +368,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                 </div>
 
                 <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-amber-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-amber-600 text-[#e2e8f0] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
                     4
                   </span>
                   <div>
@@ -398,12 +398,12 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* iPhone Instructions */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                  <div className="flex items-center gap-2 font-bold text-slate-900 text-xs">
-                    <span className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px]">🍎</span>
+                <div className="p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] space-y-2">
+                  <div className="flex items-center gap-2 font-bold text-[#e2e8f0] text-xs">
+                    <span className="w-5 h-5 rounded-full bg-[#0f1722] text-[#e2e8f0] flex items-center justify-center text-[10px]">🍎</span>
                     <span>On Apple iPhone (Safari)</span>
                   </div>
-                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-slate-600">
+                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#94a3b8]">
                     <li>Open the check-in link in <strong>Safari</strong>.</li>
                     <li>Tap the <strong>Share button</strong> (square icon with an arrow pointing up at the bottom).</li>
                     <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
@@ -415,12 +415,12 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                 </div>
 
                 {/* Android Instructions */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                  <div className="flex items-center gap-2 font-bold text-slate-900 text-xs">
-                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">🤖</span>
+                <div className="p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] space-y-2">
+                  <div className="flex items-center gap-2 font-bold text-[#e2e8f0] text-xs">
+                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-[#e2e8f0] flex items-center justify-center text-[10px]">🤖</span>
                     <span>On Android (Google Chrome)</span>
                   </div>
-                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-slate-600">
+                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#94a3b8]">
                     <li>Open the check-in link in <strong>Chrome</strong>.</li>
                     <li>Tap the <strong>three vertical dots (⋮)</strong> in the top right.</li>
                     <li>Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>.</li>
@@ -437,11 +437,11 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+        <div className="p-4 bg-[#0f1722] border-t border-[#1e293b] flex items-center justify-between text-xs text-[#94a3b8]">
           <span>ElderWatch Reassurance Protocol · 4TIFY SECURITY</span>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition"
+            className="px-4 py-2 rounded-xl bg-[#0f1722] hover:bg-[#131d27] text-[#e2e8f0] font-bold text-xs transition"
           >
             Close Guide
           </button>

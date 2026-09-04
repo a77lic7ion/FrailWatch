@@ -120,28 +120,28 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-xl w-full shadow-2xl border border-slate-200 text-slate-900 animate-in zoom-in-95 duration-200 my-8">
+    <div className="fixed inset-0 z-50 bg-[#0b1118]/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-[#0f1722] rounded-3xl p-6 sm:p-7 max-w-xl w-full shadow-2xl border border-[#1e293b] text-[#e2e8f0] animate-in zoom-in-95 duration-200 my-8">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-4 border-b border-[#1e293b]">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200">
               <Database className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-slate-900 flex items-center gap-2">
+              <h3 className="font-extrabold text-base text-[#e2e8f0] flex items-center gap-2">
                 Firebase Firestore Connection
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
                   {isCustom ? 'Custom Project' : 'Linked & Ready'}
                 </span>
               </h3>
-              <p className="text-xs text-slate-500">Live cloud database integration</p>
+              <p className="text-xs text-[#94a3b8]">Live cloud database integration</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+            className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8] hover:bg-[#141d27] transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -151,25 +151,25 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
         <div className="py-5 space-y-4 text-xs">
           
           {/* Active Project Card */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+          <div className="p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-slate-500 flex items-center gap-1.5 font-medium">
+              <span className="text-[#94a3b8] flex items-center gap-1.5 font-medium">
                 <Server className="w-3.5 h-3.5" /> Project ID
               </span>
-              <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
+              <span className="font-mono font-bold text-[#e2e8f0] bg-[#0f1722] px-2 py-0.5 rounded border border-[#1e293b]">
                 {currentProjectId}
               </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-500 font-medium">Database ID</span>
-              <span className="font-mono text-[11px] text-slate-700">
+              <span className="text-[#94a3b8] font-medium">Database ID</span>
+              <span className="font-mono text-[11px] text-[#e2e8f0]">
                 {currentDbId}
               </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-500 font-medium">Mock Data Status</span>
+              <span className="text-[#94a3b8] font-medium">Mock Data Status</span>
               <span className="font-semibold text-emerald-700 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 Stripped (0 fake residents)
@@ -177,8 +177,8 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-500 font-medium">Security Rules</span>
-              <span className="font-semibold text-slate-800 flex items-center gap-1">
+              <span className="text-[#94a3b8] font-medium">Security Rules</span>
+              <span className="font-semibold text-[#e2e8f0] flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 Deployed & Active
               </span>
@@ -191,10 +191,10 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
               <HelpCircle className="w-4 h-4 text-sky-700" />
               <span>Created Firebase on another Google account?</span>
             </div>
-            <p className="text-slate-600 leading-relaxed text-[11px]">
+            <p className="text-[#94a3b8] leading-relaxed text-[11px]">
               You have two choices:
             </p>
-            <ul className="space-y-1.5 text-[11px] text-slate-700 pl-1">
+            <ul className="space-y-1.5 text-[11px] text-[#e2e8f0] pl-1">
               <li className="flex items-start gap-1.5">
                 <span className="text-emerald-600 font-bold">1.</span>
                 <span><strong>Use Default Linked Project (Recommended):</strong> This application is already connected to project <code className="bg-sky-100 px-1 py-0.5 rounded text-sky-900 font-mono text-[10px]">{currentProjectId}</code>. No credentials needed from you.</span>
@@ -216,9 +216,9 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
 
           {/* Account Switcher Drawer */}
           {showAccountSwitch && (
-            <div className="p-4 rounded-2xl bg-slate-900 text-slate-100 space-y-3 animate-in fade-in duration-200">
+            <div className="p-4 rounded-2xl bg-[#0f1722] text-[#e2e8f0] space-y-3 animate-in fade-in duration-200">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-white flex items-center gap-1.5">
+                <span className="font-bold text-[#e2e8f0] flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-emerald-400" /> Connect Your Other Account
                 </span>
                 {isCustom && (
@@ -231,7 +231,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
                 )}
               </div>
 
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <p className="text-[11px] text-[#e2e8f0] leading-relaxed">
                 From your other Google account: Go to <strong>Firebase Console</strong> → <strong>Project Settings</strong> → <strong>General</strong> → <strong>Your Apps (Web app)</strong> and paste the <code className="text-emerald-400 font-mono">firebaseConfig</code> snippet below:
               </p>
 
@@ -239,7 +239,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
                 value={customConfigInput}
                 onChange={(e) => setCustomConfigInput(e.target.value)}
                 placeholder={`{\n  "apiKey": "AIzaSy...",\n  "authDomain": "my-project.firebaseapp.com",\n  "projectId": "my-other-project",\n  "storageBucket": "my-project.appspot.com"\n}`}
-                className="w-full h-28 bg-slate-950 border border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-200 focus:outline-none focus:border-emerald-500"
+                className="w-full h-28 bg-[#0b1118] border border-[#223040] rounded-xl p-2.5 font-mono text-[11px] text-[#e2e8f0] focus:outline-none focus:border-emerald-500"
               />
 
               {configSaveNotice && (
@@ -250,7 +250,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
                 <button
                   type="button"
                   onClick={handleSaveCustomConfig}
-                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center gap-1"
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-[#e2e8f0] font-bold text-xs transition flex items-center gap-1"
                 >
                   <span>Save & Connect</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -261,7 +261,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
 
           {/* Test connection result */}
           {testResult && (
-            <div className="p-3.5 rounded-2xl bg-slate-900 text-emerald-300 text-xs font-mono leading-relaxed border border-emerald-900/50">
+            <div className="p-3.5 rounded-2xl bg-[#0f1722] text-emerald-300 text-xs font-mono leading-relaxed border border-emerald-900/50">
               {testResult}
             </div>
           )}
@@ -271,14 +271,14 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
             <button
               onClick={runTestSync}
               disabled={isTesting}
-              className="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition disabled:opacity-50 shadow-sm"
+              className="flex-1 py-2.5 px-4 rounded-xl bg-[#0f1722] hover:bg-[#131d27] text-[#e2e8f0] font-bold text-xs flex items-center justify-center gap-2 transition disabled:opacity-50 shadow-sm"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isTesting ? 'animate-spin' : ''}`} />
               {isTesting ? 'Verifying live connection...' : 'Test Live Firestore Ping'}
             </button>
             <button
               onClick={copyConfigSnippet}
-              className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition"
+              className="py-2.5 px-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs flex items-center gap-1.5 transition"
               title="Copy active Firebase config"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -287,7 +287,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
             <button
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition disabled:opacity-50"
+              className="py-2.5 px-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs flex items-center gap-1.5 transition disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
@@ -296,11 +296,11 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+        <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between text-xs text-[#94a3b8]">
           <span>All mock data removed · Ready for real residents</span>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+            className="px-4 py-2 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition"
           >
             Done
           </button>

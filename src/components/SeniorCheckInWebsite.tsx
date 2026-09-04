@@ -71,16 +71,16 @@ export function SeniorCheckInWebsite({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-6">
+    <div className="fixed inset-0 z-50 bg-[#0b1118] text-[#e2e8f0] flex items-center justify-center p-6">
       <div className="grid grid-cols-2 gap-6 w-full max-w-lg">
         <button
           id="resident-ok-button"
           type="button"
           onClick={() => handleButtonTap('ok')}
-          className={`h-[70vh] rounded-3xl text-white font-black text-3xl shadow-2xl transition-all active:scale-95 border-4 ${
+          className={`h-[70vh] rounded-3xl text-[#e2e8f0] font-black text-3xl shadow-2xl transition-all active:scale-95 border-4 ${
             isOk
-              ? 'bg-emerald-600 border-emerald-300 ring-4 ring-emerald-500/50'
-              : 'bg-emerald-600 hover:bg-emerald-500 border-emerald-400 hover:scale-[1.01]'
+              ? 'bg-emerald-600 border-emerald-500/40 ring-4 ring-emerald-500/50'
+              : 'bg-emerald-600 hover:bg-emerald-500/200 border-emerald-400 hover:scale-[1.01]'
           }`}
         >
           <div className="flex flex-col items-center justify-center gap-4">
@@ -93,10 +93,10 @@ export function SeniorCheckInWebsite({
           id="resident-help-button"
           type="button"
           onClick={() => handleButtonTap('not_ok')}
-          className={`h-[70vh] rounded-3xl text-white font-black text-3xl shadow-2xl transition-all active:scale-95 border-4 ${
+          className={`h-[70vh] rounded-3xl text-[#e2e8f0] font-black text-3xl shadow-2xl transition-all active:scale-95 border-4 ${
             isHelp
               ? 'bg-rose-700 border-rose-400 ring-4 ring-rose-500/50'
-              : 'bg-rose-600 hover:bg-rose-500 border-rose-400 hover:scale-[1.01]'
+              : 'bg-rose-600 hover:bg-rose-500/150 border-rose-400 hover:scale-[1.01]'
           }`}
         >
           <div className="flex flex-col items-center justify-center gap-4">

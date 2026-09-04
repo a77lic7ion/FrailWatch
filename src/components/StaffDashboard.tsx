@@ -310,65 +310,65 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       
       {/* Toast notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#0f1722] text-[#e2e8f0] px-4 py-3 rounded-2xl shadow-2xl border border-[#223040] flex items-center gap-3 animate-in slide-in-from-bottom-5">
           <BellRing className="w-5 h-5 text-emerald-400" />
           <span className="text-xs font-semibold">{toastMessage}</span>
         </div>
       )}
 
       {/* Top Banner: Facility Context & Cutoff Review */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+      <div className="bg-[#0f1722] rounded-2xl p-6 border border-[#1e293b] shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-1">
-              <Building2 className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#94a3b8] mb-1">
+              <Building2 className="w-4 h-4 text-emerald-400" />
               <span>{homeOrDefault.name} · {homeOrDefault.location}</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-[11px]">
                 {homeOrDefault.providerPartner}
               </span>
               {staff?.role === 'superadmin' && (
                 <>
-                  <button onClick={() => setEditingHome(homeOrDefault)} className="text-[11px] font-bold text-indigo-700 hover:text-indigo-900 underline">Edit</button>
-                  <button onClick={() => removeHome(homeOrDefault.id)} className="text-[11px] font-bold text-rose-700 hover:text-rose-900 underline">Delete</button>
+                  <button onClick={() => setEditingHome(homeOrDefault)} className="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 underline">Edit</button>
+                  <button onClick={() => removeHome(homeOrDefault.id)} className="text-[11px] font-bold text-rose-400 hover:text-rose-900 underline">Delete</button>
                 </>
               )}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#e2e8f0] tracking-tight">
               Morning Care Triage Dashboard
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
+            <p className="text-xs sm:text-sm text-[#94a3b8] mt-1 max-w-2xl">
               Replaces manual door-to-door morning walking rounds with a 2-minute live overview. 
               Residents respond with giant green/red buttons; missed cutoffs trigger automatic door-checks.
             </p>
           </div>
 
           {/* Cutoff time status pill */}
-          <div className="flex flex-wrap items-center gap-3 bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200">
+          <div className="flex flex-wrap items-center gap-3 bg-[#0f1722] p-3 sm:p-4 rounded-2xl border border-[#1e293b]">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-600 font-bold">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/100/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#94a3b8]">
                   Morning Cutoff
                 </div>
-                <div className="text-lg font-black text-slate-900 font-mono">
+                <div className="text-lg font-black text-[#e2e8f0] font-mono">
                   {homeOrDefault.cutoffTime} AM
                 </div>
               </div>
             </div>
 
-            <div className="h-8 w-px bg-slate-200 hidden sm:block"></div>
+            <div className="h-8 w-px bg-[#141d27] hidden sm:block"></div>
 
             <div className="flex flex-wrap items-center gap-2">
               {isGlobalAdmin && onOpenGuideModal && (
                 <button
                   id="open-guide-btn"
                   onClick={onOpenGuideModal}
-                  className="px-3 py-2 rounded-xl text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition flex items-center gap-1.5 shadow-xs"
+                  className="px-3 py-2 rounded-xl text-xs font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition flex items-center gap-1.5 shadow-xs"
                   title="View complete Workflow and Link guide"
                 >
-                  <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                  <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Workflow & Link Guide</span>
                 </button>
               )}
@@ -376,7 +376,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 <button
                   id="edit-cutoff-btn"
                   onClick={onOpenCutoffModal}
-                  className="px-3 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition"
+                  className="px-3 py-2 rounded-xl text-xs font-bold bg-[#0f1722] hover:bg-[#141d27] text-[#e2e8f0] border border-[#1e293b] shadow-xs transition"
                 >
                   Change Cutoff
                 </button>
@@ -385,7 +385,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 <button
                   id="export-report-btn"
                   onClick={() => setShowExportModal(true)}
-                  className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1.5 shadow-sm"
+                  className="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] transition flex items-center gap-1.5 shadow-sm"
                 >
                   <FileDown className="w-3.5 h-3.5" />
                   <span>Report</span>
@@ -394,7 +394,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               {isGlobalAdmin && onOpenStaffManagement && (
                 <button
                   onClick={onOpenStaffManagement}
-                  className="px-3 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition flex items-center gap-1.5"
+                  className="px-3 py-2 rounded-xl text-xs font-bold bg-[#0f1722] hover:bg-[#141d27] text-[#e2e8f0] border border-[#1e293b] shadow-xs transition flex items-center gap-1.5"
                 >
                   <UserCog className="w-3.5 h-3.5" />
                   <span>Staff</span>
@@ -409,23 +409,23 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         
         {/* Total */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">TOTAL RESIDENTS</div>
-          <div className="text-3xl sm:text-4xl font-black text-slate-900">{totalCount}</div>
-          <div className="text-[11px] text-slate-400 mt-1">100% active monitoring</div>
+        <div className="bg-[#0f1722] rounded-2xl p-5 border border-[#1e293b] shadow-sm">
+          <div className="text-xs font-semibold text-[#94a3b8] uppercase tracking-wider mb-2">TOTAL RESIDENTS</div>
+          <div className="text-3xl sm:text-4xl font-black text-[#e2e8f0]">{totalCount}</div>
+          <div className="text-[11px] text-[#94a3b8] mt-1">100% active monitoring</div>
         </div>
 
         {/* Checked In OK */}
         <div 
           onClick={() => setStatusFilter('ok')}
-          className="bg-emerald-50 hover:bg-emerald-100/70 rounded-2xl p-5 border border-emerald-100 shadow-sm cursor-pointer transition"
+          className="bg-emerald-500/20 hover:bg-emerald-500/25/70 rounded-2xl p-5 border border-emerald-500/20 shadow-sm cursor-pointer transition"
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">I&apos;M OKAY</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">I&apos;M OKAY</span>
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="text-3xl sm:text-4xl font-black text-emerald-700">{okCount}</div>
-          <div className="text-[11px] text-emerald-600/80 font-medium mt-1">
+          <div className="text-3xl sm:text-4xl font-black text-emerald-400">{okCount}</div>
+          <div className="text-[11px] text-emerald-400/80 font-medium mt-1">
             {totalCount > 0 ? Math.round((okCount / totalCount) * 100) : 0}% of community
           </div>
         </div>
@@ -435,16 +435,16 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           onClick={() => setStatusFilter('action')}
           className={`rounded-2xl p-5 border shadow-sm cursor-pointer transition ${
             notOkCount > 0 
-              ? 'bg-rose-50 border-rose-200 ring-2 ring-rose-500/20 animate-pulse' 
-              : 'bg-white border-slate-200 hover:border-slate-300'
+              ? 'bg-rose-500/15 border-rose-500/30 ring-2 ring-rose-500/20 animate-pulse' 
+              : 'bg-[#0f1722] border-[#1e293b] hover:border-[#223040]'
           }`}
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-rose-700 uppercase tracking-wider">NEED HELP</span>
-            <AlertCircle className={`w-4 h-4 text-rose-600 ${notOkCount > 0 ? 'animate-bounce' : ''}`} />
+            <span className="text-xs font-semibold text-rose-400 uppercase tracking-wider">NEED HELP</span>
+            <AlertCircle className={`w-4 h-4 text-rose-400 ${notOkCount > 0 ? 'animate-bounce' : ''}`} />
           </div>
-          <div className="text-3xl sm:text-4xl font-black text-rose-700">{notOkCount}</div>
-          <div className="text-[11px] text-rose-600/80 font-bold mt-1">
+          <div className="text-3xl sm:text-4xl font-black text-rose-400">{notOkCount}</div>
+          <div className="text-[11px] text-rose-400/80 font-bold mt-1">
             {notOkCount > 0 ? 'Immediate care call' : 'Zero calls'}
           </div>
         </div>
@@ -454,16 +454,16 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           onClick={() => setStatusFilter('action')}
           className={`rounded-2xl p-5 border shadow-sm cursor-pointer transition ${
             overdueCount > 0 
-              ? 'bg-amber-50 border-amber-200 ring-2 ring-amber-500/20' 
-              : 'bg-white border-slate-200 hover:border-slate-300'
+              ? 'bg-amber-500/10 border-amber-500/30 ring-2 ring-amber-500/20' 
+              : 'bg-[#0f1722] border-[#1e293b] hover:border-[#223040]'
           }`}
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-amber-700 uppercase tracking-wider">NO RESPONSE</span>
-            <Clock className="w-4 h-4 text-amber-600" />
+            <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider">NO RESPONSE</span>
+            <Clock className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="text-3xl sm:text-4xl font-black text-amber-700">{overdueCount}</div>
-          <div className="text-[11px] text-amber-600/80 font-medium mt-1">
+          <div className="text-3xl sm:text-4xl font-black text-amber-400">{overdueCount}</div>
+          <div className="text-[11px] text-amber-400/80 font-medium mt-1">
             {overdueCount > 0 ? 'Door check needed' : 'Zero overdue'}
           </div>
         </div>
@@ -471,30 +471,30 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
         {/* Awaiting Check-in */}
         <div 
           onClick={() => setStatusFilter('awaiting')}
-          className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-50 transition col-span-2 md:col-span-1"
+          className="bg-[#0f1722] rounded-2xl p-5 border border-[#1e293b] shadow-sm cursor-pointer hover:bg-[#0f1722] transition col-span-2 md:col-span-1"
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">AWAITING</span>
-            <Clock className="w-4 h-4 text-slate-400" />
+            <span className="text-xs font-semibold text-[#94a3b8] uppercase tracking-wider">AWAITING</span>
+            <Clock className="w-4 h-4 text-[#94a3b8]" />
           </div>
-          <div className="text-3xl sm:text-4xl font-black text-slate-700">{awaitingCount}</div>
-          <div className="text-[11px] text-slate-400 mt-1">Window still active</div>
+          <div className="text-3xl sm:text-4xl font-black text-[#e2e8f0]">{awaitingCount}</div>
+          <div className="text-[11px] text-[#94a3b8] mt-1">Window still active</div>
         </div>
 
       </div>
 
       {/* URGENT ACTION QUEUE: High-Priority Triage Banner */}
       {urgentResidents.length > 0 && (
-        <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-rose-500/40">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+        <div className="bg-[#0f1722] text-[#e2e8f0] rounded-2xl p-6 shadow-md border border-rose-500/40">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#223040]">
             <div className="flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/150 animate-ping"></span>
               <h2 className="text-lg sm:text-xl font-bold tracking-tight flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5 text-rose-400" />
                 Immediate Care Action Required ({urgentResidents.length})
               </h2>
             </div>
-            <span className="text-xs bg-rose-500/20 text-rose-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider border border-rose-400/30">
+            <span className="text-xs bg-rose-500/150/20 text-rose-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider border border-rose-400/30">
               High Priority Triage
             </span>
           </div>
@@ -505,38 +505,38 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               return (
                 <div 
                   key={r.id}
-                  className="bg-slate-950/80 rounded-xl p-4 border border-rose-500/40 flex flex-col justify-between gap-3 shadow-inner"
+                  className="bg-[#0b1118]/80 rounded-xl p-4 border border-rose-500/40 flex flex-col justify-between gap-3 shadow-inner"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-white">{r.name}</span>
-                        <span className="px-2 py-0.5 rounded text-xs font-black bg-rose-600 text-white">
+                        <span className="text-lg font-bold text-[#e2e8f0]">{r.name}</span>
+                        <span className="px-2 py-0.5 rounded text-xs font-black bg-rose-600 text-[#e2e8f0]">
                           {r.room}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-[#94a3b8] mt-0.5">
                         {r.wing} · Assigned: {r.caregiver}
                       </p>
                     </div>
 
                     <span className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1 ${
                       isHelp 
-                        ? 'bg-rose-600 text-white animate-pulse' 
-                        : 'bg-amber-500 text-slate-950 font-bold'
+                        ? 'bg-rose-600 text-[#e2e8f0] animate-pulse' 
+                        : 'bg-amber-500/100 text-[#e2e8f0] font-bold'
                     }`}>
                       {isHelp ? '🚨 NEED HELP' : '⚠️ CUTOFF MISSED'}
                     </span>
                   </div>
 
                   {/* Medical Note or Explanation */}
-                  <div className="text-xs bg-slate-900 p-3 rounded-lg border border-slate-800 text-slate-300">
+                  <div className="text-xs bg-[#0f1722] p-3 rounded-lg border border-[#223040] text-[#e2e8f0]">
                     <span className="text-rose-400 font-bold">Alert: </span>
                     {r.notes || (isHelp ? 'Resident tapped red button.' : 'No response logged by cutoff time.')}
                     {r.medicalAlerts && r.medicalAlerts.length > 0 && (
                       <div className="mt-1.5 flex flex-wrap gap-1">
                         {r.medicalAlerts.map((m, idx) => (
-                          <span key={idx} className="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-medium">
+                          <span key={idx} className="text-[10px] bg-[#131d27] text-[#e2e8f0] px-1.5 py-0.5 rounded font-medium">
                             {m}
                           </span>
                         ))}
@@ -548,7 +548,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   <div className="flex flex-wrap items-center gap-2 pt-1">
                     <button
                       onClick={() => handleDispatchCarer(r)}
-                      className="flex-1 py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-rose-600/20"
+                      className="flex-1 py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-700 text-[#e2e8f0] text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-rose-600/20"
                     >
                       <HeartPulse className="w-3.5 h-3.5" />
                       <span>Dispatch Nurse</span>
@@ -556,15 +556,15 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
                     <a
                       href={`tel:${r.phone}`}
-                      className="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-1.5"
+                      className="py-2 px-3 rounded-lg bg-[#131d27] hover:bg-[#131d27] text-[#e2e8f0] text-xs font-bold transition flex items-center gap-1.5"
                     >
-                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      <Phone className="w-3.5 h-3.5 text-[#94a3b8]" />
                       <span>Call Room</span>
                     </a>
 
                     <button
                       onClick={() => handleResolveUrgent(r)}
-                      className="py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5"
+                      className="py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] text-xs font-bold transition flex items-center gap-1.5"
                       title="Mark resident checked in person"
                     >
                       <Check className="w-3.5 h-3.5" />
@@ -579,18 +579,18 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       )}
 
       {/* Search, Filter & Actions Toolbar */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
+      <div className="bg-[#0f1722] rounded-2xl p-4 border border-[#1e293b] shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
         
         {/* Search Input */}
         <div className="relative w-full lg:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#94a3b8] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             id="resident-search-input"
             type="text"
             placeholder="Search by name, room (e.g. 14)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 placeholder:text-slate-400"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl bg-[#0f1722] border border-[#1e293b] focus:bg-[#0f1722] focus:outline-none focus:ring-2 focus:ring-emerald-500 text-[#e2e8f0] placeholder:text-[#94a3b8]"
           />
         </div>
 
@@ -600,8 +600,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             onClick={() => setStatusFilter('all')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
               statusFilter === 'all' 
-                ? 'bg-slate-900 text-white' 
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-[#0f1722] text-[#e2e8f0]' 
+                : 'bg-[#141d27] text-[#94a3b8] hover:bg-[#141d27]'
             }`}
           >
             All ({totalCount})
@@ -611,8 +611,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             onClick={() => setStatusFilter('action')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1 ${
               statusFilter === 'action' 
-                ? 'bg-rose-600 text-white' 
-                : 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
+                ? 'bg-rose-600 text-[#e2e8f0]' 
+                : 'bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 border border-rose-500/30'
             }`}
           >
             <AlertCircle className="w-3 h-3" />
@@ -623,8 +623,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             onClick={() => setStatusFilter('ok')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1 ${
               statusFilter === 'ok' 
-                ? 'bg-emerald-600 text-white' 
-                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+                ? 'bg-emerald-600 text-[#e2e8f0]' 
+                : 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/30'
             }`}
           >
             <CheckCircle2 className="w-3 h-3" />
@@ -635,8 +635,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             onClick={() => setStatusFilter('awaiting')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
               statusFilter === 'awaiting' 
-                ? 'bg-slate-700 text-white' 
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-[#131d27] text-[#e2e8f0]' 
+                : 'bg-[#141d27] text-[#94a3b8] hover:bg-[#141d27]'
             }`}
           >
             Awaiting ({awaitingCount})
@@ -644,13 +644,13 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
           {/* Wing Selector */}
           <div className="flex items-center gap-1 ml-auto lg:ml-2">
-            <Filter className="w-3.5 h-3.5 text-slate-400" />
+            <Filter className="w-3.5 h-3.5 text-[#94a3b8]" />
             <select
               id="wing-filter-select"
               aria-label="Filter by Wing"
               value={wingFilter}
               onChange={(e) => setWingFilter(e.target.value)}
-              className="text-xs bg-slate-100 border border-slate-200 rounded-xl px-2.5 py-1.5 text-slate-700 font-semibold focus:outline-none cursor-pointer"
+              className="text-xs bg-[#141d27] border border-[#1e293b] rounded-xl px-2.5 py-1.5 text-[#e2e8f0] font-semibold focus:outline-none cursor-pointer"
             >
               <option key="all" value="all">All Wings ({wings.length})</option>
               {wings.map((w) => (
@@ -663,7 +663,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           <button
             id="add-resident-btn"
             onClick={() => setShowAddModal(true)}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1 shadow-sm mr-2"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] transition flex items-center gap-1 shadow-sm mr-2"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Resident</span>
@@ -673,7 +673,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           <button
             id="create-home-btn"
             onClick={() => setShowCreateHomeModal(true)}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition flex items-center gap-1 shadow-sm"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] transition flex items-center gap-1 shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Home</span>
@@ -689,7 +689,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               showToast(`Revoked ${count} resident device link(s)`);
               onUpdateResident({}).catch(() => {});
             }}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1 shadow-sm ml-2"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-[#e2e8f0] transition flex items-center gap-1 shadow-sm ml-2"
           >
             <ShieldAlert className="w-3.5 h-3.5" />
             <span>Revoke all device links</span>
@@ -705,42 +705,42 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           const isHelp = r.status === 'not_ok';
           const isOverdue = r.status === 'overdue';
 
-          let cardBorder = 'border-slate-200 hover:border-slate-300';
-          let statusBadgeClass = 'bg-slate-100 text-slate-600';
+          let cardBorder = 'border-[#1e293b] hover:border-[#223040]';
+          let statusBadgeClass = 'bg-[#141d27] text-[#94a3b8]';
           let statusText = 'Awaiting Check-in';
 
           if (isOk) {
-            cardBorder = 'border-emerald-200 bg-emerald-50/20 hover:border-emerald-300';
-            statusBadgeClass = 'bg-emerald-100 text-emerald-700 font-bold';
+            cardBorder = 'border-emerald-500/30 bg-emerald-500/20/20 hover:border-emerald-500/40';
+            statusBadgeClass = 'bg-emerald-500/25 text-emerald-400 font-bold';
             statusText = `Checked in at ${r.checkInTime || '08:14 AM'}`;
           } else if (isHelp) {
-            cardBorder = 'border-rose-300 bg-rose-50/40 hover:border-rose-400 ring-1 ring-rose-400';
-            statusBadgeClass = 'bg-rose-100 text-rose-700 font-black animate-pulse';
+            cardBorder = 'border-rose-500/40 bg-rose-500/15/40 hover:border-rose-400 ring-1 ring-rose-500/40';
+            statusBadgeClass = 'bg-rose-500/25 text-rose-400 font-black animate-pulse';
             statusText = '🚨 NEEDS HELP';
           } else if (isOverdue) {
-            cardBorder = 'border-amber-200 bg-amber-50/30 hover:border-amber-300';
-            statusBadgeClass = 'bg-amber-100 text-amber-700 font-bold';
+            cardBorder = 'border-amber-500/30 bg-amber-500/10/30 hover:border-amber-500/40';
+            statusBadgeClass = 'bg-amber-500/20 text-amber-400 font-bold';
             statusText = '⚠️ CUTOFF PASSED';
           }
 
           return (
             <div
               key={r.id}
-              className={`bg-white rounded-2xl p-5 border ${cardBorder} shadow-sm transition-all flex flex-col justify-between hover:shadow-md relative`}
+              className={`bg-[#0f1722] rounded-2xl p-5 border ${cardBorder} shadow-sm transition-all flex flex-col justify-between hover:shadow-md relative`}
             >
               <div>
                 {/* Header row */}
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-base text-slate-900 hover:text-emerald-600 cursor-pointer"
+                      <span className="font-bold text-base text-[#e2e8f0] hover:text-emerald-400 cursor-pointer"
                         onClick={() => setSelectedResident(r)}
                       >
                         {r.name}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-500 font-medium mt-0.5">
-                      <span className="font-bold text-slate-800">{r.room}</span> · {r.wing}
+                    <div className="text-xs text-[#94a3b8] font-medium mt-0.5">
+                      <span className="font-bold text-[#e2e8f0]">{r.room}</span> · {r.wing}
                     </div>
                   </div>
 
@@ -750,15 +750,15 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 </div>
 
                 {/* Info strip */}
-                <div className="mt-3 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
+                <div className="mt-3 pt-3 border-t border-[#1e293b] grid grid-cols-2 gap-2 text-[11px] text-[#94a3b8]">
                   <div>
-                    <span className="text-slate-400 block">Caregiver</span>
-                    <span className="font-semibold text-slate-700">{r.caregiver}</span>
+                    <span className="text-[#94a3b8] block">Caregiver</span>
+                    <span className="font-semibold text-[#e2e8f0]">{r.caregiver}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block">Device Status</span>
+                    <span className="text-[#94a3b8] block">Device Status</span>
                     <span className={`font-semibold flex items-center gap-1 ${
-                      r.deviceLinked ? 'text-emerald-700' : 'text-amber-700'
+                      r.deviceLinked ? 'text-emerald-400' : 'text-amber-400'
                     }`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${r.deviceLinked ? 'bg-emerald-600' : 'bg-amber-600'}`}></span>
                       {r.deviceLinked ? 'Paired (Active)' : 'Unlinked phone'}
@@ -770,7 +770,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 {r.medicalAlerts && r.medicalAlerts.length > 0 && (
                   <div className="mt-2.5 flex flex-wrap gap-1">
                     {r.medicalAlerts.map((a, i) => (
-                      <span key={i} className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium">
+                      <span key={i} className="text-[10px] bg-[#141d27] text-[#94a3b8] px-2 py-0.5 rounded-md font-medium">
                         {a}
                       </span>
                     ))}
@@ -779,14 +779,14 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               </div>
 
               {/* Action row */}
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+              <div className="mt-4 pt-3 border-t border-[#1e293b] flex items-center justify-between gap-2">
 
 
                 <div className="flex items-center gap-1">
                   {!r.deviceLinked && (
                     <button
                       onClick={() => handleShareExistingResidentLink(r)}
-                      className="px-2 py-1 rounded-lg text-xs font-semibold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1 transition"
+                      className="px-2 py-1 rounded-lg text-xs font-semibold bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center gap-1 transition"
                       title="Share verification link to attach phone to this care home"
                     >
                       <Link2 className="w-3 h-3" />
@@ -797,7 +797,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   {onOpenSeniorWebsite && (
                     <button
                       onClick={() => onOpenSeniorWebsite(r.id)}
-                      className="p-1.5 rounded-lg text-emerald-700 hover:bg-emerald-50 hover:text-emerald-900 transition"
+                      className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-900 transition"
                       title="Open Senior Green/Red Web Check-In"
                     >
                       <Smartphone className="w-4 h-4" />
@@ -806,7 +806,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
                   <a
                     href={`tel:${r.phone}`}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+                    className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#141d27] transition"
                     title={`Call ${r.phone}`}
                   >
                     <Phone className="w-4 h-4" />
@@ -814,7 +814,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
                   <button
                     onClick={() => setSelectedResident(r)}
-                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] transition"
                   >
                     Profile
                   </button>
@@ -823,13 +823,13 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     <>
                       <button
                         onClick={() => setEditingResident(r)}
-                        className="px-2 py-1 rounded-lg text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition"
+                        className="px-2 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => removeResident(r.id)}
-                        className="px-2 py-1 rounded-lg text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-700 transition"
+                        className="px-2 py-1 rounded-lg text-xs font-semibold bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 transition"
                       >
                         Delete
                       </button>
@@ -844,11 +844,11 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       </div>
 
       {filteredResidents.length === 0 && (
-        <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 text-slate-500">
+        <div className="bg-[#0f1722] rounded-2xl p-12 text-center border border-[#1e293b] text-[#94a3b8]">
           <p className="text-sm font-medium">No residents match your search or filter criteria.</p>
           <button
             onClick={() => { setSearchQuery(''); setStatusFilter('all'); setWingFilter('all'); }}
-            className="mt-3 text-xs font-bold text-emerald-600 hover:underline"
+            className="mt-3 text-xs font-bold text-emerald-400 hover:underline"
           >
             Clear all filters
           </button>
@@ -857,42 +857,42 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
       {/* RESIDENT PROFILE DRAWER */}
       {selectedResident && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex justify-end">
-          <div className="w-full max-w-md bg-white h-full shadow-2xl overflow-y-auto p-6 flex flex-col justify-between animate-in slide-in-from-right duration-200">
+        <div className="fixed inset-0 z-50 bg-[#0f1722]/60 backdrop-blur-xs flex justify-end">
+          <div className="w-full max-w-md bg-[#0f1722] h-full shadow-2xl overflow-y-auto p-6 flex flex-col justify-between animate-in slide-in-from-right duration-200">
             <div>
               {/* Drawer Header */}
-              <div className="flex items-start justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-start justify-between pb-4 border-b border-[#1e293b]">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-bold text-slate-900">{selectedResident.name}</h3>
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-slate-100 text-slate-800">
+                    <h3 className="text-xl font-bold text-[#e2e8f0]">{selectedResident.name}</h3>
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-[#141d27] text-[#e2e8f0]">
                       {selectedResident.room}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">{selectedResident.wing}</p>
+                  <p className="text-xs text-[#94a3b8] mt-0.5">{selectedResident.wing}</p>
                 </div>
                 <button
                   onClick={() => setSelectedResident(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                  className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8] hover:bg-[#141d27] transition"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Status Banner */}
-              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+              <div className="mt-4 p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#94a3b8] block">
                     Today&apos;s Status
                   </span>
-                  <span className="text-sm font-black text-slate-900">
+                  <span className="text-sm font-black text-[#e2e8f0]">
                     {selectedResident.status === 'ok' && 'Checked in OK'}
                     {selectedResident.status === 'not_ok' && 'Flagged for Help'}
                     {selectedResident.status === 'overdue' && 'Overdue (Cutoff Missed)'}
                     {selectedResident.status === 'awaiting' && 'Awaiting Morning Check-in'}
                   </span>
                   {selectedResident.checkInTime && (
-                    <span className="text-xs text-slate-500 block mt-0.5">
+                    <span className="text-xs text-[#94a3b8] block mt-0.5">
                       Recorded: {selectedResident.checkInTime}
                     </span>
                   )}
@@ -906,7 +906,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                       setSelectedResident({ ...selectedResident, status: 'ok', checkInTime: currentTimeStr });
                       showToast(`Marked ${selectedResident.name} as OK`);
                     }}
-                    className="p-2 rounded-xl bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition"
+                    className="p-2 rounded-xl bg-emerald-500/25 text-emerald-400 hover:bg-emerald-200 transition"
                     title="Mark OK"
                   >
                     <CheckCircle2 className="w-4 h-4" />
@@ -917,7 +917,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                       setSelectedResident({ ...selectedResident, status: 'not_ok', checkInTime: currentTimeStr });
                       showToast(`Flagged ${selectedResident.name} as needing help`);
                     }}
-                    className="p-2 rounded-xl bg-rose-100 text-rose-800 hover:bg-rose-200 transition"
+                    className="p-2 rounded-xl bg-rose-500/25 text-rose-400 hover:bg-rose-200 transition"
                     title="Flag for Help"
                   >
                     <AlertCircle className="w-4 h-4" />
@@ -927,7 +927,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
               {/* 7-Day Morning Verification History */}
               <div className="mt-5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#94a3b8] mb-2">
                   7-Day Morning Check-In History
                 </h4>
                 <div className="grid grid-cols-7 gap-1.5 text-center">
@@ -947,21 +947,21 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     const isHelp = h.status === 'not_ok';
                     const isOver = h.status === 'overdue';
 
-                    let dotBg = 'bg-slate-100 text-slate-400';
-                    if (isOk) dotBg = 'bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold';
-                    else if (isHelp) dotBg = 'bg-rose-100 text-rose-800 border border-rose-300 font-bold';
-                    else if (isOver) dotBg = 'bg-amber-100 text-amber-800 border border-amber-300 font-bold';
+                    let dotBg = 'bg-[#141d27] text-[#94a3b8]';
+                    if (isOk) dotBg = 'bg-emerald-500/25 text-emerald-400 border border-emerald-500/40 font-bold';
+                    else if (isHelp) dotBg = 'bg-rose-500/25 text-rose-400 border border-rose-500/40 font-bold';
+                    else if (isOver) dotBg = 'bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold';
 
                     return (
                       <div key={i} className="flex flex-col items-center">
-                        <span className="text-[10px] text-slate-400 mb-1">{h.day}</span>
+                        <span className="text-[10px] text-[#94a3b8] mb-1">{h.day}</span>
                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs ${dotBg}`}>
                           {isOk && '✓'}
                           {isHelp && '!'}
                           {isOver && '✕'}
                           {h.status === 'awaiting' && '—'}
                         </div>
-                        <span className="text-[9px] text-slate-400 mt-1 truncate max-w-[36px]">
+                        <span className="text-[9px] text-[#94a3b8] mt-1 truncate max-w-[36px]">
                           {h.time ? h.time.split(' ')[0] : '—'}
                         </span>
                       </div>
@@ -971,31 +971,31 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               </div>
 
               {/* Family & Emergency Contact Details */}
-              <div className="mt-6 pt-5 border-t border-slate-100">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+              <div className="mt-6 pt-5 border-t border-[#1e293b]">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#94a3b8] mb-2">
                   Family & Emergency Notification
                 </h4>
-                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-2">
+                <div className="bg-[#0f1722] rounded-2xl p-4 border border-[#1e293b] space-y-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-bold text-sm text-slate-800">
+                      <div className="font-bold text-sm text-[#e2e8f0]">
                         {selectedResident.emergencyContact?.name || 'Emergency Contact'}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-[#94a3b8]">
                         {selectedResident.emergencyContact?.relationship || 'Family'} · {selectedResident.emergencyContact?.phone || 'No phone recorded'}
                       </div>
                     </div>
                     {selectedResident.emergencyContact?.phone && (
                       <a
                         href={`tel:${selectedResident.emergencyContact.phone}`}
-                        className="p-2 rounded-xl bg-slate-200 text-slate-700 hover:bg-slate-300 transition"
+                        className="p-2 rounded-xl bg-[#141d27] text-[#e2e8f0] hover:bg-[#141d27] transition"
                         title="Call family contact"
                       >
                         <Phone className="w-4 h-4" />
                       </a>
                     )}
                   </div>
-                  <div className="pt-2 border-t border-slate-200/60 text-xs text-slate-600">
+                  <div className="pt-2 border-t border-[#1e293b]/60 text-xs text-[#94a3b8]">
                     <span>Device link attaches this resident to the care facility.</span>
                   </div>
                 </div>
@@ -1003,10 +1003,10 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
               {/* Medical notes */}
               <div className="mt-5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#94a3b8] mb-1.5">
                   Clinical & Caregiver Notes
                 </h4>
-                <p className="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed">
+                <p className="text-xs text-[#94a3b8] bg-[#0f1722] p-3 rounded-xl border border-[#1e293b] leading-relaxed">
                   {selectedResident.notes || 'No special instructions recorded.'}
                 </p>
               </div>
@@ -1014,26 +1014,26 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               {/* Device Safe-Link & Database Attachment */}
               <div className="mt-5">
                 <div className="flex items-center justify-between mb-1.5">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#94a3b8]">
                     Device Link & Facility Attachment
                   </h4>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                     selectedResident.deviceLinked
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-amber-100 text-amber-800'
+                      ? 'bg-emerald-500/25 text-emerald-400'
+                      : 'bg-amber-500/20 text-amber-400'
                   }`}>
                     {selectedResident.deviceLinked ? '✓ Attached in Database' : '⏳ Pending User Link'}
                   </span>
                 </div>
 
-                <div className="bg-slate-100 rounded-xl p-3 text-xs font-mono text-slate-700 break-all border border-slate-200">
+                <div className="bg-[#141d27] rounded-xl p-3 text-xs font-mono text-[#e2e8f0] break-all border border-[#1e293b]">
                   {window.location.origin}/?verify={selectedResident.verificationToken || `ew_${selectedResident.id}`}&home={selectedResident.homeId || homeOrDefault.id}
                 </div>
 
                 <div className="mt-2 flex gap-2">
                   <button
                     onClick={() => handleShareExistingResidentLink(selectedResident)}
-                    className="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                    className="flex-1 py-2 px-3 rounded-xl bg-[#0f1722] hover:bg-[#131d27] text-[#e2e8f0] font-bold text-xs flex items-center justify-center gap-1.5 transition"
                   >
                     <Link2 className="w-3.5 h-3.5 text-emerald-400" />
                     <span>Copy Verification Invite</span>
@@ -1044,7 +1044,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                         onOpenSeniorWebsite(selectedResident.id);
                         setSelectedResident(null);
                       }}
-                      className="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                      className="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs flex items-center justify-center gap-1.5 transition"
                     >
                       <Smartphone className="w-3.5 h-3.5" />
                       <span>Senior Web View</span>
@@ -1055,10 +1055,10 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             </div>
 
             {/* Bottom Actions in Drawer */}
-            <div className="pt-6 mt-6 border-t border-slate-100 flex gap-2">
+            <div className="pt-6 mt-6 border-t border-[#1e293b] flex gap-2">
               <button
                 onClick={() => setSelectedResident(null)}
-                className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+                className="flex-1 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition"
               >
                 Close
               </button>
@@ -1069,16 +1069,16 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
       {/* ADD RESIDENT MODAL */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-200 text-slate-900 animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 bg-[#0f1722]/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0f1722] rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-[#1e293b] text-[#e2e8f0] animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between pb-4 border-b border-[#1e293b]">
               <div>
                 <h3 className="text-lg font-bold">Add New Resident</h3>
-                <p className="text-xs text-slate-500">Configure room, contact, and 1-tap phone link</p>
+                <p className="text-xs text-[#94a3b8]">Configure room, contact, and 1-tap phone link</p>
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8] hover:bg-[#141d27] transition"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1086,14 +1086,14 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
             <form onSubmit={handleCreateResident} className="space-y-4 py-4">
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
                   Assign to Care Home Facility *
                 </label>
                 <select
                   id="new-resident-home-select"
                   value={selectedHomeForResident}
                   onChange={(e) => setSelectedHomeForResident(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer bg-white text-slate-900"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer bg-[#0f1722] text-[#e2e8f0]"
                 >
                   {(allHomes || [homeOrDefault]).map((h) => (
                     <option key={h.id} value={h.id}>
@@ -1101,14 +1101,14 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     </option>
                   ))}
                 </select>
-                <p className="text-[11px] text-slate-500 mt-1">
+                <p className="text-[11px] text-[#94a3b8] mt-1">
                   Stored in database per home. The resident will verify via link to attach their device to this facility.
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
                     Resident Full Name *
                   </label>
                   <input
@@ -1117,11 +1117,11 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     placeholder="e.g. Eleanor Vance"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
                     Room / Cottage *
                   </label>
                   <input
@@ -1130,14 +1130,14 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     placeholder="e.g. Room 16"
                     value={newRoom}
                     onChange={(e) => setNewRoom(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
                     Wing / Section
                   </label>
                   <input
@@ -1146,11 +1146,11 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     placeholder="e.g. Willow Cottage"
                     value={newWing}
                     onChange={(e) => setNewWing(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
                     Resident Mobile Phone *
                   </label>
                   <input
@@ -1159,13 +1159,13 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     placeholder="+27 82 555 0000"
                     value={newPhone}
                     onChange={(e) => setNewPhone(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]"
                   />
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-100">
-                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+              <div className="pt-2 border-t border-[#1e293b]">
+                <h4 className="text-xs font-bold text-[#94a3b8] uppercase tracking-wider mb-2">
                   Emergency Family Contact
                 </h4>
                 <div className="grid grid-cols-3 gap-2">
@@ -1175,7 +1175,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                       placeholder="Contact Name"
                       value={newContactName}
                       onChange={(e) => setNewContactName(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]"
                     />
                   </div>
                   <div className="col-span-1">
@@ -1184,7 +1184,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                       placeholder="Relationship (Daughter)"
                       value={newContactRel}
                       onChange={(e) => setNewContactRel(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]"
                     />
                   </div>
                   <div className="col-span-1">
@@ -1193,7 +1193,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                       placeholder="Contact Phone"
                       value={newContactPhone}
                       onChange={(e) => setNewContactPhone(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]"
                     />
                   </div>
                 </div>
@@ -1202,14 +1202,14 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               <div className="flex gap-2 pt-3">
                 <button
                   type="submit"
-                  className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
+                  className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs transition shadow-sm"
                 >
                   Save & Generate Device Link
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+                  className="px-4 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition"
                 >
                   Cancel
                 </button>
@@ -1221,23 +1221,23 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
       {/* EXPORT MORNING AUDIT REPORT MODAL */}
       {showExportModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-200 text-slate-900">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 bg-[#0f1722]/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0f1722] rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-[#1e293b] text-[#e2e8f0]">
+            <div className="flex items-center justify-between pb-4 border-b border-[#1e293b]">
               <div>
                 <h3 className="text-lg font-bold">Morning Verification Audit Log</h3>
-                <p className="text-xs text-slate-500">Official log for care facility records & family reassurance</p>
+                <p className="text-xs text-[#94a3b8]">Official log for care facility records & family reassurance</p>
               </div>
               <button
                 onClick={() => setShowExportModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8] hover:bg-[#141d27] transition"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="py-4">
-              <div className="bg-slate-900 text-slate-100 p-4 rounded-2xl font-mono text-xs overflow-x-auto max-h-60 leading-relaxed border border-slate-800">
+              <div className="bg-[#0f1722] text-[#e2e8f0] p-4 rounded-2xl font-mono text-xs overflow-x-auto max-h-60 leading-relaxed border border-[#223040]">
                 <div># ELDERWATCH MORNING AUDIT REPORT</div>
                 <div>FACILITY: {homeOrDefault.name}</div>
                 <div>DATE: {new Date().toISOString().split('T')[0]} · CUTOFF: {homeOrDefault.cutoffTime} AM</div>
@@ -1264,13 +1264,13 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   );
                   alert('Morning audit summary copied to clipboard!');
                 }}
-                className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
+                className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs transition shadow-sm"
               >
                 Copy Report Summary
               </button>
               <button
                 onClick={() => setShowExportModal(false)}
-                className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+                className="px-4 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition"
               >
                 Done
               </button>
@@ -1281,25 +1281,25 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
       {/* VERIFICATION LINK & SMS INVITATION MODAL */}
       {createdVerificationData && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 text-slate-900 animate-in fade-in zoom-in-95">
-            <div className="flex items-start justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 bg-[#0f1722]/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0f1722] rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[#1e293b] text-[#e2e8f0] animate-in fade-in zoom-in-95">
+            <div className="flex items-start justify-between pb-4 border-b border-[#1e293b]">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/25 text-emerald-400 flex items-center justify-center">
                   <Link2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base text-slate-900">
+                  <h3 className="font-bold text-base text-[#e2e8f0]">
                     Verification Link Generated
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#94a3b8]">
                     Database record stored for {createdVerificationData.homeName}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setCreatedVerificationData(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8] hover:bg-[#141d27] transition"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1307,16 +1307,16 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
             <div className="py-4 space-y-4">
               {/* Resident Summary Pill */}
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex items-center justify-between text-xs">
+              <div className="bg-[#0f1722] border border-[#1e293b] rounded-2xl p-3.5 flex items-center justify-between text-xs">
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Resident & Mobile</span>
-                  <span className="font-bold text-slate-900 text-sm">{createdVerificationData.residentName}</span>
-                  <span className="text-slate-500 block">{createdVerificationData.phone} · {createdVerificationData.room}</span>
+                  <span className="text-[#94a3b8] block text-[11px]">Resident & Mobile</span>
+                  <span className="font-bold text-[#e2e8f0] text-sm">{createdVerificationData.residentName}</span>
+                  <span className="text-[#94a3b8] block">{createdVerificationData.phone} · {createdVerificationData.room}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-400 block text-[11px]">Facility Attached</span>
-                  <span className="font-bold text-emerald-700">{createdVerificationData.homeName}</span>
-                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 bg-amber-100 font-semibold px-2 py-0.5 rounded-full mt-1">
+                  <span className="text-[#94a3b8] block text-[11px]">Facility Attached</span>
+                  <span className="font-bold text-emerald-400">{createdVerificationData.homeName}</span>
+                  <span className="inline-flex items-center gap-1 text-[10px] text-amber-400 bg-amber-500/20 font-semibold px-2 py-0.5 rounded-full mt-1">
                     Waiting for link click
                   </span>
                 </div>
@@ -1324,7 +1324,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
               {/* Verification Link Field */}
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
                   1-Click Resident Mobile Verification URL
                 </label>
                 <div className="flex gap-2">
@@ -1332,7 +1332,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     type="text"
                     readOnly
                     value={createdVerificationData.verificationUrl}
-                    className="flex-1 px-3 py-2 text-xs font-mono rounded-xl border border-slate-300 bg-slate-50 text-slate-800 select-all"
+                    className="flex-1 px-3 py-2 text-xs font-mono rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0] select-all"
                   />
                   <button
                     type="button"
@@ -1342,7 +1342,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                       setTimeout(() => setCopiedLink(false), 3000);
                       showToast('Verification URL copied to clipboard');
                     }}
-                    className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition"
+                    className="px-3 py-2 rounded-xl bg-[#0f1722] hover:bg-[#131d27] text-[#e2e8f0] font-bold text-xs flex items-center gap-1.5 transition"
                   >
                     {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                     <span>{copiedLink ? 'Copied' : 'Copy'}</span>
@@ -1352,10 +1352,10 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
               {/* Precomposed SMS / WhatsApp Message */}
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">
                   Precomposed SMS / WhatsApp Invitation
                 </label>
-                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 italic">
+                <div className="bg-[#0f1722] p-3 rounded-xl border border-[#1e293b] text-xs text-[#e2e8f0] italic">
                   "Good day {createdVerificationData.residentName.split(' ')[0]}! Welcome to {createdVerificationData.homeName}. Please tap this link on your cell phone to activate your morning reassurance check-in: {createdVerificationData.verificationUrl}"
                 </div>
                 <button
@@ -1367,7 +1367,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     setTimeout(() => setCopiedSms(false), 3000);
                     showToast('SMS message copied to clipboard');
                   }}
-                  className="mt-2 text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5"
+                  className="mt-2 text-xs font-bold text-emerald-400 hover:text-emerald-900 flex items-center gap-1.5"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>{copiedSms ? '✓ SMS text copied!' : 'Copy SMS / WhatsApp message text'}</span>
@@ -1375,7 +1375,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
+              <div className="pt-3 border-t border-[#1e293b] flex flex-col sm:flex-row gap-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -1386,7 +1386,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                     }
                     setCreatedVerificationData(null);
                   }}
-                  className="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition"
+                  className="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition"
                 >
                   <ExternalLink className="w-4 h-4" />
                   <span>Test Senior Client Website (Green & Red Buttons)</span>
@@ -1394,7 +1394,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setCreatedVerificationData(null)}
-                  className="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+                  className="py-3 px-4 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition"
                 >
                   Done
                 </button>
@@ -1407,36 +1407,36 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       {/* CREATE HOME MODAL */}
       {showCreateHomeModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+          <div className="bg-[#0f1722] rounded-2xl shadow-2xl w-full max-w-lg">
             <div className="flex items-center justify-between p-6 border-b">
               <div>
                 <h3 className="text-lg font-bold">Create New Home</h3>
-                <p className="text-xs text-slate-500">Add a care home, then assign a home admin in Staff Management.</p>
+                <p className="text-xs text-[#94a3b8]">Add a care home, then assign a home admin in Staff Management.</p>
               </div>
-              <button onClick={() => setShowCreateHomeModal(false)} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+              <button onClick={() => setShowCreateHomeModal(false)} className="p-2 hover:bg-[#141d27] rounded-lg"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={createHome} className="p-6 space-y-4">
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Home ID *</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="e.g. home-pretoria-03" value={newHomeId} onChange={(e) => setNewHomeId(e.target.value)} required />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Home ID *</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]" placeholder="e.g. home-pretoria-03" value={newHomeId} onChange={(e) => setNewHomeId(e.target.value)} required />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Home Name *</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="e.g. Pretoria Frail Care" value={newHomeName} onChange={(e) => setNewHomeName(e.target.value)} required />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Home Name *</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]" placeholder="e.g. Pretoria Frail Care" value={newHomeName} onChange={(e) => setNewHomeName(e.target.value)} required />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Location</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="e.g. Hatfield, Pretoria" value={newHomeLocation} onChange={(e) => setNewHomeLocation(e.target.value)} />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Location</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]" placeholder="e.g. Hatfield, Pretoria" value={newHomeLocation} onChange={(e) => setNewHomeLocation(e.target.value)} />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Cutoff Time</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900" placeholder="09:00" value={newHomeCutoff} onChange={(e) => setNewHomeCutoff(e.target.value)} />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Cutoff Time</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-[#0f1722] text-[#e2e8f0]" placeholder="09:00" value={newHomeCutoff} onChange={(e) => setNewHomeCutoff(e.target.value)} />
               </div>
               <div className="flex gap-2 pt-2">
-                <button type="submit" disabled={creatingHome} className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm disabled:opacity-60">
+                <button type="submit" disabled={creatingHome} className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs transition shadow-sm disabled:opacity-60">
                   {creatingHome ? 'Creating...' : 'Create Home'}
                 </button>
-                <button type="button" onClick={() => setShowCreateHomeModal(false)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
+                <button type="button" onClick={() => setShowCreateHomeModal(false)} className="px-4 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition">Cancel</button>
               </div>
             </form>
           </div>
@@ -1446,30 +1446,30 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       {/* EDIT HOME MODAL */}
       {editingHome && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+          <div className="bg-[#0f1722] rounded-2xl shadow-2xl w-full max-w-lg">
             <div className="flex items-center justify-between p-6 border-b">
               <div>
                 <h3 className="text-lg font-bold">Edit Home</h3>
-                <p className="text-xs text-slate-500">Update home details.</p>
+                <p className="text-xs text-[#94a3b8]">Update home details.</p>
               </div>
-              <button onClick={() => setEditingHome(null)} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+              <button onClick={() => setEditingHome(null)} className="p-2 hover:bg-[#141d27] rounded-lg"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={saveEditingHome} className="p-6 space-y-4">
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Name</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingHome.name} onChange={(e) => setEditingHome({ ...editingHome, name: e.target.value })} required />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Name</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingHome.name} onChange={(e) => setEditingHome({ ...editingHome, name: e.target.value })} required />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Location</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingHome.location} onChange={(e) => setEditingHome({ ...editingHome, location: e.target.value })} />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Location</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingHome.location} onChange={(e) => setEditingHome({ ...editingHome, location: e.target.value })} />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Cutoff Time</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingHome.cutoffTime} onChange={(e) => setEditingHome({ ...editingHome, cutoffTime: e.target.value })} />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Cutoff Time</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingHome.cutoffTime} onChange={(e) => setEditingHome({ ...editingHome, cutoffTime: e.target.value })} />
               </div>
               <div className="flex gap-2 pt-2">
-                <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Save Changes</button>
-                <button type="button" onClick={() => setEditingHome(null)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
+                <button type="submit" className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs transition">Save Changes</button>
+                <button type="button" onClick={() => setEditingHome(null)} className="px-4 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition">Cancel</button>
               </div>
             </form>
           </div>
@@ -1479,40 +1479,40 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
       {/* EDIT RESIDENT MODAL */}
       {editingResident && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+          <div className="bg-[#0f1722] rounded-2xl shadow-2xl w-full max-w-lg">
             <div className="flex items-center justify-between p-6 border-b">
               <div>
                 <h3 className="text-lg font-bold">Edit Resident</h3>
-                <p className="text-xs text-slate-500">Update resident info or home assignment.</p>
+                <p className="text-xs text-[#94a3b8]">Update resident info or home assignment.</p>
               </div>
-              <button onClick={() => setEditingResident(null)} className="p-2 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
+              <button onClick={() => setEditingResident(null)} className="p-2 hover:bg-[#141d27] rounded-lg"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={saveEditingResident} className="p-6 space-y-4">
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Name</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.name} onChange={(e) => setEditingResident({ ...editingResident, name: e.target.value })} required />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Name</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingResident.name} onChange={(e) => setEditingResident({ ...editingResident, name: e.target.value })} required />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Room</label>
-                  <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.room} onChange={(e) => setEditingResident({ ...editingResident, room: e.target.value })} />
+                  <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Room</label>
+                  <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingResident.room} onChange={(e) => setEditingResident({ ...editingResident, room: e.target.value })} />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Wing</label>
-                  <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.wing} onChange={(e) => setEditingResident({ ...editingResident, wing: e.target.value })} />
+                  <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Wing</label>
+                  <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingResident.wing} onChange={(e) => setEditingResident({ ...editingResident, wing: e.target.value })} />
                 </div>
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Phone</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.phone} onChange={(e) => setEditingResident({ ...editingResident, phone: e.target.value })} />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Phone</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingResident.phone} onChange={(e) => setEditingResident({ ...editingResident, phone: e.target.value })} />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Caregiver</label>
-                <input className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white text-slate-900" value={editingResident.caregiver} onChange={(e) => setEditingResident({ ...editingResident, caregiver: e.target.value })} />
+                <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Caregiver</label>
+                <input className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" value={editingResident.caregiver} onChange={(e) => setEditingResident({ ...editingResident, caregiver: e.target.value })} />
               </div>
               <div className="flex gap-2 pt-2">
-                <button type="submit" className="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Save Changes</button>
-                <button type="button" onClick={() => setEditingResident(null)} className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Cancel</button>
+                <button type="submit" className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs transition">Save Changes</button>
+                <button type="button" onClick={() => setEditingResident(null)} className="px-4 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition">Cancel</button>
               </div>
             </form>
           </div>

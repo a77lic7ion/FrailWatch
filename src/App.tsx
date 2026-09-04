@@ -219,7 +219,7 @@ export default function App() {
   const showLogin = !staff || staffLoading;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#0b1118] flex flex-col">
       <link rel="manifest" href="/manifest.webmanifest" />
       <meta name="theme-color" content="#0f766e" />
       <Header
@@ -239,21 +239,21 @@ export default function App() {
 
       <main className="flex-1">
         {viewMode === 'resident' && activeTab === 'senior-checkin' && residentLoading && (
-          <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 bg-[#0b1118] text-[#e2e8f0] flex items-center justify-center p-4">
             <div className="text-center">
               <Logo className="w-12 h-12 mx-auto mb-3 animate-pulse" />
-              <p className="text-sm text-slate-300">Checking in…</p>
+              <p className="text-sm text-[#e2e8f0]">Checking in…</p>
             </div>
           </div>
         )}
         {viewMode === 'resident' && activeTab === 'senior-checkin' && residentUser && (
-          <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+          <div className="fixed inset-0 z-50 bg-[#0b1118] text-[#e2e8f0] flex items-center justify-center p-4">
+            <div className="w-full max-w-md rounded-3xl border border-[#223040] bg-[#0f1722] p-6 shadow-2xl">
               <div className="text-center mb-5">
                 <Logo className="w-12 h-12 mx-auto mb-2" />
                 <h1 className="text-xl font-black">Morning Check-In</h1>
-                <p className="text-xs text-slate-400 mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
-                <p className="text-[11px] text-slate-500 mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
+                <p className="text-xs text-[#94a3b8] mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
+                <p className="text-[11px] text-[#94a3b8] mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -265,10 +265,10 @@ export default function App() {
                     setResidentUser({ ...residentUser, status: 'ok', checkInTime: timeFormatted } as any);
                     await api.recordCheckIn(residentUser.id, 'ok', timeFormatted);
                   }}
-                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
+                  className={`h-[50vh] rounded-3xl text-[#e2e8f0] font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
                     residentUser.status === 'ok'
-                      ? 'bg-emerald-600 border-emerald-300 ring-4 ring-emerald-500/50'
-                      : 'bg-emerald-600 hover:bg-emerald-500 border-emerald-400'
+                      ? 'bg-emerald-600 border-emerald-500/40 ring-4 ring-emerald-500/50'
+                      : 'bg-emerald-600 hover:bg-emerald-500/200 border-emerald-400'
                   }`}
                 >
                   <div className="flex flex-col items-center justify-center gap-3">
@@ -284,10 +284,10 @@ export default function App() {
                     setResidentUser({ ...residentUser, status: 'not_ok', checkInTime: timeFormatted } as any);
                     await api.recordCheckIn(residentUser.id, 'not_ok', timeFormatted);
                   }}
-                  className={`h-[50vh] rounded-3xl text-white font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
+                  className={`h-[50vh] rounded-3xl text-[#e2e8f0] font-black text-2xl shadow-2xl transition-all active:scale-95 border-4 ${
                     residentUser.status === 'not_ok'
                       ? 'bg-rose-700 border-rose-400 ring-4 ring-rose-500/50'
-                      : 'bg-rose-600 hover:bg-rose-500 border-rose-400'
+                      : 'bg-rose-600 hover:bg-rose-500/150 border-rose-400'
                   }`}
                 >
                   <div className="flex flex-col items-center justify-center gap-3">
@@ -297,7 +297,7 @@ export default function App() {
                 </button>
               </div>
               {residentUser.status && (
-                <p className="text-center text-xs text-slate-400 mt-4">
+                <p className="text-center text-xs text-[#94a3b8] mt-4">
                   Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               )}
@@ -316,7 +316,7 @@ export default function App() {
                   setResidentUser(null);
                   setViewMode('admin');
                 }}
-                className="mt-6 w-full rounded-2xl border border-slate-700 bg-slate-900/60 text-slate-300 py-3 text-sm font-semibold"
+                className="mt-6 w-full rounded-2xl border border-[#223040] bg-[#0f1722]/60 text-[#e2e8f0] py-3 text-sm font-semibold"
               >
                 Sign out of this device
               </button>

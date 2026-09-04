@@ -23,7 +23,7 @@ export const ComparisonCritique: React.FC = () => {
     <div className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
       
       {/* Header Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-stone-200/80 shadow-sm">
+      <div className="bg-[#0f1722] rounded-3xl p-6 sm:p-7 border border-stone-200/80 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export const ComparisonCritique: React.FC = () => {
             <button
               onClick={() => setActiveTab('visual')}
               className={`px-3.5 py-2 rounded-xl transition ${
-                activeTab === 'visual' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
+                activeTab === 'visual' ? 'bg-[#0f1722] text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               Side-by-Side Comparison
@@ -54,7 +54,7 @@ export const ComparisonCritique: React.FC = () => {
             <button
               onClick={() => setActiveTab('scorecard')}
               className={`px-3.5 py-2 rounded-xl transition ${
-                activeTab === 'scorecard' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
+                activeTab === 'scorecard' ? 'bg-[#0f1722] text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               UX Scorecard
@@ -62,7 +62,7 @@ export const ComparisonCritique: React.FC = () => {
             <button
               onClick={() => setActiveTab('principles')}
               className={`px-3.5 py-2 rounded-xl transition ${
-                activeTab === 'principles' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
+                activeTab === 'principles' ? 'bg-[#0f1722] text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               Design Principles
@@ -74,7 +74,7 @@ export const ComparisonCritique: React.FC = () => {
       {activeTab === 'visual' && (
         <div className="space-y-6">
           {/* VISUAL COMPARISON 1: THE RESIDENT PHONE SCREEN */}
-          <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm">
+          <div className="bg-[#0f1722] rounded-3xl p-6 border border-stone-200 shadow-sm">
             <div className="mb-4">
               <span className="text-xs font-extrabold uppercase tracking-wider text-stone-400">
                 Interface 01
@@ -137,7 +137,7 @@ export const ComparisonCritique: React.FC = () => {
               </div>
 
               {/* NEW ELDERWATCH REDESIGN */}
-              <div className="bg-stone-900 rounded-2xl p-5 border-2 border-emerald-500/50 text-white flex flex-col justify-between shadow-md">
+              <div className="bg-stone-900 rounded-2xl p-5 border-2 border-emerald-500/50 text-[#e2e8f0] flex flex-col justify-between shadow-md">
                 <div>
                   <div className="flex items-center justify-between pb-3 border-b border-stone-800 mb-4">
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
@@ -155,11 +155,11 @@ export const ComparisonCritique: React.FC = () => {
                       Good morning, Margaret · Room 14
                     </div>
                     <div className="grid grid-cols-1 gap-2.5">
-                      <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 text-base shadow-sm">
+                      <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-[#e2e8f0] font-black py-4 rounded-xl flex items-center justify-center gap-2 text-base shadow-sm">
                         <Check className="w-5 h-5 stroke-[3]" />
                         <span>I&apos;M OKAY</span>
                       </div>
-                      <div className="bg-gradient-to-r from-rose-600 to-rose-700 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 text-base shadow-sm">
+                      <div className="bg-gradient-to-r from-rose-600 to-rose-700 text-[#e2e8f0] font-black py-4 rounded-xl flex items-center justify-center gap-2 text-base shadow-sm">
                         <AlertTriangle className="w-5 h-5 stroke-[3]" />
                         <span>I NEED HELP</span>
                       </div>
@@ -191,7 +191,7 @@ export const ComparisonCritique: React.FC = () => {
           </div>
 
           {/* VISUAL COMPARISON 2: STAFF & CARE HOME DASHBOARD */}
-          <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm">
+          <div className="bg-[#0f1722] rounded-3xl p-6 border border-stone-200 shadow-sm">
             <div className="mb-4">
               <span className="text-xs font-extrabold uppercase tracking-wider text-stone-400">
                 Interface 02
@@ -221,7 +221,7 @@ export const ComparisonCritique: React.FC = () => {
                     <div className="text-stone-400 text-[11px] font-bold">Today</div>
                     <div className="p-3 bg-[#161616] rounded-lg border border-[#262626] flex items-center justify-between">
                       <div>
-                        <div className="font-bold text-white">Resident</div>
+                        <div className="font-bold text-[#e2e8f0]">Resident</div>
                         <div className="text-stone-500 text-[10px]">+27825551201</div>
                       </div>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400">ok</span>
@@ -253,7 +253,7 @@ export const ComparisonCritique: React.FC = () => {
               </div>
 
               {/* NEW ELDERWATCH DASHBOARD */}
-              <div className="bg-stone-900 rounded-2xl p-5 border-2 border-emerald-500/50 text-white flex flex-col justify-between shadow-md">
+              <div className="bg-stone-900 rounded-2xl p-5 border-2 border-emerald-500/50 text-[#e2e8f0] flex flex-col justify-between shadow-md">
                 <div>
                   <div className="flex items-center justify-between pb-3 border-b border-stone-800 mb-4">
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
@@ -272,13 +272,13 @@ export const ComparisonCritique: React.FC = () => {
                     </div>
                     <div className="p-3 bg-rose-950/40 rounded-lg border border-rose-500/40 flex items-center justify-between">
                       <div>
-                        <div className="font-bold text-white flex items-center gap-1.5">
+                        <div className="font-bold text-[#e2e8f0] flex items-center gap-1.5">
                           <span>Arthur Pendelton</span>
                           <span className="px-1.5 py-0.2 rounded bg-rose-600 text-[10px]">Room 07</span>
                         </div>
                         <div className="text-rose-300 text-[10px]">Tapped &quot;I Need Help&quot; · 08:31 AM</div>
                       </div>
-                      <span className="text-[10px] px-2 py-1 rounded bg-rose-600 text-white font-bold animate-pulse">
+                      <span className="text-[10px] px-2 py-1 rounded bg-rose-600 text-[#e2e8f0] font-bold animate-pulse">
                         Dispatch Carer
                       </span>
                     </div>
@@ -311,7 +311,7 @@ export const ComparisonCritique: React.FC = () => {
       )}
 
       {activeTab === 'scorecard' && (
-        <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm">
+        <div className="bg-[#0f1722] rounded-3xl p-6 border border-stone-200 shadow-sm">
           <h2 className="text-xl font-black text-stone-900 mb-2">UX & Operational Architecture Scorecard</h2>
           <p className="text-xs text-stone-500 mb-6">
             Detailed criteria-by-criteria assessment comparing the original design against the ElderWatch redesign.
@@ -426,7 +426,7 @@ export const ComparisonCritique: React.FC = () => {
       {activeTab === 'principles' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
+          <div className="bg-[#0f1722] rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
               <Smartphone className="w-5 h-5" />
             </div>
@@ -436,7 +436,7 @@ export const ComparisonCritique: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
+          <div className="bg-[#0f1722] rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
             <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold">
               <Clock className="w-5 h-5" />
             </div>
@@ -446,7 +446,7 @@ export const ComparisonCritique: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
+          <div className="bg-[#0f1722] rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
             <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
               <Building2 className="w-5 h-5" />
             </div>
