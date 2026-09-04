@@ -10,7 +10,8 @@ import {
   deleteDoc, 
   query, 
   where, 
-  doc as firestoreDoc 
+  doc as firestoreDoc,
+  addDoc
 } from 'firebase/firestore';
 
 export interface DatabaseStatus {
@@ -97,8 +98,11 @@ export const api = {
     try {
       const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
       const data = { ...resident, verificationToken: token, createdAt: new Date().toISOString() };
-      const ref = await setDoc(firestoreDoc(collection(db, 'residents')), data);
-      return { success: true, resident: { id: ref.id, ...data }, verificationToken: token, verificationUrl: `${window.location.origin}/?verify=${token}&home=${resident.homeId || ''}` };
+      const ref = collection(db, 'residents');
+      const docRef = await addDoc(ref, data);
+      const residentData = { id: docRef.id, ...data };
+      const phoneUrl = `${window.location.origin}/?phone=${encodeURIComponent(resident.phone || '')}`;
+      return { success: true, resident: residentData, verificationToken: token, verificationUrl: phoneUrl };
     } catch (e) {
       console.warn('Failed to add resident to backend:', e);
       return { success: false };
@@ -107,11 +111,16 @@ export const api = {
 
   async getResidentProfile(idOrToken: string): Promise<{ resident?: any; home?: any } | null> {
     try {
-      const docSnap = await getDoc(firestoreDoc(db, 'residents', idOrToken));
+      const trimmed = (idOrToken || '').trim();
+      if (!trimmed) return null;
+      const docSnap = await getDoc(firestoreDoc(db, 'residents', trimmed));
       if (docSnap.exists()) return { resident: { id: docSnap.id, ...docSnap.data() } };
-      const q = query(collection(db, 'residents'), where('verificationToken', '==', idOrToken));
+      const q = query(collection(db, 'residents'), where('verificationToken', '==', trimmed));
       const snap = await getDocs(q);
       if (!snap.empty) return { resident: { id: (snap.docs[0] as any).id, ...(snap.docs[0] as any).data() } };
+      const phoneQuery = query(collection(db, 'residents'), where('phone', '==', trimmed));
+      const phoneSnap = await getDocs(phoneQuery);
+      if (!phoneSnap.empty) return { resident: { id: (phoneSnap.docs[0] as any).id, ...(phoneSnap.docs[0] as any).data() } };
       return null;
     } catch (e) {
       console.warn('Error fetching resident profile:', e);
@@ -121,13 +130,20 @@ export const api = {
 
   async verifyResident(idOrToken: string): Promise<boolean> {
     try {
-      let docId = idOrToken;
-      const docSnap = await getDoc(firestoreDoc(db, 'residents', idOrToken));
+      const trimmed = (idOrToken || '').trim();
+      if (!trimmed) return false;
+      let docId = trimmed;
+      const docSnap = await getDoc(firestoreDoc(db, 'residents', trimmed));
       if (!docSnap.exists()) {
-        const q = query(collection(db, 'residents'), where('verificationToken', '==', idOrToken));
-        const snap = await getDocs(q);
-        if (snap.empty) return false;
-        docId = (snap.docs[0] as any).id;
+        const tokenQ = query(collection(db, 'residents'), where('verificationToken', '==', trimmed));
+        const tokenSnap = await getDocs(tokenQ);
+        if (!tokenSnap.empty) docId = (tokenSnap.docs[0] as any).id;
+        else {
+          const phoneQ = query(collection(db, 'residents'), where('phone', '==', trimmed));
+          const phoneSnap = await getDocs(phoneQ);
+          if (!phoneSnap.empty) docId = (phoneSnap.docs[0] as any).id;
+          else return false;
+        }
       }
       await updateDoc(firestoreDoc(db, 'residents', docId), {
         deviceLinked: true,

@@ -224,7 +224,6 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
     const targetHome = (allHomes || [homeOrDefault]).find((h) => h.id === selectedHomeForResident) || homeOrDefault;
     const token = 'ew_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now().toString(36);
-
     const newRes: Partial<Resident> = {
       name: newName.trim(),
       room: newRoom.trim(),
@@ -250,7 +249,8 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
 
     const res: any = await onAddResident(newRes);
     const resolvedToken = res?.verificationToken || token;
-    const resolvedUrl = `${window.location.origin}/?verify=${resolvedToken}&home=${targetHome.id}`;
+    const phone = (newRes.phone || '').trim();
+    const resolvedUrl = phone ? `${window.location.origin}/?phone=${encodeURIComponent(phone)}` : `${window.location.origin}/?verify=${encodeURIComponent(resolvedToken)}&home=${targetHome.id}`;
 
     setShowAddModal(false);
     setCreatedVerificationData({
@@ -274,7 +274,10 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const handleShareExistingResidentLink = (r: Resident) => {
     const targetHome = (allHomes || [homeOrDefault]).find((h) => h.id === (r.homeId || homeOrDefault.id)) || homeOrDefault;
     const token = r.verificationToken || `ew_${r.id}`;
-    const url = `${window.location.origin}/?verify=${token}&home=${targetHome.id}`;
+    const phone = (r.phone || '').trim();
+    const url = phone
+      ? `${window.location.origin}/?phone=${encodeURIComponent(phone)}`
+      : `${window.location.origin}/?verify=${encodeURIComponent(token)}&home=${targetHome.id}`;
     setCreatedVerificationData({
       residentName: r.name,
       phone: r.phone,
