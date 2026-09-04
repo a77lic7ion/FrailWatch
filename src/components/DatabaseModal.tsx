@@ -136,12 +136,12 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
                   {isCustom ? 'Custom Project' : 'Linked & Ready'}
                 </span>
               </h3>
-              <p className="text-xs text-[#94a3b8]">Live cloud database integration</p>
+              <p className="text-xs text-[#cbd5e1]">Live cloud database integration</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8] hover:bg-[#141d27] transition"
+            className="p-1.5 rounded-lg text-[#cbd5e1] hover:text-[#cbd5e1] hover:bg-[#141d27] transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -153,7 +153,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
           {/* Active Project Card */}
           <div className="p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-[#94a3b8] flex items-center gap-1.5 font-medium">
+              <span className="text-[#cbd5e1] flex items-center gap-1.5 font-medium">
                 <Server className="w-3.5 h-3.5" /> Project ID
               </span>
               <span className="font-mono font-bold text-[#e2e8f0] bg-[#0f1722] px-2 py-0.5 rounded border border-[#1e293b]">
@@ -162,14 +162,14 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-[#94a3b8] font-medium">Database ID</span>
+              <span className="text-[#cbd5e1] font-medium">Database ID</span>
               <span className="font-mono text-[11px] text-[#e2e8f0]">
                 {currentDbId}
               </span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-[#94a3b8] font-medium">Mock Data Status</span>
+              <span className="text-[#cbd5e1] font-medium">Mock Data Status</span>
               <span className="font-semibold text-emerald-700 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 Stripped (0 fake residents)
@@ -177,7 +177,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-[#94a3b8] font-medium">Security Rules</span>
+              <span className="text-[#cbd5e1] font-medium">Security Rules</span>
               <span className="font-semibold text-[#e2e8f0] flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 Deployed & Active
@@ -191,7 +191,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
               <HelpCircle className="w-4 h-4 text-sky-700" />
               <span>Created Firebase on another Google account?</span>
             </div>
-            <p className="text-[#94a3b8] leading-relaxed text-[11px]">
+            <p className="text-[#cbd5e1] leading-relaxed text-[11px]">
               You have two choices:
             </p>
             <ul className="space-y-1.5 text-[11px] text-[#e2e8f0] pl-1">
@@ -296,7 +296,7 @@ export const DatabaseModal: React.FC<DatabaseModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between text-xs text-[#94a3b8]">
+        <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between text-xs text-[#cbd5e1]">
           <span>All mock data removed · Ready for real residents</span>
           <button
             onClick={onClose}

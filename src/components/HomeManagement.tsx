@@ -139,7 +139,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
             <h2 className="text-xl font-bold flex items-center gap-2">
               <Building2 className="w-5 h-5" /> Home Management
             </h2>
-            <p className="text-xs text-[#94a3b8] mt-1">
+            <p className="text-xs text-[#cbd5e1] mt-1">
               {canGlobalManage ? 'Add, edit, and delete homes. View admins per home.' : 'View assigned home details.'}
             </p>
           </div>
@@ -199,7 +199,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
               <Building2 className="w-4 h-4" /> Homes ({homes.length})
             </div>
             {loading ? (
-              <p className="text-xs text-[#94a3b8]">Loading...</p>
+              <p className="text-xs text-[#cbd5e1]">Loading...</p>
             ) : (
               <div className="space-y-2">
                 {homes.map((h) => (
@@ -238,7 +238,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
                           <p className="text-sm font-semibold">{h.name}</p>
-                          <p className="text-xs text-[#94a3b8]">
+                          <p className="text-xs text-[#cbd5e1]">
                             {h.location} · Cutoff: {h.cutoffTime} AM · ID: {h.id}
                           </p>
                         </div>
@@ -256,7 +256,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
                     )}
                   </div>
                 ))}
-                {!homes.length && <p className="text-xs text-[#94a3b8]">No homes found.</p>}
+                {!homes.length && <p className="text-xs text-[#cbd5e1]">No homes found.</p>}
               </div>
             )}
           </div>

@@ -26,7 +26,7 @@ export function StaffLogin({ onLogin, error, loading }: StaffLoginProps) {
             <ShieldCheck className="w-6 h-6 text-emerald-400" />
           </div>
           <h1 className="text-2xl font-bold text-[#e2e8f0]">Admin Login</h1>
-          <p className="text-xs text-[#94a3b8]">ElderWatch Morning Care — staff access only</p>
+          <p className="text-xs text-[#cbd5e1]">ElderWatch Morning Care — staff access only</p>
         </div>
 
         {error && (
@@ -90,7 +90,7 @@ export function StaffLogin({ onLogin, error, loading }: StaffLoginProps) {
           </button>
         </form>
 
-        <div className="flex items-center gap-2 text-[11px] text-[#94a3b8]">
+        <div className="flex items-center gap-2 text-[11px] text-[#cbd5e1]">
           <Lock className="w-3 h-3" />
           <span>Authorized staff only. All access is recorded.</span>
         </div>

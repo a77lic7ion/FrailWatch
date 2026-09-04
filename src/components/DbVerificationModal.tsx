@@ -41,7 +41,7 @@ export function DbVerificationModal({ isOpen, onClose }: DbVerificationModalProp
             <h2 className="text-xl font-bold flex items-center gap-2">
               <Database className="w-5 h-5" /> Firebase Connection Verification
             </h2>
-            <p className="text-xs text-[#94a3b8] mt-1">
+            <p className="text-xs text-[#cbd5e1] mt-1">
               Verify Firestore connectivity and data access for this admin session.
             </p>
           </div>
@@ -68,19 +68,19 @@ export function DbVerificationModal({ isOpen, onClose }: DbVerificationModalProp
 
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-[#0f1722] border border-[#1e293b] rounded-xl p-3">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#94a3b8]">Project</div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#cbd5e1]">Project</div>
               <div className="text-sm font-mono text-[#e2e8f0] mt-1">{status?.projectId || '-'}</div>
             </div>
             <div className="bg-[#0f1722] border border-[#1e293b] rounded-xl p-3">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#94a3b8]">Residents</div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#cbd5e1]">Residents</div>
               <div className="text-sm font-black text-[#e2e8f0] mt-1">{status?.residentCount ?? '-'}</div>
             </div>
             <div className="bg-[#0f1722] border border-[#1e293b] rounded-xl p-3">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#94a3b8]">Client Email</div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#cbd5e1]">Client Email</div>
               <div className="text-xs text-[#e2e8f0] mt-1 break-all">{status?.clientEmail || '-'}</div>
             </div>
             <div className="bg-[#0f1722] border border-[#1e293b] rounded-xl p-3">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#94a3b8]">Error</div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#cbd5e1]">Error</div>
               <div className="text-xs text-[#e2e8f0] mt-1">{status?.error || 'None'}</div>
             </div>
           </div>

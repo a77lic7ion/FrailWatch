@@ -45,12 +45,12 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
             </div>
             <div>
               <h3 className="font-extrabold text-base text-[#e2e8f0]">Live Scenario Simulator</h3>
-              <p className="text-xs text-[#94a3b8]">Test how the layout and triage dashboard respond in real time</p>
+              <p className="text-xs text-[#cbd5e1]">Test how the layout and triage dashboard respond in real time</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8]"
+            className="p-1.5 rounded-lg text-[#cbd5e1] hover:text-[#cbd5e1]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -133,10 +133,10 @@ export const SimulationModal: React.FC<SimulationModalProps> = ({
               </div>
               <div>
                 <div className="font-bold text-xs">Reset Morning to 07:00 AM Initial State</div>
-                <div className="text-[11px] text-[#94a3b8]">Restore default demo residents and pending checkins</div>
+                <div className="text-[11px] text-[#cbd5e1]">Restore default demo residents and pending checkins</div>
               </div>
             </div>
-            <Zap className="w-4 h-4 text-[#94a3b8] group-hover:translate-x-0.5 transition-transform" />
+            <Zap className="w-4 h-4 text-[#cbd5e1] group-hover:translate-x-0.5 transition-transform" />
           </button>
 
         </div>

@@ -75,7 +75,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
             className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
               activeSubTab === 'family'
                 ? 'bg-[#0f1722] text-[#e2e8f0] shadow-sm border border-[#1e293b]'
-                : 'text-[#94a3b8] hover:text-[#e2e8f0]'
+                : 'text-[#cbd5e1] hover:text-[#e2e8f0]'
             }`}
           >
             <Heart className="w-4 h-4 text-rose-500" />
@@ -87,7 +87,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
             className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
               activeSubTab === '4tify'
                 ? 'bg-[#0f1722] text-[#e2e8f0] shadow-sm'
-                : 'text-[#94a3b8] hover:text-[#e2e8f0]'
+                : 'text-[#cbd5e1] hover:text-[#e2e8f0]'
             }`}
           >
             <Shield className="w-4 h-4 text-emerald-400" />
@@ -114,14 +114,14 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                   <h2 className="text-2xl font-black text-[#e2e8f0] tracking-tight mt-1">
                     Family Loved One Check-In
                   </h2>
-                  <p className="text-xs text-[#94a3b8] mt-0.5">
+                  <p className="text-xs text-[#cbd5e1] mt-0.5">
                     Know your loved one is safe every morning, without the home needing to make dozens of individual phone calls.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 bg-[#141d27] px-3 py-2 rounded-xl border border-[#1e293b] text-xs">
-                <span className="text-[#94a3b8] font-medium">Viewing:</span>
+                <span className="text-[#cbd5e1] font-medium">Viewing:</span>
                 <select
                   aria-label="Select Resident for Family View"
                   value={selectedFamilyResidentId}
@@ -157,7 +157,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                   </div>
 
                   <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#94a3b8]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#cbd5e1]">
                       Today&apos;s Morning Status
                     </span>
                     <h3 className="text-2xl sm:text-3xl font-black text-[#e2e8f0]">
@@ -167,7 +167,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                         ? `${resident.name.split(' ')[0]} Requested Assistance`
                         : `${resident.name.split(' ')[0]} is Pending Morning Check`}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#94a3b8] mt-1">
+                    <p className="text-xs sm:text-sm text-[#cbd5e1] mt-1">
                       {isOk 
                         ? `Check-in recorded at ${resident.checkInTime || '08:14 AM'}. All clear at ${selectedHome.name}.`
                         : resident.status === 'not_ok'
@@ -178,13 +178,13 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                 </div>
 
                 <div className="bg-[#0f1722]/90 backdrop-blur-xs px-4 py-3 rounded-2xl border border-[#1e293b] text-center sm:text-right shrink-0 shadow-xs">
-                  <span className="text-[11px] font-bold text-[#94a3b8] uppercase tracking-wider block">
+                  <span className="text-[11px] font-bold text-[#cbd5e1] uppercase tracking-wider block">
                     Room Location
                   </span>
                   <span className="text-base font-extrabold text-[#e2e8f0]">
                     {resident.room}
                   </span>
-                  <span className="text-xs text-[#94a3b8] block">
+                  <span className="text-xs text-[#cbd5e1] block">
                     {resident.wing}
                   </span>
                 </div>
@@ -192,7 +192,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
 
               {/* 7-Day Peace-of-Mind Track */}
               <div className="mt-8 pt-6 border-t border-[#1e293b]/80">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#94a3b8] mb-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#cbd5e1] mb-3">
                   Past 7 Days Reassurance History
                 </h4>
                 <div className="grid grid-cols-7 gap-2">
@@ -204,7 +204,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                           ? 'bg-emerald-500/25/70 border-emerald-500/40 text-emerald-950' 
                           : h.status === 'not_ok' 
                           ? 'bg-rose-500/25 border-rose-500/40 text-rose-950' 
-                          : 'bg-[#141d27] border-[#1e293b] text-[#94a3b8]'
+                          : 'bg-[#141d27] border-[#1e293b] text-[#cbd5e1]'
                       }`}
                     >
                       <div className="text-[11px] font-bold">{h.day}</div>
@@ -229,7 +229,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                 <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#0f1722] border border-[#1e293b]">
                   <div>
                     <div className="text-xs font-bold text-[#e2e8f0]">Automatic Cutoff Missed Alert</div>
-                    <div className="text-[11px] text-[#94a3b8]">
+                    <div className="text-[11px] text-[#cbd5e1]">
                       If {resident.name.split(' ')[0]} has not responded by {selectedHome.cutoffTime} AM, trigger notification once door-check is conducted.
                     </div>
                   </div>
@@ -247,26 +247,26 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
             
             <div className="bg-[#0f1722] rounded-3xl p-6 border border-[#1e293b] shadow-xs">
               <h4 className="text-sm font-extrabold text-[#e2e8f0] mb-3 flex items-center gap-2">
-                <Building className="w-4 h-4 text-[#94a3b8]" />
+                <Building className="w-4 h-4 text-[#cbd5e1]" />
                 <span>Care Facility Contacts</span>
               </h4>
-              <p className="text-xs text-[#94a3b8] mb-4 leading-relaxed">
+              <p className="text-xs text-[#cbd5e1] mb-4 leading-relaxed">
                 Direct contacts for {selectedHome.name}. Routine checks happen daily from 07:00 AM to {selectedHome.cutoffTime} AM.
               </p>
 
               <div className="space-y-2.5 text-xs">
                 <div className="p-3 rounded-xl bg-[#0f1722] border border-[#1e293b]">
-                  <span className="text-[#94a3b8] block text-[11px]">Primary Duty Sister</span>
+                  <span className="text-[#cbd5e1] block text-[11px]">Primary Duty Sister</span>
                   <span className="font-bold text-[#e2e8f0]">{selectedHome.primaryNurse}</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-[#0f1722] border border-[#1e293b]">
-                  <span className="text-[#94a3b8] block text-[11px]">Assigned Carer</span>
+                  <span className="text-[#cbd5e1] block text-[11px]">Assigned Carer</span>
                   <span className="font-bold text-[#e2e8f0]">{resident.caregiver}</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-[#0f1722] border border-[#1e293b]">
-                  <span className="text-[#94a3b8] block text-[11px]">Facility Care Desk Hotline</span>
+                  <span className="text-[#cbd5e1] block text-[11px]">Facility Care Desk Hotline</span>
                   <span className="font-mono font-bold text-[#e2e8f0]">+27 11 849 5000</span>
                 </div>
               </div>
@@ -307,7 +307,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/200/20 text-emerald-300 border border-emerald-500/30">
                     B2B Security & Care Add-On
                   </span>
-                  <span className="text-xs text-[#94a3b8]">Turnkey Integration for 4TIFY SECURITY</span>
+                  <span className="text-xs text-[#cbd5e1]">Turnkey Integration for 4TIFY SECURITY</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-black tracking-tight mt-2">
                   Bundle Daily Reassurance into Existing Security Contracts
@@ -318,13 +318,13 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
               </div>
 
               <div className="bg-[#131d27]/90 p-5 rounded-2xl border border-[#223040] text-center shrink-0">
-                <div className="text-xs font-bold text-[#94a3b8] uppercase tracking-wider">
+                <div className="text-xs font-bold text-[#cbd5e1] uppercase tracking-wider">
                   Morning Verification SLA
                 </div>
                 <div className="text-3xl font-black text-emerald-400 font-mono mt-1">
                   99.8%
                 </div>
-                <div className="text-[11px] text-[#94a3b8] mt-1">
+                <div className="text-[11px] text-[#cbd5e1] mt-1">
                   Across 12 contracted facilities
                 </div>
               </div>
@@ -334,27 +334,27 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
           {/* Provider Metrics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-[#0f1722] rounded-2xl p-5 border border-[#1e293b] shadow-2xs">
-              <div className="text-xs font-bold text-[#94a3b8] uppercase tracking-wider">Contracted Facilities</div>
+              <div className="text-xs font-bold text-[#cbd5e1] uppercase tracking-wider">Contracted Facilities</div>
               <div className="text-3xl font-black text-[#e2e8f0] mt-1">12</div>
-              <div className="text-[11px] text-[#94a3b8] mt-1">Gated estates & frail care</div>
+              <div className="text-[11px] text-[#cbd5e1] mt-1">Gated estates & frail care</div>
             </div>
 
             <div className="bg-[#0f1722] rounded-2xl p-5 border border-[#1e293b] shadow-2xs">
-              <div className="text-xs font-bold text-[#94a3b8] uppercase tracking-wider">Monitored Residents</div>
+              <div className="text-xs font-bold text-[#cbd5e1] uppercase tracking-wider">Monitored Residents</div>
               <div className="text-3xl font-black text-[#e2e8f0] mt-1">480</div>
-              <div className="text-[11px] text-[#94a3b8] mt-1">Active daily morning checks</div>
+              <div className="text-[11px] text-[#cbd5e1] mt-1">Active daily morning checks</div>
             </div>
 
             <div className="bg-[#0f1722] rounded-2xl p-5 border border-[#1e293b] shadow-2xs">
-              <div className="text-xs font-bold text-[#94a3b8] uppercase tracking-wider">Hardware Cost per Unit</div>
+              <div className="text-xs font-bold text-[#cbd5e1] uppercase tracking-wider">Hardware Cost per Unit</div>
               <div className="text-3xl font-black text-emerald-400 mt-1">R 0.00</div>
               <div className="text-[11px] text-emerald-400 font-bold mt-1">Zero hardware deployment</div>
             </div>
 
             <div className="bg-[#0f1722] rounded-2xl p-5 border border-[#1e293b] shadow-2xs">
-              <div className="text-xs font-bold text-[#94a3b8] uppercase tracking-wider">Staff Time Saved</div>
+              <div className="text-xs font-bold text-[#cbd5e1] uppercase tracking-wider">Staff Time Saved</div>
               <div className="text-3xl font-black text-[#e2e8f0] mt-1">~58 min</div>
-              <div className="text-[11px] text-[#94a3b8] mt-1">Per estate every single morning</div>
+              <div className="text-[11px] text-[#cbd5e1] mt-1">Per estate every single morning</div>
             </div>
           </div>
 
@@ -364,7 +364,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
               <Radio className="w-5 h-5 text-emerald-400" />
               <span>4TIFY Central Dispatch Escalation Flow</span>
             </h3>
-            <p className="text-xs text-[#94a3b8] mb-6 max-w-2xl">
+            <p className="text-xs text-[#cbd5e1] mb-6 max-w-2xl">
               When an estate contracts 4TIFY, morning exceptions seamlessly feed directly into the security control room console:
             </p>
 
@@ -375,7 +375,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                     1
                   </span>
                   <h4 className="font-extrabold text-sm text-[#e2e8f0]">07:00 – 09:15 AM</h4>
-                  <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed">
+                  <p className="text-xs text-[#cbd5e1] mt-1 leading-relaxed">
                     Seniors tap green &quot;I&apos;m okay&quot; on their phones. Dashboard turns green in real time without staff interaction.
                   </p>
                 </div>
@@ -390,7 +390,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                     2
                   </span>
                   <h4 className="font-extrabold text-sm text-[#e2e8f0]">09:15 AM Cutoff Trigger</h4>
-                  <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed">
+                  <p className="text-xs text-[#cbd5e1] mt-1 leading-relaxed">
                     Unchecked residents are auto-flagged into the triage queue. Care staff focuses strictly on the 2–3 exceptions.
                   </p>
                 </div>
@@ -405,7 +405,7 @@ export const FamilyAndProviderView: React.FC<FamilyAndProviderViewProps> = ({
                     3
                   </span>
                   <h4 className="font-extrabold text-sm text-[#e2e8f0]">SOS or Unreachable Escalation</h4>
-                  <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed">
+                  <p className="text-xs text-[#cbd5e1] mt-1 leading-relaxed">
                     If &quot;I Need Help&quot; is tapped or door-check indicates an emergency, 4TIFY armed/paramedic unit is dispatched immediately.
                   </p>
                 </div>

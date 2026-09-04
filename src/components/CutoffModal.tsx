@@ -35,12 +35,12 @@ export const CutoffModal: React.FC<CutoffModalProps> = ({
             </div>
             <div>
               <h3 className="font-extrabold text-base">Adjust Morning Cutoff</h3>
-              <p className="text-xs text-[#94a3b8]">{home.name}</p>
+              <p className="text-xs text-[#cbd5e1]">{home.name}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#94a3b8] hover:text-[#94a3b8]"
+            className="p-1.5 rounded-lg text-[#cbd5e1] hover:text-[#cbd5e1]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -58,7 +58,7 @@ export const CutoffModal: React.FC<CutoffModalProps> = ({
               onChange={(e) => setCutoffVal(e.target.value)}
               className="w-full text-center text-2xl font-mono font-black py-3 rounded-2xl bg-[#0f1722] border-2 border-[#1e293b] focus:border-emerald-600 focus:bg-[#0f1722] focus:outline-none"
             />
-            <p className="text-xs text-[#94a3b8] mt-2 leading-relaxed">
+            <p className="text-xs text-[#cbd5e1] mt-2 leading-relaxed">
               Any resident who has not tapped &quot;I&apos;m okay&quot; by this time will be immediately flagged for physical room verification.
             </p>
           </div>

@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
                     Morning Care
                   </span>
                 </div>
-                <p className="text-[11px] text-[#94a3b8] hidden sm:block">
+                <p className="text-[11px] text-[#cbd5e1] hidden sm:block">
                   Zero-hardware senior morning reassurance protocol
                 </p>
               </div>
@@ -130,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Time badge */}
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#131d27] border border-[#223040] text-xs text-[#e2e8f0]">
-                <Clock className="w-3.5 h-3.5 text-[#94a3b8]" />
+                <Clock className="w-3.5 h-3.5 text-[#cbd5e1]" />
                 <span className="font-mono font-medium">{currentTimeStr}</span>
               </div>
 
@@ -186,7 +186,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 id="reset-demo-btn"
                 onClick={onResetData}
-                className="p-1.5 sm:p-2 rounded-xl bg-[#131d27] hover:bg-[#131d27] text-[#94a3b8] hover:text-[#e2e8f0] border border-[#223040] transition"
+                className="p-1.5 sm:p-2 rounded-xl bg-[#131d27] hover:bg-[#131d27] text-[#cbd5e1] hover:text-[#e2e8f0] border border-[#223040] transition"
                 title="Reset morning state"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
@@ -214,7 +214,7 @@ export const Header: React.FC<HeaderProps> = ({
               className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
                 activeTab === 'dashboard'
                   ? 'bg-emerald-600 text-[#e2e8f0] shadow-sm'
-                  : 'text-[#94a3b8] hover:bg-[#131d27] hover:text-[#e2e8f0]'
+                  : 'text-[#cbd5e1] hover:bg-[#131d27] hover:text-[#e2e8f0]'
               }`}
             >
               <Activity className="w-4 h-4" />

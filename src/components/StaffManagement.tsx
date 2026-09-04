@@ -122,7 +122,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
         <div className="flex items-center justify-between p-6 border-b">
           <div>
             <h2 className="text-xl font-bold flex items-center gap-2"><Shield className="w-5 h-5" /> Staff Management</h2>
-            <p className="text-xs text-[#94a3b8] mt-1">
+            <p className="text-xs text-[#cbd5e1] mt-1">
               {canGlobalManage ? 'Add global admins or home-only admins.' : 'You can view home staff.'}
             </p>
           </div>
@@ -161,14 +161,14 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
           <div>
             <div className="flex items-center gap-2 text-sm font-bold mb-2"><Users className="w-4 h-4" /> Staff</div>
             {loading ? (
-              <p className="text-xs text-[#94a3b8]">Loading...</p>
+              <p className="text-xs text-[#cbd5e1]">Loading...</p>
             ) : (
               <div className="space-y-2">
                 {staffList.map((s) => (
                   <div key={s.uid} className="flex items-center justify-between border rounded-xl px-3 py-2">
                     <div>
                       <p className="text-sm font-semibold">{s.name || s.email}</p>
-                      <p className="text-xs text-[#94a3b8]">{s.email} · {s.role || 'home_admin'} · {s.homeId}</p>
+                      <p className="text-xs text-[#cbd5e1]">{s.email} · {s.role || 'home_admin'} · {s.homeId}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       {canGlobalManage && (
@@ -180,7 +180,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                     </div>
                   </div>
                 ))}
-                {!staffList.length && <p className="text-xs text-[#94a3b8]">No staff found.</p>}
+                {!staffList.length && <p className="text-xs text-[#cbd5e1]">No staff found.</p>}
               </div>
             )}
           </div>
@@ -191,7 +191,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                 <div className="flex items-center justify-between p-6 border-b">
                   <div>
                     <h3 className="text-lg font-bold">Edit Staff</h3>
-                    <p className="text-xs text-[#94a3b8]">{editingStaff.email}</p>
+                    <p className="text-xs text-[#cbd5e1]">{editingStaff.email}</p>
                   </div>
                   <button onClick={() => setEditingStaff(null)} className="p-2 hover:bg-[#141d27] rounded-lg"><X className="w-5 h-5" /></button>
                 </div>

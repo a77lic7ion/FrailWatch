@@ -42,7 +42,7 @@ export const ResidentPhoneLogin: React.FC<Props> = ({ onLoginSuccess, onBack }) 
     <div className="min-h-screen bg-[#0b1118] text-[#e2e8f0] flex items-center justify-center px-4">
       <form onSubmit={submit} className="w-full max-w-sm rounded-3xl border border-[#223040] bg-[#0f1722] p-6 shadow-2xl">
         <h1 className="text-xl font-black mb-1">Resident login</h1>
-        <p className="text-xs text-[#94a3b8] mb-4">Enter the cellphone number staff added for you.</p>
+        <p className="text-xs text-[#cbd5e1] mb-4">Enter the cellphone number staff added for you.</p>
         <div className="flex items-center gap-2 rounded-2xl border border-[#223040] bg-[#0b1118] px-3 py-3">
           <Phone className="w-5 h-5 text-emerald-400" />
           <input
@@ -50,7 +50,7 @@ export const ResidentPhoneLogin: React.FC<Props> = ({ onLoginSuccess, onBack }) 
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Cellphone number"
             inputMode="tel"
-            className="w-full bg-transparent text-[#e2e8f0] placeholder:text-[#94a3b8] focus:outline-none"
+            className="w-full bg-transparent text-[#e2e8f0] placeholder:text-[#cbd5e1] focus:outline-none"
           />
         </div>
         <button type="submit" className="mt-4 w-full rounded-2xl bg-emerald-600 py-3 font-bold">Open my check-in</button>

@@ -122,12 +122,12 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               Elderly Ergonomics Design
             </span>
-            <span className="text-xs text-[#94a3b8] font-medium">Cutoff: {cutoffTime} AM</span>
+            <span className="text-xs text-[#cbd5e1] font-medium">Cutoff: {cutoffTime} AM</span>
           </div>
           <h2 className="text-lg font-bold text-[#e2e8f0] mt-1">
             Resident Phone Interface ({resident.name})
           </h2>
-          <p className="text-xs text-[#94a3b8] max-w-xl">
+          <p className="text-xs text-[#cbd5e1] max-w-xl">
             Zero logins. Zero passwords. No menus or typing. Designed specifically for tremors, low vision, and zero smartphone complexity.
           </p>
         </div>
@@ -136,7 +136,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           {/* Switch active resident */}
           <div className="flex items-center gap-1.5 text-xs bg-[#141d27] px-3 py-1.5 rounded-xl border border-[#1e293b]">
-            <span className="text-[#94a3b8]">Resident:</span>
+            <span className="text-[#cbd5e1]">Resident:</span>
             <select
               id="switch-resident-select"
               aria-label="Switch Active Resident for Testing"
@@ -194,7 +194,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
           <button
             id="show-pairing-btn"
             onClick={() => setShowPairModal(true)}
-            className="p-1.5 rounded-xl text-[#94a3b8] bg-[#141d27] hover:bg-[#141d27] border border-[#1e293b] transition"
+            className="p-1.5 rounded-xl text-[#cbd5e1] bg-[#141d27] hover:bg-[#141d27] border border-[#1e293b] transition"
             title="Show 1-Tap Device Link & QR"
           >
             <QrCode className="w-4 h-4" />
@@ -237,7 +237,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
           }`}>
             
             {/* Top Status & Morning Header */}
-            <div className="px-5 pt-4 pb-3 border-b border-[#223040]/80 bg-[#0f1722]/60 flex items-center justify-between text-[#94a3b8] text-xs">
+            <div className="px-5 pt-4 pb-3 border-b border-[#223040]/80 bg-[#0f1722]/60 flex items-center justify-between text-[#cbd5e1] text-xs">
               <div className="flex items-center gap-2">
                 <Logo className="w-5 h-5" />
                 <span className="font-bold text-[#e2e8f0] text-xs tracking-tight">ElderWatch</span>
@@ -250,7 +250,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
 
             {/* Resident Personalized Welcome Banner */}
             <div className="px-5 py-4 text-center bg-[#0f1722] border-b border-[#223040]/80">
-              <p className="text-xs uppercase font-bold tracking-widest text-[#94a3b8]">
+              <p className="text-xs uppercase font-bold tracking-widest text-[#cbd5e1]">
                 {todayDateFormatted}
               </p>
               <h1 className={`font-extrabold tracking-tight text-[#e2e8f0] mt-0.5 ${
@@ -258,7 +258,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
               }`}>
                 Good morning, {resident.name.split(' ')[0]}
               </h1>
-              <p className="text-xs text-[#94a3b8] mt-1">
+              <p className="text-xs text-[#cbd5e1] mt-1">
                 {resident.room} · Please tap your morning check-in
               </p>
             </div>
@@ -358,7 +358,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
                   </div>
 
                   <div className="mt-6 pt-6 border-t border-[#223040] w-full flex flex-col gap-2">
-                    <p className="text-[11px] text-[#94a3b8]">
+                    <p className="text-[11px] text-[#cbd5e1]">
                       Need to change your answer?
                     </p>
                     <button
@@ -402,7 +402,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
 
                   <button
                     onClick={() => onCheckIn(resident.id, 'awaiting')}
-                    className="mt-4 text-xs text-[#94a3b8] hover:text-[#e2e8f0] underline font-medium"
+                    className="mt-4 text-xs text-[#cbd5e1] hover:text-[#e2e8f0] underline font-medium"
                   >
                     Cancel request (tapped by accident)
                   </button>
@@ -411,7 +411,7 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
             </div>
 
             {/* Bottom Support Footnote */}
-            <div className="p-3 text-center bg-[#0b1118]/80 border-t border-[#223040]/80 text-[11px] text-[#94a3b8]">
+            <div className="p-3 text-center bg-[#0b1118]/80 border-t border-[#223040]/80 text-[11px] text-[#cbd5e1]">
               <span>ElderWatch SafeLink · Assistance: </span>
               <strong className="text-[#e2e8f0]">Sr. Sarah Botha ({resident.caregiver})</strong>
             </div>
@@ -436,12 +436,12 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
                 </div>
                 <div>
                   <h3 className="font-bold text-base">Pair Resident&apos;s Phone</h3>
-                  <p className="text-xs text-[#94a3b8]">{resident.name} · {resident.room}</p>
+                  <p className="text-xs text-[#cbd5e1]">{resident.name} · {resident.room}</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowPairModal(false)}
-                className="p-1 rounded-lg text-[#94a3b8] hover:text-[#94a3b8]"
+                className="p-1 rounded-lg text-[#cbd5e1] hover:text-[#cbd5e1]"
               >
                 ✕
               </button>
@@ -462,12 +462,12 @@ export const ResidentPhoneView: React.FC<ResidentPhoneViewProps> = ({
                     />
                   ))}
                 </div>
-                <span className="absolute bottom-2 text-[10px] font-mono font-bold text-[#94a3b8] bg-[#0f1722]/80 px-2 py-0.5 rounded">
+                <span className="absolute bottom-2 text-[10px] font-mono font-bold text-[#cbd5e1] bg-[#0f1722]/80 px-2 py-0.5 rounded">
                   SAFE-PAIR-{resident.id.toUpperCase()}
                 </span>
               </div>
 
-              <div className="mt-4 text-xs text-[#94a3b8] max-w-xs">
+              <div className="mt-4 text-xs text-[#cbd5e1] max-w-xs">
                 Scan once with the resident&apos;s camera or send the SMS link. No login or password will ever be requested.
               </div>
 

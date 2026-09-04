@@ -75,14 +75,14 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                   Mobile & Staff
                 </span>
               </div>
-              <p className="text-xs text-[#94a3b8] mt-0.5">
+              <p className="text-xs text-[#cbd5e1] mt-0.5">
                 Complete operating instructions for residents, nursing staff & family
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-[#94a3b8] hover:text-[#e2e8f0] hover:bg-[#131d27] transition"
+            className="p-2 rounded-xl text-[#cbd5e1] hover:text-[#e2e8f0] hover:bg-[#131d27] transition"
             aria-label="Close Guide"
           >
             <X className="w-5 h-5" />
@@ -186,7 +186,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
 
               <div className="p-4 rounded-2xl bg-[#0f1722] border border-[#1e293b] space-y-2 text-xs">
                 <h4 className="font-bold text-[#e2e8f0]">Key Senior-Friendly Features:</h4>
-                <ul className="list-disc pl-4 space-y-1 text-[#94a3b8]">
+                <ul className="list-disc pl-4 space-y-1 text-[#cbd5e1]">
                   <li><strong>Touch targets over 110px high</strong>: Designed specifically for arthritic hands and tremors.</li>
                   <li><strong>Tactile Tone & Vibration</strong>: Web Audio synthesizer tone and haptic rumble confirm every tap.</li>
                   <li><strong>7-Day Visual Strip</strong>: Reassures the resident with 7 daily checkmarks for peace of mind.</li>
@@ -227,31 +227,31 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
               {/* Link Formats Card */}
               <div className="p-4 rounded-2xl bg-[#0f1722] text-[#e2e8f0] space-y-3 font-mono text-xs">
                 <div>
-                  <span className="text-[#94a3b8] block text-[11px] font-sans font-bold">1. One-Click Device Pairing Link:</span>
+                  <span className="text-[#cbd5e1] block text-[11px] font-sans font-bold">1. One-Click Device Pairing Link:</span>
                   <p className="text-emerald-400 break-all select-all mt-0.5">
                     https://[APP-URL]/?verify=[TOKEN]&home=[HOME_ID]
                   </p>
-                  <p className="text-[#94a3b8] font-sans text-[11px] mt-0.5">
+                  <p className="text-[#cbd5e1] font-sans text-[11px] mt-0.5">
                     Auto-links the resident's phone to the care home upon first tap.
                   </p>
                 </div>
 
                 <div className="pt-2 border-t border-[#223040]">
-                  <span className="text-[#94a3b8] block text-[11px] font-sans font-bold">2. Direct Resident Profile Link:</span>
+                  <span className="text-[#cbd5e1] block text-[11px] font-sans font-bold">2. Direct Resident Profile Link:</span>
                   <p className="text-sky-300 break-all select-all mt-0.5">
                     https://[APP-URL]/?residentId=[RESIDENT_ID]
                   </p>
-                  <p className="text-[#94a3b8] font-sans text-[11px] mt-0.5">
+                  <p className="text-[#cbd5e1] font-sans text-[11px] mt-0.5">
                     Opens directly into that specific resident's check-in screen.
                   </p>
                 </div>
 
                 <div className="pt-2 border-t border-[#223040]">
-                  <span className="text-[#94a3b8] block text-[11px] font-sans font-bold">3. General Check-In Mode:</span>
+                  <span className="text-[#cbd5e1] block text-[11px] font-sans font-bold">3. General Check-In Mode:</span>
                   <p className="text-amber-300 break-all select-all mt-0.5">
                     https://[APP-URL]/?mode=checkin
                   </p>
-                  <p className="text-[#94a3b8] font-sans text-[11px] mt-0.5">
+                  <p className="text-[#cbd5e1] font-sans text-[11px] mt-0.5">
                     Re-opens the resident's saved screen from browser memory.
                   </p>
                 </div>
@@ -337,7 +337,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                   </span>
                   <div>
                     <h4 className="font-bold text-[#e2e8f0] text-xs">06:30 AM — Morning Board Opens</h4>
-                    <p className="text-[#94a3b8] text-xs mt-0.5">
+                    <p className="text-[#cbd5e1] text-xs mt-0.5">
                       All enrolled residents start in the <span className="bg-[#141d27] px-1 rounded text-[#e2e8f0] font-semibold">Awaiting</span> state.
                     </p>
                   </div>
@@ -403,7 +403,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                     <span className="w-5 h-5 rounded-full bg-[#0f1722] text-[#e2e8f0] flex items-center justify-center text-[10px]">🍎</span>
                     <span>On Apple iPhone (Safari)</span>
                   </div>
-                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#94a3b8]">
+                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#cbd5e1]">
                     <li>Open the check-in link in <strong>Safari</strong>.</li>
                     <li>Tap the <strong>Share button</strong> (square icon with an arrow pointing up at the bottom).</li>
                     <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
@@ -420,7 +420,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
                     <span className="w-5 h-5 rounded-full bg-emerald-600 text-[#e2e8f0] flex items-center justify-center text-[10px]">🤖</span>
                     <span>On Android (Google Chrome)</span>
                   </div>
-                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#94a3b8]">
+                  <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#cbd5e1]">
                     <li>Open the check-in link in <strong>Chrome</strong>.</li>
                     <li>Tap the <strong>three vertical dots (⋮)</strong> in the top right.</li>
                     <li>Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>.</li>
@@ -437,7 +437,7 @@ export const WorkflowGuideModal: React.FC<WorkflowGuideModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-[#0f1722] border-t border-[#1e293b] flex items-center justify-between text-xs text-[#94a3b8]">
+        <div className="p-4 bg-[#0f1722] border-t border-[#1e293b] flex items-center justify-between text-xs text-[#cbd5e1]">
           <span>ElderWatch Reassurance Protocol · 4TIFY SECURITY</span>
           <button
             onClick={onClose}

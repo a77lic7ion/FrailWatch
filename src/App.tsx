@@ -252,8 +252,8 @@ export default function App() {
               <div className="text-center mb-5">
                 <Logo className="w-12 h-12 mx-auto mb-2" />
                 <h1 className="text-xl font-black">Morning Check-In</h1>
-                <p className="text-xs text-[#94a3b8] mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
-                <p className="text-[11px] text-[#94a3b8] mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
+                <p className="text-xs text-[#cbd5e1] mt-1">{residentUser.name} · {residentUser.homeId || ''}</p>
+                <p className="text-[11px] text-[#cbd5e1] mt-1">Room {residentUser.room || ''} · {residentUser.wing || ''}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -297,7 +297,7 @@ export default function App() {
                 </button>
               </div>
               {residentUser.status && (
-                <p className="text-center text-xs text-[#94a3b8] mt-4">
+                <p className="text-center text-xs text-[#cbd5e1] mt-4">
                   Checked in at {residentUser.checkInTime || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               )}
