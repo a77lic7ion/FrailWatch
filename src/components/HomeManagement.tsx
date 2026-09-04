@@ -139,7 +139,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
             <h2 className="text-xl font-bold flex items-center gap-2">
               <Building2 className="w-5 h-5" /> Home Management
             </h2>
-            <p className="text-xs text-[#cbd5e1] mt-1">
+            <p className="text-xs text-white mt-1">
               {canGlobalManage ? 'Add, edit, and delete homes. View admins per home.' : 'View assigned home details.'}
             </p>
           </div>
@@ -187,7 +187,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
               </div>
               <button
                 disabled={saving}
-                className="bg-emerald-600 text-[#e2e8f0] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-60"
+                className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-60"
               >
                 {saving ? 'Creating...' : 'Create Home'}
               </button>
@@ -199,7 +199,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
               <Building2 className="w-4 h-4" /> Homes ({homes.length})
             </div>
             {loading ? (
-              <p className="text-xs text-[#cbd5e1]">Loading...</p>
+              <p className="text-xs text-white">Loading...</p>
             ) : (
               <div className="space-y-2">
                 {homes.map((h) => (
@@ -226,10 +226,10 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
                           />
                         </div>
                         <div className="flex gap-2">
-                          <button type="submit" disabled={saving} className="bg-emerald-600 text-[#e2e8f0] px-3 py-1.5 rounded-lg text-xs font-bold">
+                          <button type="submit" disabled={saving} className="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold">
                             {saving ? 'Saving...' : 'Save'}
                           </button>
-                          <button type="button" onClick={() => setEditingHome(null)} className="bg-[#141d27] text-[#e2e8f0] px-3 py-1.5 rounded-lg text-xs font-bold">
+                          <button type="button" onClick={() => setEditingHome(null)} className="bg-[#141d27] text-white px-3 py-1.5 rounded-lg text-xs font-bold">
                             Cancel
                           </button>
                         </div>
@@ -238,7 +238,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
                           <p className="text-sm font-semibold">{h.name}</p>
-                          <p className="text-xs text-[#cbd5e1]">
+                          <p className="text-xs text-white">
                             {h.location} · Cutoff: {h.cutoffTime} AM · ID: {h.id}
                           </p>
                         </div>
@@ -256,7 +256,7 @@ export function HomeManagement({ isOpen, onClose, staff, onRefresh }: HomeManage
                     )}
                   </div>
                 ))}
-                {!homes.length && <p className="text-xs text-[#cbd5e1]">No homes found.</p>}
+                {!homes.length && <p className="text-xs text-white">No homes found.</p>}
               </div>
             )}
           </div>

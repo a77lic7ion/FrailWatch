@@ -42,12 +42,12 @@ export function GlobalAdminResidentList({ home, residents, onBack, onOpenStaffMa
             <ArrowLeft className="w-4 h-4" /> Back to home list
           </button>
           <div>
-            <h2 className="text-lg font-bold text-[#e2e8f0]">{home.name}</h2>
-            <p className="text-xs text-[#cbd5e1]">{home.location || ''} · Residents: {scoped.length}</p>
+            <h2 className="text-lg font-bold text-white">{home.name}</h2>
+            <p className="text-xs text-white">{home.location || ''} · Residents: {scoped.length}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={onOpenStaffManagement} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 text-[#e2e8f0] text-xs font-bold">
+          <button onClick={onOpenStaffManagement} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold">
             <UserCog className="w-3.5 h-3.5" /> Staff
           </button>
         </div>
@@ -55,7 +55,7 @@ export function GlobalAdminResidentList({ home, residents, onBack, onOpenStaffMa
 
       <div className="bg-[#0f1722] rounded-2xl border border-[#1e293b] shadow-sm divide-y">
         <div className="p-3 flex items-center gap-2">
-          <Search className="w-4 h-4 text-[#cbd5e1]" />
+          <Search className="w-4 h-4 text-white" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -64,18 +64,18 @@ export function GlobalAdminResidentList({ home, residents, onBack, onOpenStaffMa
           />
         </div>
         {scoped.length === 0 && (
-          <div className="p-6 text-center text-xs text-[#cbd5e1]">No residents match.</div>
+          <div className="p-6 text-center text-xs text-white">No residents match.</div>
         )}
         {scoped.map((r) => (
           <div key={r.id} className="px-4 py-3 flex items-center justify-between gap-2">
             <div>
-              <p className="text-sm font-semibold text-[#e2e8f0]">{r.name}</p>
-              <p className="text-xs text-[#cbd5e1]">{r.room || 'No room'} · {r.wing || ''}</p>
+              <p className="text-sm font-semibold text-white">{r.name}</p>
+              <p className="text-xs text-white">{r.room || 'No room'} · {r.wing || ''}</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <p className="text-xs font-medium text-[#e2e8f0]">{r.status === 'not_ok' ? 'Needs help' : r.status === 'overdue' ? 'Overdue' : r.status === 'awaiting' ? 'Awaiting' : 'OK'}</p>
-                {r.phone && <p className="text-[11px] text-[#cbd5e1]">{r.phone}</p>}
+                <p className="text-xs font-medium text-white">{r.status === 'not_ok' ? 'Needs help' : r.status === 'overdue' ? 'Overdue' : r.status === 'awaiting' ? 'Awaiting' : 'OK'}</p>
+                {r.phone && <p className="text-[11px] text-white">{r.phone}</p>}
               </div>
               <button
                 onClick={() => handleDelete(r.id)}

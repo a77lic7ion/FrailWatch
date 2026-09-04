@@ -122,7 +122,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
         <div className="flex items-center justify-between p-6 border-b">
           <div>
             <h2 className="text-xl font-bold flex items-center gap-2"><Shield className="w-5 h-5" /> Staff Management</h2>
-            <p className="text-xs text-[#cbd5e1] mt-1">
+            <p className="text-xs text-white mt-1">
               {canGlobalManage ? 'Add global admins or home-only admins.' : 'You can view home staff.'}
             </p>
           </div>
@@ -152,7 +152,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                   </select>
                 )}
               </div>
-              <button disabled={saving} className="bg-emerald-600 text-[#e2e8f0] px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-60">
+              <button disabled={saving} className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-60">
                 {saving ? 'Creating...' : 'Create'}
               </button>
             </form>
@@ -161,14 +161,14 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
           <div>
             <div className="flex items-center gap-2 text-sm font-bold mb-2"><Users className="w-4 h-4" /> Staff</div>
             {loading ? (
-              <p className="text-xs text-[#cbd5e1]">Loading...</p>
+              <p className="text-xs text-white">Loading...</p>
             ) : (
               <div className="space-y-2">
                 {staffList.map((s) => (
                   <div key={s.uid} className="flex items-center justify-between border rounded-xl px-3 py-2">
                     <div>
                       <p className="text-sm font-semibold">{s.name || s.email}</p>
-                      <p className="text-xs text-[#cbd5e1]">{s.email} · {s.role || 'home_admin'} · {s.homeId}</p>
+                      <p className="text-xs text-white">{s.email} · {s.role || 'home_admin'} · {s.homeId}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       {canGlobalManage && (
@@ -180,7 +180,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                     </div>
                   </div>
                 ))}
-                {!staffList.length && <p className="text-xs text-[#cbd5e1]">No staff found.</p>}
+                {!staffList.length && <p className="text-xs text-white">No staff found.</p>}
               </div>
             )}
           </div>
@@ -191,26 +191,26 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                 <div className="flex items-center justify-between p-6 border-b">
                   <div>
                     <h3 className="text-lg font-bold">Edit Staff</h3>
-                    <p className="text-xs text-[#cbd5e1]">{editingStaff.email}</p>
+                    <p className="text-xs text-white">{editingStaff.email}</p>
                   </div>
                   <button onClick={() => setEditingStaff(null)} className="p-2 hover:bg-[#141d27] rounded-lg"><X className="w-5 h-5" /></button>
                 </div>
                 <form onSubmit={saveEditingStaff} className="p-6 space-y-4">
                   <div>
-                    <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Name</label>
-                    <input id="edit-staff-name" name="edit-staff-name" className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" defaultValue={editingStaff.name || ''} />
+                    <label className="text-xs font-bold text-white uppercase tracking-wider block mb-1">Name</label>
+                    <input id="edit-staff-name" name="edit-staff-name" className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-white" defaultValue={editingStaff.name || ''} />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Role</label>
-                      <select id="edit-staff-role" name="edit-staff-role" className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" defaultValue={editingStaff.role || 'home_admin'}>
+                      <label className="text-xs font-bold text-white uppercase tracking-wider block mb-1">Role</label>
+                      <select id="edit-staff-role" name="edit-staff-role" className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-white" defaultValue={editingStaff.role || 'home_admin'}>
                         <option value="superadmin">Global Admin</option>
                         <option value="home_admin">Home Admin</option>
                       </select>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-[#e2e8f0] uppercase tracking-wider block mb-1">Home</label>
-                      <select id="edit-staff-home" name="edit-staff-home" className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]" defaultValue={editingStaff.homeId || homeId}>
+                      <label className="text-xs font-bold text-white uppercase tracking-wider block mb-1">Home</label>
+                      <select id="edit-staff-home" name="edit-staff-home" className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-white" defaultValue={editingStaff.homeId || homeId}>
                         {homes.map((h) => (
                           <option key={h.id} value={h.id}>{h.name}</option>
                         ))}
@@ -218,8 +218,8 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
                     </div>
                   </div>
                   <div className="flex gap-2 pt-2">
-                    <button type="submit" className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[#e2e8f0] font-bold text-xs transition">Save Changes</button>
-                    <button type="button" onClick={() => setEditingStaff(null)} className="px-4 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-[#e2e8f0] font-bold text-xs transition">Cancel</button>
+                    <button type="submit" className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">Save Changes</button>
+                    <button type="button" onClick={() => setEditingStaff(null)} className="px-4 py-3 rounded-xl bg-[#141d27] hover:bg-[#141d27] text-white font-bold text-xs transition">Cancel</button>
                   </div>
                 </form>
               </div>
