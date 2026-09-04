@@ -38,23 +38,24 @@ export default function App() {
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
   const [isDbRefreshing, setIsDbRefreshing] = useState<boolean>(false);
   const [residentUser, setResidentUser] = useState<Resident | null>(null);
+  const [residentLoading, setResidentLoading] = useState<boolean>(false);
 
   const isResidentLink = typeof window !== 'undefined' && (() => {
-    const p = window.location.pathname || '';
-    return p !== '/' && p !== '/index.html';
+    const p = new URLSearchParams(window.location.search);
+    return p.has('phone') || p.has('verify') || p.has('token') || p.has('residentId') || p.has('id') || p.get('mode') === 'checkin';
   })();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
       const params = new URLSearchParams(window.location.search);
       const phone = params.get('phone');
       const urlVersion = params.get('v');
       const token = params.get('verify') || params.get('token');
       const residentId = params.get('residentId') || params.get('id');
-      const lookup = path || phone || token || residentId;
+      const lookup = phone || token || residentId;
       if (lookup) {
         setActiveTab('senior-checkin');
+        setResidentLoading(true);
         api.getResidentProfile(lookup).then((profile) => {
           const resident = profile?.resident;
           if (resident) {
@@ -72,20 +73,21 @@ export default function App() {
               } catch {}
             }
           }
-        }).catch(() => {});
+        }).catch(() => {}).finally(() => setResidentLoading(false));
       } else if (!staff) {
         const savedId = localStorage.getItem('elderwatch_linked_resident_id');
         const savedToken = localStorage.getItem('elderwatch_linked_token');
         const savedPhone = localStorage.getItem('elderwatch_linked_phone');
         const savedLookup = savedToken || savedPhone || savedId;
         if (savedLookup) {
+          setResidentLoading(true);
           api.getResidentProfile(savedLookup).then((profile) => {
             if (profile?.resident) {
               setResidentUser(profile.resident);
               setViewMode('resident');
               setActiveTab('senior-checkin');
             }
-          }).catch(() => {});
+          }).catch(() => {}).finally(() => setResidentLoading(false));
         }
       }
     }
@@ -236,6 +238,14 @@ export default function App() {
       />
 
       <main className="flex-1">
+        {viewMode === 'resident' && activeTab === 'senior-checkin' && residentLoading && (
+          <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
+            <div className="text-center">
+              <Logo className="w-12 h-12 mx-auto mb-3 animate-pulse" />
+              <p className="text-sm text-slate-300">Checking in…</p>
+            </div>
+          </div>
+        )}
         {viewMode === 'resident' && activeTab === 'senior-checkin' && residentUser && (
           <div className="fixed inset-0 z-50 bg-slate-950 text-white flex items-center justify-center p-4">
             <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
