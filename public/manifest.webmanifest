@@ -1,7 +1,7 @@
 {
   "name": "ElderWatch Morning Check-In",
-  "short_name": "Check-In",
-  "start_url": "/?mode=checkin",
+  "short_name": "ElderWatch",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#020617",

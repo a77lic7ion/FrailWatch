@@ -59,25 +59,6 @@ export default function App() {
               api.verifyResident(lookup).catch(() => {});
               setResidentUser(profile.resident);
               setViewMode('resident');
-              try {
-                localStorage.setItem('elderwatch_linked_resident_id', profile.resident.id);
-                if (token) localStorage.setItem('elderwatch_linked_token', token);
-                if (phone) localStorage.setItem('elderwatch_linked_phone', phone);
-              } catch {}
-            }
-          }).catch(() => {});
-        }
-      } else {
-        const savedId = localStorage.getItem('elderwatch_linked_resident_id');
-        const savedToken = localStorage.getItem('elderwatch_linked_token');
-        const savedPhone = localStorage.getItem('elderwatch_linked_phone');
-        const savedLookup = savedToken || savedPhone || savedId;
-        if (savedLookup) {
-          api.getResidentProfile(savedLookup).then((profile) => {
-            if (profile?.resident) {
-              setResidentUser(profile.resident);
-              setViewMode('resident');
-              setActiveTab('senior-checkin');
             }
           }).catch(() => {});
         }
