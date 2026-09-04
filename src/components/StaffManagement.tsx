@@ -126,7 +126,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
               {canGlobalManage ? 'Add global admins or home-only admins.' : 'You can view home staff.'}
             </p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-[#141d27] rounded-lg"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-2 hover:bg-[#141d27] rounded-lg text-white"><X className="w-5 h-5" /></button>
         </div>
 
         <div className="p-6 space-y-6">
@@ -135,17 +135,17 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
 
           {canGlobalManage && (
             <form onSubmit={createStaff} className="bg-[#0f1722] border border-[#1e293b] rounded-xl p-4 space-y-3">
-              <div className="flex items-center gap-2 text-sm font-bold"><UserPlus className="w-4 h-4" /> Create Staff</div>
+              <div className="flex items-center gap-2 text-sm font-bold text-white"><UserPlus className="w-4 h-4" /> Create Staff</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input className="border rounded-lg p-2" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
-                <input className="border rounded-lg p-2" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <input className="border rounded-lg p-2" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <select className="border rounded-lg p-2" value={role} onChange={(e) => setRole(e.target.value)}>
+                <input className="w-full border rounded-lg p-2 bg-[#141d27] text-white placeholder:text-[#64748b]" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
+                <input className="w-full border rounded-lg p-2 bg-[#141d27] text-white placeholder:text-[#64748b]" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input className="w-full border rounded-lg p-2 bg-[#141d27] text-white placeholder:text-[#64748b]" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <select className="w-full border rounded-lg p-2 bg-[#141d27] text-white" value={role} onChange={(e) => setRole(e.target.value)}>
                   <option value="superadmin">Global Admin</option>
                   <option value="home_admin">Home Admin</option>
                 </select>
                 {!isCreatingGlobalAdmin && (
-                  <select className="border rounded-lg p-2" value={homeId} onChange={(e) => setHomeId(e.target.value)}>
+                  <select className="w-full border rounded-lg p-2 bg-[#141d27] text-white" value={homeId} onChange={(e) => setHomeId(e.target.value)}>
                     {homes.map((h) => (
                       <option key={h.id} value={h.id}>{h.name}</option>
                     ))}
@@ -159,7 +159,7 @@ export function StaffManagement({ isOpen, onClose, staff, onRefresh }: StaffMana
           )}
 
           <div>
-            <div className="flex items-center gap-2 text-sm font-bold mb-2"><Users className="w-4 h-4" /> Staff</div>
+            <div className="flex items-center gap-2 text-sm font-bold text-white mb-2"><Users className="w-4 h-4" /> Staff</div>
             {loading ? (
               <p className="text-xs text-white">Loading...</p>
             ) : (
