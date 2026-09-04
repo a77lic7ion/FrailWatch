@@ -191,15 +191,25 @@ export default function App() {
     let unsubscribe: (() => void) | undefined;
 
     const startListener = () => {
-      const homeId = isGlobal ? (selectedGlobalHomeId || selectedHomeId || staff.homeId) : staff.homeId;
-      if (!homeId) return;
-      const q = query(collection(db, 'residents'), where('homeId', '==', homeId));
-      unsubscribe = onSnapshot(q, (snap) => {
-        const next = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Resident[];
-        setResidents(next.map((n) => ({ ...n })));
-      }, (err) => {
-        console.warn('Realtime resident listener error:', err);
-      });
+      if (isGlobal) {
+        const q = query(collection(db, 'residents'));
+        unsubscribe = onSnapshot(q, (snap) => {
+          const next = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Resident[];
+          setResidents(next.map((n) => ({ ...n })));
+        }, (err) => {
+          console.warn('Realtime resident listener error:', err);
+        });
+      } else {
+        const homeId = staff.homeId;
+        if (!homeId) return;
+        const q = query(collection(db, 'residents'), where('homeId', '==', homeId));
+        unsubscribe = onSnapshot(q, (snap) => {
+          const next = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Resident[];
+          setResidents(next.map((n) => ({ ...n })));
+        }, (err) => {
+          console.warn('Realtime resident listener error:', err);
+        });
+      }
     };
 
     startListener();
@@ -207,7 +217,7 @@ export default function App() {
     return () => {
       if (typeof unsubscribe === 'function') unsubscribe();
     };
-  }, [staff, staffLoading, isGlobal, selectedGlobalHomeId, selectedHomeId]);
+  }, [staff, staffLoading, isGlobal]);
 
   useEffect(() => {
     if (!staff || staffLoading) return;
@@ -470,8 +480,12 @@ export default function App() {
             currentTimeStr={currentTimeStr}
             onUpdateResidentStatus={handleCheckIn}
             onAddResident={async (payload) => {
-              await api.addResident(payload);
-              await loadDbStatus();
+              const result = await api.addResident(payload);
+              if (result?.success && result.resident) {
+                setResidents((prev) => [result.resident as any, ...prev]);
+              } else {
+                await loadDbStatus();
+              }
             }}
             onUpdateResident={async () => {}}
             onOpenCutoffModal={() => setIsCutoffModalOpen(true)}
