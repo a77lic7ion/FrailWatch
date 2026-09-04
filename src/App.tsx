@@ -196,14 +196,7 @@ export default function App() {
       const q = query(collection(db, 'residents'), where('homeId', '==', homeId));
       unsubscribe = onSnapshot(q, (snap) => {
         const next = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Resident[];
-        setResidents((prev) => {
-          const merged = prev.map((r) => {
-            const fresh = next.find((n) => n.id === r.id);
-            if (!fresh) return r;
-            return { ...fresh };
-          });
-          return merged;
-        });
+        setResidents(next.map((n) => ({ ...n })));
       }, (err) => {
         console.warn('Realtime resident listener error:', err);
       });

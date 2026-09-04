@@ -34,7 +34,7 @@ interface StaffDashboardProps {
   residents: Resident[];
   currentTimeStr: string;
   onUpdateResidentStatus: (residentId: string, status: CheckInStatus) => void;
-  onAddResident: (resident: Partial<Resident>) => Promise<any> | void;
+  onAddResident: (resident: Partial<Resident>) => Promise<{ success: boolean; resident?: any } | void>;
   onUpdateResident: (resident: Resident) => void;
   onOpenCutoffModal: () => void;
   onOpenSeniorWebsite?: (residentId?: string) => void;
@@ -96,6 +96,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
     primaryNurse: '',
     providerPartner: '',
   } as CareHome;
+  const assignedHomeForDisplay = (allHomes || []).find((h) => h.id === (staff?.homeId || home?.id)) || home || homeOrDefault;
   const [selectedHomeForResident, setSelectedHomeForResident] = useState<string>(staff?.homeId || home?.id || homeOrDefault.id);
 
   // Verification modal state after admin creates user
@@ -346,6 +347,11 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
             <h1 className="text-2xl sm:text-3xl font-bold text-[#e2e8f0] tracking-tight">
               Morning Care Triage Dashboard
             </h1>
+            {staff?.name && (
+              <p className="text-xs sm:text-sm text-emerald-400 mt-1">
+                Welcome, {staff.name}
+              </p>
+            )}
             <p className="text-xs sm:text-sm text-[#cbd5e1] mt-1 max-w-2xl">
               Replaces manual door-to-door morning walking rounds with a 2-minute live overview. 
               Residents respond with giant green/red buttons; missed cutoffs trigger automatic door-checks.
@@ -1129,7 +1135,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
                   Assigned Facility
                 </label>
                 <div className="w-full px-3 py-2 text-xs rounded-xl border border-[#223040] bg-[#0f1722] text-[#e2e8f0]">
-                  {homeOrDefault.name} · {homeOrDefault.location}
+                  {assignedHomeForDisplay.name} · {assignedHomeForDisplay.location}
                 </div>
                 <input type="hidden" value={selectedHomeForResident} readOnly />
                 <p className="text-[11px] text-[#cbd5e1] mt-1">
