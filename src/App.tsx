@@ -102,9 +102,15 @@ export default function App() {
     setSelectedGlobalHomeId(null);
     setResidents([]);
     setHomes(INITIAL_HOMES);
-    setStaffLoading(true);
+    setStaffLoading(false);
     setViewMode('admin');
     setResidentUser(null);
+    setLoginError(null);
+    try {
+      localStorage.removeItem('elderwatch_linked_resident_id');
+      localStorage.removeItem('elderwatch_linked_token');
+      localStorage.removeItem('elderwatch_linked_phone');
+    } catch {}
   };
 
   useEffect(() => {
